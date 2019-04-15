@@ -1,0 +1,20 @@
+PODS:
+  - CometChatPro_Swift4.2 (1.3.2):
+    - JitsiMeetSDK
+  - JitsiMeetSDK (2.0.0)
+
+DEPENDENCIES:
+  - CometChatPro_Swift4.2
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CometChatPro_Swift4.2
+    - JitsiMeetSDK
+
+SPEC CHECKSUMS:
+  CometChatPro_Swift4.2: 83acbd7b19e49ccc2a48a05c8f9c61256a23aa2c
+  JitsiMeetSDK: ab7a28318ea1ec4b4f20d3d2f124012eefb598be
+
+PODFILE CHECKSUM: 1661e550e67e3a3196e110da9af737087089a27f
+
+COCOAPODS: 1.6.0.beta.1
