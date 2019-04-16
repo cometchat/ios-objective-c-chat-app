@@ -163,7 +163,7 @@
     
     [self.navigationItem setRightBarButtonItems:@[creategroupBtn]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-    [self.navigationController.navigationBar setTranslucent:NO];
+    [self.navigationController.navigationBar setTranslucent:YES];
     
 }
 -(void)pushNextTo:(UIViewController *)viewcontroller{

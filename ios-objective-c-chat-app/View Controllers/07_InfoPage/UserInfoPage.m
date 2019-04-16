@@ -71,8 +71,8 @@
             entityCell.tag = indexPath.row;
             
             entityCell.titleLbl.text = _user.name;
-            entityCell.statusLbl.text = [NSString stringWithFormat:@"last active at: %@",[[NSString stringWithFormat:@"%ld",(long)_user.lastActiveAt]sentAtToTime]];
-            
+            entityCell.statusLbl.text = [NSString stringWithFormat:@"last active at :%@",[[NSString stringWithFormat:@"%ld",(long)_user.lastActiveAt]sentAtToTime]];
+                    
             NSString *firstLettr = [entityCell.titleLbl.text substringToIndex:1];
             Avatar *avatar = [[Avatar alloc]initWithRect:CGRectMake(0.0f, 0.0f, 30.0f, 30.0f) fullName:firstLettr];
             [avatar setBackgroundColor:[UIColor grayColor]];
