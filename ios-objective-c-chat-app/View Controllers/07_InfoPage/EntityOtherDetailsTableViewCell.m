@@ -38,10 +38,9 @@
 }
 -(UILabel *)alabel {
     
-    if (_alabel) {
+    if (!_alabel) {
         _alabel = [UILabel new];
         [_alabel setFont:[UIFont systemFontOfSize:14.0f weight:(UIFontWeightSemibold)]];
-        [_alabel setTextAlignment:NSTextAlignmentCenter];
     }
     return _alabel;
 }

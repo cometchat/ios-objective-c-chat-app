@@ -213,7 +213,7 @@
             switch ([indexPath row]) {
                 case 0:
                     if ([_group createdAt]) {
-                        cell.textLabel.text = [NSString stringWithFormat:@"createdAt :%@",[self timestampToString:[_group createdAt]]];
+                        cell.textLabel.text = [NSString stringWithFormat:@"createdAt:%@",[[NSString stringWithFormat:@"%ld",(long)[_group createdAt]] sentAtToTime]];
                     } else {
                         cell.textLabel.text = [NSString stringWithFormat:@"--"];
                     }
@@ -221,7 +221,7 @@
                     break;
                 case 1:
                     if ([_group updatedAt]) {
-                        cell.textLabel.text = [NSString stringWithFormat:@"updatedAt :%@",[self timestampToString:[_group updatedAt]]];
+                        cell.textLabel.text = [NSString stringWithFormat:@"updatedAt:%@",[[NSString stringWithFormat:@"%ld",(long)[_group updatedAt]] sentAtToTime]];
                     } else {
                         cell.textLabel.text = [NSString stringWithFormat:@"--"];
                     }
@@ -229,7 +229,7 @@
                     break;
                 case 2:
                     if ([_group joinedAt]) {
-                        cell.textLabel.text = [NSString stringWithFormat:@"joinedAt :%@",[self timestampToString:[_group joinedAt]]];
+                        cell.textLabel.text = [NSString stringWithFormat:@"joinedAt:%@",[[NSString stringWithFormat:@"%ld",(long)[_group joinedAt]] sentAtToTime]];
                     } else {
                         cell.textLabel.text = [NSString stringWithFormat:@"--"];
                     }
@@ -403,15 +403,7 @@
     }
     return @[[UITableViewRowAction new]];
 }
--(NSString *)timestampToString:(double)timestamp{
-    
-    NSTimeInterval unixTimeStamp = timestamp / 1000.0;
-    NSDate *exactDate = [NSDate dateWithTimeIntervalSince1970:unixTimeStamp];
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"hh:mm a dd/MM/yyy ";
-    NSString  *finalate = [dateFormatter stringFromDate:exactDate];
-    return finalate;
-}
+
 -(void)SegmentChangeViewValueChanged:(UISegmentedControl *)SControl
 {
     switch (SControl.selectedSegmentIndex) {

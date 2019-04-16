@@ -15,6 +15,7 @@
 #import "FilesTableViewCell.h"
 #import "TextTableViewCell.h"
 #import "MediaTableViewCell.h"
+#import "ActionTableViewCell.h"
 
 @interface ChatEntity : NSObject
 
@@ -199,7 +200,7 @@ static int textFiledHeight;
         NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
         self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
     }else{
-        self.navigationItem.title = [_chatEntity receiverName];
+        self.navigationItem.titleView = [self chatTitle:[_chatEntity receiverName] WithUserStatus:@""];
     }
 
 }
@@ -403,27 +404,14 @@ static int textFiledHeight;
     }else if ([message isKindOfClass:ActionMessage.class]){
         
         ActionMessage *action = (ActionMessage *)message;
-        
-        NSLog(@" ACTION MESSASGE %@",[action stringValue]);
-        
-        CGSize sizeOfText = [[action message] getSizeForTextForView:tableView];
-        
-        UILabel *actionLable = [[UILabel alloc]initWithFrame:CGRectMake(0.0f, 0.0f, sizeOfText.width, sizeOfText.height)];
-        actionLable.text = [action message];
-        actionLable.font = [UIFont  italicSystemFontOfSize:13.0f];
-        actionLable.textAlignment = NSTextAlignmentCenter;
-        [actionLable setTextColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1.0f]];
-        actionLable.center = cell.center;
-        [cell.contentView addSubview:actionLable];
-        
-        return cell;
+        ActionTableViewCell *actionCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
+        if (actionCell) {
+            [actionCell bind:[action message]];
+        }
+        return actionCell;
     }else if ([message isKindOfClass:Call.class]){
         
         Call *callMessage = (Call *)message;
-        
-        NSLog(@" call MESSASGE %@",[callMessage stringValue]);
-        
-        CGSize sizeOfText = [@"CALLERNAME_CALLSTATUS_CALL_RECEIVER" getSizeForTextForView:tableView];
         
         NSError *jsonError;
         NSData *objectData = [[callMessage rawData] dataUsingEncoding:NSUTF8StringEncoding];
@@ -431,22 +419,15 @@ static int textFiledHeight;
                                                              options:NSJSONReadingMutableContainers
                                                                error:&jsonError];
         
-        NSLog(@"json %@",json);
-        NSLog(@"call Status %ld",(long)[callMessage callStatus]);
-        
         NSString *from , *to;
         
         from = [[[json objectForKey:@"by"]objectForKey:@"entity"]objectForKey:@"name"];
         to  = [[[json objectForKey:@"for"]objectForKey:@"entity"]objectForKey:@"name"];
-        
-        UILabel *actionLable = [[UILabel alloc]initWithFrame:CGRectMake(0.0f, 0.0f, sizeOfText.width, sizeOfText.height)];
-        actionLable.text = [NSString stringWithFormat:@"%@ %@ call %@",from,[json objectForKey:@"action"],to];
-        actionLable.font = [UIFont  italicSystemFontOfSize:13.0f];
-        actionLable.textAlignment = NSTextAlignmentCenter;
-        [actionLable setTextColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1.0f]];
-        actionLable.center = cell.center;
-        [cell.contentView addSubview:actionLable];
-        return cell;
+        ActionTableViewCell *actionCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
+        if (actionCell) {
+            [actionCell bind:[NSString stringWithFormat:@"%@ %@ call %@",from,[json objectForKey:@"action"],to]];
+        }
+        return actionCell;
     }
     cell.textLabel.text = @"E R R O R";
     return cell;

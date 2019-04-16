@@ -31,18 +31,31 @@
         __tableView.rowHeight = UITableViewAutomaticDimension;
         __tableView.estimatedSectionFooterHeight = 0.0f;
         __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        [__tableView registerClass:EntityDetailsTableViewCell.class forCellReuseIdentifier:EntityDetailsTableViewCell.cellIdentifier];
+        [__tableView registerClass:EntityOtherDetailsTableViewCell.class forCellReuseIdentifier:EntityOtherDetailsTableViewCell.cellIdentifier];
     }
     return __tableView;
 }
-
+-(void)logOutUser
+{
+    [CometChat logoutOnSuccess:^(NSString * _Nonnull isSuccess) {
+        
+        NSLog(@"%@",isSuccess);
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        
+        LoginViewController *lg = [sb instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        [self presentViewController:lg animated:YES completion:^{
+            
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@LOGGED_IN_USER_ID];
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@IS_LOGGED_IN];
+        }];
+        
+    } onError:^(CometChatException * _Nonnull error) {
+        
+        NSLog(@"%@",[error errorDescription]);
+    }];
+}
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    
-    static NSString *cellIdentifier = @"reuseIdentifier";
-    
-    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:cellIdentifier];
-    }
     
     switch ([indexPath section]) {
             
@@ -94,66 +107,96 @@
             break;
         case 1:
         {
-                if (_user.email) {
-                    cell.textLabel.text = _user.email;
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.email) {
+                otherCell.alabel.text = _user.email;
+            } else {
+                otherCell.alabel.text = [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
             
         }
             break;
         case 2:
         {
-                if (_user.statusMessage) {
-                    cell.textLabel.text = _user.statusMessage;
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.statusMessage) {
+                otherCell.alabel.text = _user.statusMessage;
+            } else {
+                otherCell.alabel.text= [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
         }
             break;
         case 3:
         {
-                if (_user.role) {
-                    cell.textLabel.text = _user.role;
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.role) {
+                otherCell.alabel.text = _user.role;
+            } else {
+                otherCell.alabel.text = [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
         }
             break;
         case 4:
         {
-                if (_user.link) {
-                    cell.textLabel.text = _user.link;
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.link) {
+                otherCell.alabel.text = _user.link;
+            } else {
+                otherCell.alabel.text = [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
         }
             break;
         case 5:
         {
-                if (_user.email) {
-                    cell.textLabel.text = _user.email;
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.email) {
+                otherCell.alabel.text = _user.email;
+            } else {
+                otherCell.alabel.text = [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
         }
             break;
         case 6:
         {
-                if (_user.credits) {
-                    cell.textLabel.text = [NSString stringWithFormat:@"%ld",(long)_user.credits];
-                } else {
-                    cell.textLabel.text = [NSString stringWithFormat:@"--"];
-                }
-                return cell;
+            
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            if (_user.credits) {
+                otherCell.alabel.text = [NSString stringWithFormat:@"%ld",(long)_user.credits];
+            } else {
+                otherCell.alabel.text = [NSString stringWithFormat:@"--"];
+            }
+            return otherCell;
         }
             break;
+        case 7:
+        {
             
+            EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
+            
+            
+            if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+                
+                otherCell.alabel.text = [NSString stringWithFormat:@"Logout"];
+                otherCell.alabel.textColor = [UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f];
+                otherCell.alabel.textAlignment = NSTextAlignmentCenter;
+                return otherCell;
+            }
+            
+        }
+            break;
         default:
             break;
     }
@@ -162,10 +205,13 @@
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
+    if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+        return 9;
+    }
     return 8;
 }
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
+    
     return 1;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -201,6 +247,13 @@
         case 4: { label.text = [NSString stringWithFormat:@"link:"]; }          break;
         case 5: { label.text = [NSString stringWithFormat:@"metadata:"]; }      break;
         case 6: { label.text = [NSString stringWithFormat:@"credits:"]; }       break;
+        case 7:
+        {
+            if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+                label.text = [NSString stringWithFormat:@"logout:"];
+            }
+            
+        }       break;
         default:
             break;
     }
@@ -211,15 +264,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     switch ([indexPath section]) {
-        case 1:
+        case 7:
             switch ([indexPath row]) {
                 case 0:
+                    [self logOutUser];
                     break;
                 default:
                     break;
             }
             break;
-            
         default:
             break;
     }

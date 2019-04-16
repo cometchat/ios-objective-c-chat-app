@@ -23,6 +23,7 @@
 		E145B7FF2262085F007E9641 /* NSDate+RelativeTime.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E145B7FE2262085F007E9641 /* NSDate+RelativeTime.bundle */; };
 		E145B80222620D37007E9641 /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = E145B80122620D37007E9641 /* NSDate+NVTimeAgo.m */; };
 		E1500767223927330016DC32 /* AudioVisualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1500766223927330016DC32 /* AudioVisualizerView.m */; };
+		E15D4F4422647518001E4FC4 /* ActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */; };
 		E172D8002246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D7FF2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m */; };
 		E172D803224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D802224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.m */; };
 		E172D806224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D805224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m */; };
@@ -94,6 +95,8 @@
 		E145B80122620D37007E9641 /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		E1500765223927330016DC32 /* AudioVisualizerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioVisualizerView.h; sourceTree = "<group>"; };
 		E1500766223927330016DC32 /* AudioVisualizerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioVisualizerView.m; sourceTree = "<group>"; };
+		E15D4F4222647518001E4FC4 /* ActionTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionTableViewCell.h; sourceTree = "<group>"; };
+		E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActionTableViewCell.m; sourceTree = "<group>"; };
 		E172D7FE2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CometChatProMesssageDelegates.h"; sourceTree = "<group>"; };
 		E172D7FF2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+CometChatProMesssageDelegates.m"; sourceTree = "<group>"; };
 		E172D801224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CometChatProCallDelegates.h"; sourceTree = "<group>"; };
@@ -557,6 +560,8 @@
 				E18992A9226072D1009C2EA3 /* FilesTableViewCell.m */,
 				E18992AB22608C61009C2EA3 /* AudioTableViewCell.h */,
 				E18992AC22608C61009C2EA3 /* AudioTableViewCell.m */,
+				E15D4F4222647518001E4FC4 /* ActionTableViewCell.h */,
+				E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */,
 			);
 			path = 05_Chat;
 			sourceTree = "<group>";
@@ -788,6 +793,7 @@
 				E18992AD22608C61009C2EA3 /* AudioTableViewCell.m in Sources */,
 				E144857B2228068C004B6B78 /* ResultsTableController.m in Sources */,
 				E18992AA226072D1009C2EA3 /* FilesTableViewCell.m in Sources */,
+				E15D4F4422647518001E4FC4 /* ActionTableViewCell.m in Sources */,
 				E1A1C479221AA8C200F7076B /* LoginViewController.m in Sources */,
 				E1B7619022377C0C001EF19B /* CometChatProRequests.m in Sources */,
 				E172D80922460A190013D05D /* AppDelegate+CometChatProGroupEventsDelegates.m in Sources */,
