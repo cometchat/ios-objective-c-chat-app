@@ -10,9 +10,14 @@
 #import "AppConstants.h"
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol AppFileDelegate <NSObject>
+-(void)didSelectFileAtIndexPath:(NSInteger)tag;
+@end
+
 @interface FilesTableViewCell : UITableViewCell
 +(NSString*)reuseIdentifier;
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath;
+@property (nonatomic, weak) id<AppFileDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

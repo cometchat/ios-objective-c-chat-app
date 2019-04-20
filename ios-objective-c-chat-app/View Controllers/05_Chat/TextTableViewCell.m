@@ -24,7 +24,7 @@
     CAShapeLayer *layer;
 }
 +(NSString*)reuseIdentifier{
-    return @"TextreuseIdentifier";
+    return NSStringFromClass([self class]);
 }
 
 -(void)bind:(TextMessage *)messsage withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection

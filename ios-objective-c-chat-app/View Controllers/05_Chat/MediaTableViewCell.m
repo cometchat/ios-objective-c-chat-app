@@ -18,7 +18,7 @@
     MessageBubbleViewButtonTailDirection taildirection;
 }
 +(NSString*)reuseIdentifier{
-    return @"mediareuseIdentifier";
+    return NSStringFromClass([self class]);
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath {
     
@@ -134,8 +134,19 @@
         _imageHolder.contentMode = UIViewContentModeScaleAspectFill;
         _imageHolder.clipsToBounds = YES;
         _imageHolder.userInteractionEnabled = YES;
+        _imageHolder.backgroundColor = [UIColor lightGrayColor];
+        _imageHolder.image = [UIImage imageNamed:@"place_holder"];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImage:)];
+        tap.numberOfTapsRequired = 1;
+        [_imageHolder addGestureRecognizer:tap];
     }
     return _imageHolder;
+}
+- (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:)]) {
+        [_delegate didSelectMediaAtIndexPath:self.tag];
+    }
 }
 -(void)updateConstraints{
     [super updateConstraints];

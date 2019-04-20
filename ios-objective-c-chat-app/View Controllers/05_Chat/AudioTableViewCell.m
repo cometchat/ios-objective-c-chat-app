@@ -32,7 +32,7 @@
 }
 +(NSString *)reuseIdentifier
 {
-    return @"audioreuseidentifier";
+     return NSStringFromClass([self class]);
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {

@@ -353,15 +353,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     switch ([indexPath section]) {
-        case 1:
-            switch ([indexPath row]) {
-                case 0:
-                    break;
-                default:
-                    break;
+        case 5:
+            if (selectedIndex == 0) {
+                [self PushToNext:[_activeMembersList objectAtIndex:[indexPath row]]];
+            } else {
+                [self PushToNext:[_inActiveMembersList objectAtIndex:[indexPath row]]];
             }
             break;
-            
         default:
             break;
     }
@@ -470,6 +468,20 @@
     } onError:^(CometChatException * _Nullable error) {
         
     }];
+}
+-(void)PushToNext:(AppEntity *)user{
+    
+    User *_user = (User *)user;
+    
+    if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+        return ;
+    }
+    UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    ChatViewController *chatviewcontroller = [main instantiateViewControllerWithIdentifier:@"ChatViewController"];
+    chatviewcontroller.hidesBottomBarWhenPushed = YES;
+    [chatviewcontroller setAppEntity:user];
+    [self.navigationController pushViewController:chatviewcontroller animated:YES];
+    
 }
 @end
 

@@ -14,37 +14,38 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 +(NSString *)reuseIdentifier{
-    return @"ActionTableViewCell";
+     return NSStringFromClass([self class]);
 }
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self.contentView addSubview:self.messageLabel];
+        [_messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(_messageLabel);
+        
+        NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_messageLabel]-|" options:0 metrics:nil views:views];
+        NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_messageLabel]-|" options:0 metrics:nil views:views];
+        
+        [self.contentView addConstraints:subViewH1];
+        [self.contentView addConstraints:subViewV1];
+    }
+    return self;
+}
+
 -(void)bind:(NSString *)message
 {
-    
-    [self.contentView addSubview:self.messageLabel];
-    [_messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_messageLabel);
-    
-    NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_messageLabel]-|" options:0 metrics:nil views:views];
-    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_messageLabel]-|" options:0 metrics:nil views:views];
-    
-    [self.contentView addConstraints:subViewH1];
-    [self.contentView addConstraints:subViewV1];
     _messageLabel.text = message;
 }
 -(UILabel*)messageLabel {
     
     if (!_messageLabel) {
         _messageLabel = [UILabel new];
-        _messageLabel.numberOfLines = 1;
+        _messageLabel.numberOfLines = 0;
         _messageLabel.lineBreakMode = NSLineBreakByClipping;
         _messageLabel.textColor = [UIColor blackColor];
         _messageLabel.font = [UIFont  italicSystemFontOfSize:13.0f];

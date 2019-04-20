@@ -36,7 +36,7 @@
     self = [super init];
     if(self)
     {
-
+        
         if ([appEntity isKindOfClass:User.class]) {
             
             self.receiverId = [(User *)appEntity uid];
@@ -44,7 +44,7 @@
             self.receiverName = [(User *)appEntity name];
             self.entity = appEntity;
             self.profileURL = [(User *)appEntity avatar];
-
+            
             self.lastActiveAt = [NSString stringWithFormat:@"%ld",(long)[(User *)appEntity lastActiveAt]];
             
         } else if ([appEntity isKindOfClass:Group.class]){
@@ -63,7 +63,7 @@
 @end
 
 static int textFiledHeight;
-@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate>
+@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate , AppMediaDelegate  ,AppFileDelegate >
 @property(nonatomic , strong) AppDelegate *appDelegate;
 @property (nonatomic ,strong) ActivityIndicatorView *backgroundActivityIndicatorView;
 @property (nonatomic, strong) UILabel *placeholderLabel;
@@ -193,7 +193,7 @@ static int textFiledHeight;
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
     UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
-    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
+//    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
     
     if ([_chatEntity receiverType] == ReceiverTypeUser) {
         
@@ -202,7 +202,7 @@ static int textFiledHeight;
     }else{
         self.navigationItem.titleView = [self chatTitle:[_chatEntity receiverName] WithUserStatus:@""];
     }
-
+    
 }
 
 -(void)fetchNext{
@@ -302,8 +302,9 @@ static int textFiledHeight;
     }else if ([message isKindOfClass:MediaMessage.class]){
         
         MediaMessage *mediaMessage = (MediaMessage *)message;
-
+        
         FilesTableViewCell *filesCell = [[FilesTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [FilesTableViewCell reuseIdentifier]];
+        filesCell.delegate = self;
         
         if (message.messageType == MessageTypeFile) {
             
@@ -320,7 +321,7 @@ static int textFiledHeight;
         if (message.messageType == MessageTypeVideo || message.messageType == MessageTypeImage) {
             
             MediaTableViewCell *mediaCell = [[MediaTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [MediaTableViewCell reuseIdentifier]];
-            
+            mediaCell.delegate = self;
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
                 [mediaCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
                 [mediaCell setTag:[indexPath row]];
@@ -359,6 +360,13 @@ static int textFiledHeight;
                 time.text = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
                 time.textColor = [UIColor whiteColor];
                 [time setFont:[UIFont systemFontOfSize:11]];
+                CGSize sizeOfTime = [time.text getSizeForTextForView:self._tableView];
+                
+                if (sizeOfsender.width > sizeOfTime.width) {
+                    width = sizeOfsender.width;
+                }else{
+                    width = sizeOfTime.width;
+                }
                 
                 UIView *messageBubble = [[MessageBubbleView alloc]initWithFrame:CGRectMake(self.view.frame.size.width - width, paddingY, width, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height + time.frame.size.height + paddingY*2 ) isSender:YES];
                 
@@ -391,6 +399,14 @@ static int textFiledHeight;
                 time.textColor = [UIColor blackColor];
                 [time setFont:[UIFont systemFontOfSize:11]];
                 
+                CGSize sizeOfTime = [time.text getSizeForTextForView:self._tableView];
+                
+                if (sizeOfsender.width > sizeOfTime.width) {
+                    width = sizeOfsender.width;
+                }else{
+                    width = sizeOfTime.width;
+                }
+                
                 UIView *messageBubble = [[MessageBubbleView alloc]initWithFrame:CGRectMake(paddingX, paddingY , width, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height + time.frame.size.height + paddingY*2 ) isSender:NO];
                 
                 [messageBubble addSubview:senderName];
@@ -404,11 +420,15 @@ static int textFiledHeight;
     }else if ([message isKindOfClass:ActionMessage.class]){
         
         ActionMessage *action = (ActionMessage *)message;
-        ActionTableViewCell *actionCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
-        if (actionCell) {
-            [actionCell bind:[action message]];
+        
+        ActionTableViewCell *someCell = (ActionTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[ActionTableViewCell reuseIdentifier]];
+        if (!someCell) {
+            someCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
         }
-        return actionCell;
+        if (someCell) {
+            [someCell bind:[action message]];
+        }
+        return someCell;
     }else if ([message isKindOfClass:Call.class]){
         
         Call *callMessage = (Call *)message;
@@ -418,16 +438,19 @@ static int textFiledHeight;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
                                                              options:NSJSONReadingMutableContainers
                                                                error:&jsonError];
-        
         NSString *from , *to;
         
         from = [[[json objectForKey:@"by"]objectForKey:@"entity"]objectForKey:@"name"];
         to  = [[[json objectForKey:@"for"]objectForKey:@"entity"]objectForKey:@"name"];
-        ActionTableViewCell *actionCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
-        if (actionCell) {
-            [actionCell bind:[NSString stringWithFormat:@"%@ %@ call %@",from,[json objectForKey:@"action"],to]];
+        
+        ActionTableViewCell *someCell = (ActionTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[ActionTableViewCell reuseIdentifier]];
+        if (!someCell) {
+            someCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
         }
-        return actionCell;
+        if (someCell) {
+            [someCell bind:[NSString stringWithFormat:@"%@ %@ call %@",from,[json objectForKey:@"action"],to]];
+        }
+        return someCell;
     }
     cell.textLabel.text = @"E R R O R";
     return cell;
@@ -469,10 +492,10 @@ static int textFiledHeight;
         TextMessage *textMessage = (TextMessage *)message;
         
         return CELL_ANIMATION_HEIGHT
-                + paddingY
-                + [[[textMessage sender] name] getSizeForTextForView:tableView].height + paddingY
-                + [[textMessage text] getSizeForTextForView:tableView].height + paddingY
-                + [@"00:00" getSizeForTextForView:tableView].height;
+        + paddingY
+        + [[[textMessage sender] name] getSizeForTextForView:tableView].height + paddingY
+        + [[textMessage text] getSizeForTextForView:tableView].height + paddingY
+        + [@"00:00" getSizeForTextForView:tableView].height;
         
     }else if ([message isKindOfClass:MediaMessage.class]){
         
@@ -655,7 +678,7 @@ static int textFiledHeight;
     else {
         _placeholderLabel.hidden = NO;
     }
-
+    
     
     float numberOfLines = (textView.contentSize.height - textView.textContainerInset.top - textView.textContainerInset.bottom) / textView.font.lineHeight;
     
@@ -806,7 +829,7 @@ static int textFiledHeight;
     } else {
         // Fallback on earlier versions
     }
-
+    
     MessageType messageType  = MessageTypeImage;
     NSString *filePath;
     
@@ -1179,8 +1202,8 @@ static int textFiledHeight;
                 
             case UserStatusOnline:
             {
-                    NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-                    self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
+                NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
+                self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
             }
                 break;
             case UserStatusOffline:
@@ -1208,6 +1231,20 @@ static int textFiledHeight;
             }];
         }];
     }];
+}
+
+- (void)didSelectMediaAtIndexPath:(NSInteger)tag {
+    
+    MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
+    previewUrl = [selctedMessage url];
+    [self showMediaForIndexPath];
+}
+
+- (void)didSelectFileAtIndexPath:(NSInteger)tag {
+    
+    MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
+    previewUrl = [selctedMessage url];
+    [self showMediaForIndexPath];
 }
 
 @end

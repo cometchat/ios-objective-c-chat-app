@@ -127,7 +127,12 @@
                 [_loadingMoreView setHidden:YES];
             });
         }else{
-            //TODO:- add no more contacts label in footer view //
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _isMoreDataLoading = NO;
+                [_footerActivityIndicatorView stopAnimating];
+                [_backgroundActivityIndicatorView stopAnimating];
+                [_loadingMoreView setHidden:YES];
+            });
         }
         
     } onError:^(CometChatException * error) {

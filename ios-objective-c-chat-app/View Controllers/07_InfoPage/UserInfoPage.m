@@ -14,6 +14,8 @@
 
 @implementation UserInfoPage
 
+static NSString *cellIdentifier = @"reuseIdentifier";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self._tableView];

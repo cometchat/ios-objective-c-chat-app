@@ -11,10 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol AppMediaDelegate <NSObject>
+-(void)didSelectMediaAtIndexPath:(NSInteger)tag;
+@end
+
 @interface MediaTableViewCell : UITableViewCell
 +(NSString*)reuseIdentifier;
 -(void)bind:(MediaMessage *)messsage withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath;
-
+@property (nonatomic, weak) id<AppMediaDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

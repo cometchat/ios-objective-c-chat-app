@@ -35,7 +35,7 @@
 }
 +(NSString *)reuseIdentifier
 {
-    return @"filesreuseIdentifier";
+     return NSStringFromClass([self class]);
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {
@@ -76,7 +76,7 @@
             layer.path = [bezierPath CGPath];
             layer.fillColor = [[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1] CGColor];
             [_bubble.layer addSublayer:layer];
-            
+            [self.fileImage setTintColor:[UIColor whiteColor]];
             
         }
             break;
@@ -107,7 +107,7 @@
             layer.fillColor = [[UIColor colorWithRed:(223.0f/255.0f) green:(222.0f/255.0f) blue:(229.0f/255.0f) alpha:1.0f] CGColor];
             [_bubble.layer addSublayer:layer];
             
-            
+            [self.fileImage setTintColor:[UIColor blackColor]];
         }
             
             break;
@@ -126,10 +126,10 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(_senderNameLbl ,_fileImage , _timeLbl , _readReceipts);
     
     NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_senderNameLbl]-|" options:0 metrics:nil views:views];
-    NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_fileImage]-|" options:0 metrics:nil views:views];
+    NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_fileImage]-(16)-|" options:0 metrics:nil views:views];
     NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_timeLbl]-[_readReceipts]-|" options:0 metrics:nil views:views];
-    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl][_fileImage][_timeLbl(20)]-|" options:0 metrics:nil views:views];
-    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl][_fileImage][_readReceipts(20)]-|" options:0 metrics:nil views:views];
+    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl(20)][_fileImage][_timeLbl(20)]-|" options:0 metrics:nil views:views];
+    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl(20)][_fileImage][_readReceipts(20)]-|" options:0 metrics:nil views:views];
     
     [_bubble addConstraints:subViewH1];
     [_bubble addConstraints:subViewH2];
@@ -173,8 +173,19 @@
 -(UIImageView *)fileImage{
     if (!_fileImage) {
         _fileImage = [UIImageView new];
+        _fileImage.contentMode = UIViewContentModeScaleAspectFit;
+        _fileImage.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImage:)];
+        tap.numberOfTapsRequired = 1;
+        [_fileImage addGestureRecognizer:tap];
     }
     return _fileImage;
+}
+- (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectFileAtIndexPath:)]) {
+        [_delegate didSelectFileAtIndexPath:self.tag];
+    }
 }
 -(UILabel*)timeLbl {
     
