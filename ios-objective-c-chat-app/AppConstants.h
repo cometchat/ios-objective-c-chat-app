@@ -48,6 +48,7 @@
 
 #define API_KEY             "YOUR_API_KEY_HERE"
 #define APP_ID              "YOUR_APP_ID_HERE"
+
 #define IS_LOGGED_IN        "isLoggedin"
 #define LOGGED_IN_USER_ID   "logged_in_user_id"
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
