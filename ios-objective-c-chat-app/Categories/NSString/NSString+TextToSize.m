@@ -12,9 +12,11 @@
 
 @implementation NSString (TextToSize)
 
--(CGSize)getSizeForTextForView:(UIView*)view{
+-(CGSize)getSize{
     
-    CGFloat messageMaxWidth = view.frame.size.width*66/100;
+    CGSize sizeOfScreen = [[UIScreen mainScreen] bounds].size;
+
+    CGFloat messageMaxWidth = sizeOfScreen.width*66/100;
     
     CGSize constraint = CGSizeMake(messageMaxWidth, CGFLOAT_MAX);
     

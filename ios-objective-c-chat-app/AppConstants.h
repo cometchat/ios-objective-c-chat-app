@@ -31,7 +31,7 @@
 #import "View Controllers/02_TabBar/TabBarViewController.h"
 #import "Manager/CometChatProRequests/CometChatProRequests.h"
 #import "AudioVisualizer.h"
-#import "AudioVisualizerView.h"
+#import "AudioVisualizerView.h"			
 #import "DemoUsersViewController.h"
 #import "ActivityIndicatorView.h"
 #import "NSError+Util.h"

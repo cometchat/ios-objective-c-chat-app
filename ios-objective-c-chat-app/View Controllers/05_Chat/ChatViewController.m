@@ -63,7 +63,7 @@
 @end
 
 static int textFiledHeight;
-@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate , AppMediaDelegate  ,AppFileDelegate >
+@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate , AppMediaDelegate  ,AppFileDelegate , AppAudioDelegate >
 @property(nonatomic , strong) AppDelegate *appDelegate;
 @property (nonatomic ,strong) ActivityIndicatorView *backgroundActivityIndicatorView;
 @property (nonatomic, strong) UILabel *placeholderLabel;
@@ -132,7 +132,7 @@ static int textFiledHeight;
     [__tableView setBackgroundView:_backgroundActivityIndicatorView];
     [_backgroundActivityIndicatorView startAnimating];
     [self.sendMessageTextView addSubview:self.placeholderLabel];
-    logged_in_user_uid = [[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString];
+    logged_in_user_uid = [[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID];
 }
 - (void)actionCallAudio
 {
@@ -193,12 +193,12 @@ static int textFiledHeight;
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
     UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
-//    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
+    //    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
     
     if ([_chatEntity receiverType] == ReceiverTypeUser) {
         
         NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-        self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
+        self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:NSLocalizedString(@"Online", @"")];
     }else{
         self.navigationItem.titleView = [self chatTitle:[_chatEntity receiverName] WithUserStatus:@""];
     }
@@ -236,7 +236,7 @@ static int textFiledHeight;
     __tableView.rowHeight = UITableViewAutomaticDimension;
     __tableView.estimatedSectionFooterHeight = 0.0f;
     __tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    
 }
 -(void)addBorderToView:(UIView *)_aView
 {
@@ -256,7 +256,7 @@ static int textFiledHeight;
         _placeholderLabel.backgroundColor = [UIColor clearColor];
         _placeholderLabel.font = [UIFont systemFontOfSize:16.0];
         _placeholderLabel.textColor = [UIColor lightGrayColor];
-        _placeholderLabel.text = @"Write a messsage";
+        _placeholderLabel.text = NSLocalizedString(@"Write a messsage", @"");
         _placeholderLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     }
     
@@ -284,8 +284,6 @@ static int textFiledHeight;
     if ([message isKindOfClass:TextMessage.class]) {
         
         TextMessage *textMessage = (TextMessage *)message;
-        
-        NSLog(@"TEXT MESSSAGE %@",[textMessage stringValue]);
         
         TextTableViewCell *textcell = [[TextTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [TextTableViewCell reuseIdentifier]];
         
@@ -335,86 +333,18 @@ static int textFiledHeight;
             }
         }
         if (message.messageType == MessageTypeAudio) {
-            
-            CGFloat width = self.view.frame.size.width *0.50;
-            CGFloat height = width/2;
+        
+            AudioTableViewCell *audioCell = [[AudioTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[AudioTableViewCell reuseIdentifier]];
+            audioCell.delegate = self ;
             
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
-                
-                CGSize sizeOfsender = [[[mediaMessage sender] name] getSizeForTextForView:tableView];
-                UILabel *senderName = [[UILabel alloc]initWithFrame:CGRectMake(paddingX*2, paddingY, sizeOfsender.width, sizeOfsender.height)];
-                senderName.text = [[mediaMessage sender] name];
-                senderName.font = [UIFont boldSystemFontOfSize:11];
-                senderName.textColor = [UIColor colorWithRed:(255.0f/255.0f) green:(255.0f/255.0f) blue:(255.0f/255.0f) alpha:1.0f];
-                senderName.numberOfLines = 1;
-                senderName.lineBreakMode = NSLineBreakByClipping;
-                
-                UIButton *audioPlayBtn = [[UIButton alloc]initWithFrame:CGRectMake(paddingX, paddingY + senderName.frame.size.height, width * 0.33, height/2)];
-                UIImage *btnImage = [[UIImage imageNamed:@"audioPlay"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)];
-                [audioPlayBtn setImage:btnImage forState:UIControlStateNormal];
-                [audioPlayBtn setTintColor:[UIColor whiteColor]];
-                [audioPlayBtn addTarget:self action:@selector(playPauseButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-                [audioPlayBtn setTag:[indexPath row]];
-                
-                UILabel *time = [[UILabel alloc]initWithFrame:CGRectMake(paddingX, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height,width -16.0f, 20.0f)];
-                time.text = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
-                time.textColor = [UIColor whiteColor];
-                [time setFont:[UIFont systemFontOfSize:11]];
-                CGSize sizeOfTime = [time.text getSizeForTextForView:self._tableView];
-                
-                if (sizeOfsender.width > sizeOfTime.width) {
-                    width = sizeOfsender.width;
-                }else{
-                    width = sizeOfTime.width;
-                }
-                
-                UIView *messageBubble = [[MessageBubbleView alloc]initWithFrame:CGRectMake(self.view.frame.size.width - width, paddingY, width, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height + time.frame.size.height + paddingY*2 ) isSender:YES];
-                
-                [messageBubble addSubview:senderName];
-                [messageBubble addSubview:audioPlayBtn];
-                [messageBubble addSubview:time];
-                
-                [cell.contentView addSubview:messageBubble];
-                
-                return cell;
+                [audioCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
+                [audioCell  setTag:[indexPath row]];
+                return audioCell;
             }else {
-                
-                CGSize sizeOfsender = [[[mediaMessage sender] name] getSizeForTextForView:tableView];
-                UILabel *senderName = [[UILabel alloc]initWithFrame:CGRectMake(paddingX*2, paddingY, sizeOfsender.width, sizeOfsender.height)];
-                senderName.text = [[mediaMessage sender] name];
-                senderName.font = [UIFont boldSystemFontOfSize:11];
-                senderName.textColor = [UIColor blackColor];
-                senderName.numberOfLines = 1;
-                senderName.lineBreakMode = NSLineBreakByClipping;
-                
-                UIButton *audioPlayBtn = [[UIButton alloc]initWithFrame:CGRectMake(paddingX, paddingY + senderName.frame.size.height, width * 0.33, height/2)];
-                UIImage *btnImage = [[UIImage imageNamed:@"audioPlay"] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)];
-                [audioPlayBtn setImage:btnImage forState:UIControlStateNormal];
-                [audioPlayBtn addTarget:self action:@selector(playPauseButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-                [audioPlayBtn setTag:[indexPath row]];
-                [audioPlayBtn setTintColor:[UIColor blackColor]];
-                
-                UILabel *time = [[UILabel alloc]initWithFrame:CGRectMake(paddingX, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height,width -16.0f, 20.0f)];
-                time.text = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
-                time.textColor = [UIColor blackColor];
-                [time setFont:[UIFont systemFontOfSize:11]];
-                
-                CGSize sizeOfTime = [time.text getSizeForTextForView:self._tableView];
-                
-                if (sizeOfsender.width > sizeOfTime.width) {
-                    width = sizeOfsender.width;
-                }else{
-                    width = sizeOfTime.width;
-                }
-                
-                UIView *messageBubble = [[MessageBubbleView alloc]initWithFrame:CGRectMake(paddingX, paddingY , width, paddingY + senderName.frame.size.height + audioPlayBtn.frame.size.height + time.frame.size.height + paddingY*2 ) isSender:NO];
-                
-                [messageBubble addSubview:senderName];
-                [messageBubble addSubview:audioPlayBtn];
-                [messageBubble addSubview:time];
-                [cell.contentView addSubview:messageBubble];
-                
-                return cell;
+                [audioCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionLeft) indexPath:indexPath];
+                [audioCell  setTag:[indexPath row]];
+                return audioCell;
             }
         }
     }else if ([message isKindOfClass:ActionMessage.class]){
@@ -470,18 +400,6 @@ static int textFiledHeight;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    BaseMessage *message = [messsagesArray objectAtIndex:[indexPath row]];
-    
-    if ([message isKindOfClass:MediaMessage.class]) {
-        
-        if (message.messageType == MessageTypeImage) {
-            
-        }else if (message.messageType == MessageTypeVideo){
-            
-        }
-        
-    }
-    
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -493,9 +411,10 @@ static int textFiledHeight;
         
         return CELL_ANIMATION_HEIGHT
         + paddingY
-        + [[[textMessage sender] name] getSizeForTextForView:tableView].height + paddingY
-        + [[textMessage text] getSizeForTextForView:tableView].height + paddingY
-        + [@"00:00" getSizeForTextForView:tableView].height;
+        + [[[textMessage sender] name] getSize].height + paddingY
+        + [[textMessage text] getSize].height + paddingY
+        + [@"00:00" getSize].height + paddingY
+        ;
         
     }else if ([message isKindOfClass:MediaMessage.class]){
         
@@ -512,14 +431,14 @@ static int textFiledHeight;
             
         } else if (message.messageType == MessageTypeAudio){
             
-            CGFloat width = self.view.frame.size.width *0.50;
-            CGFloat height = width/2 + paddingY*3;
+            CGFloat width = self.view.frame.size.width/2;
+            CGFloat height = width/2 + CELL_ANIMATION_HEIGHT;
             return height;
         }
     }else if ([message isKindOfClass:ActionMessage.class]){
         
         ActionMessage *action = (ActionMessage *)message;
-        CGSize sizeOfText = [[action message] getSizeForTextForView:tableView];
+        CGSize sizeOfText = [[action message] getSize];
         return sizeOfText.height + paddingY*2;
     }else if ([message isKindOfClass:Call.class]){
         
@@ -734,27 +653,27 @@ static int textFiledHeight;
     
     UIAlertController *attachmentAlert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
     
-    UIAlertAction * sendCameraPics = [UIAlertAction actionWithTitle:@"Take Photo" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction * sendCameraPics = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take Photo", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         
         [Camera PresentMultiCamera:self canEdit:YES];
     }];
     
-    UIAlertAction *photosAndVideos = [UIAlertAction actionWithTitle:@"Choose From Library" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *photosAndVideos = [UIAlertAction actionWithTitle:NSLocalizedString(@"Choose From Library", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         
         [Camera PresentPhotoLibrary:self canEdit:YES];
     }];
     
-    UIAlertAction * sendDocuments = [UIAlertAction actionWithTitle:@"Documents" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction * sendDocuments = [UIAlertAction actionWithTitle:NSLocalizedString(@"Documents", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         
         [self selectDocument];
     }];
-    UIAlertAction * recordAudio = [UIAlertAction actionWithTitle:@"Audio recording" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction * recordAudio = [UIAlertAction actionWithTitle:NSLocalizedString(@"Audio recording", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         
         [self recordAudio];
     }];
     
     
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:(UIAlertActionStyleCancel) handler:nil];
     
     [sendCameraPics setValue:[UIImage imageNamed:@"chat_camera"] forKey:@"image"];
     [photosAndVideos setValue:[UIImage imageNamed:@"chat_picture"] forKey:@"image"];
@@ -810,7 +729,7 @@ static int textFiledHeight;
     audioVisualizerView = [[AudioVisualizerView alloc]initWithFrame:CGRectMake(margin, margin, alertController.view.bounds.size.width - margin * 4.0F, 130.0f)];
     audioVisualizerView.delegate = self;
     [alertController.view addSubview:audioVisualizerView];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {}];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {}];
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:^{}];
 }
@@ -1233,18 +1152,23 @@ static int textFiledHeight;
     }];
 }
 
-- (void)didSelectMediaAtIndexPath:(NSInteger)tag {
-    
+- (void)didSelectMediaAtIndexPath:(NSInteger)tag
+{
+    [self openMediaWithTag:tag];
+}
+
+- (void)didSelectFileAtIndexPath:(NSInteger)tag
+{
+    [self openMediaWithTag:tag];
+}
+-(void)didSelectAudioAtIndexPath:(NSInteger)tag
+{
+    [self openMediaWithTag:tag];
+}
+-(void)openMediaWithTag:(NSInteger)tag
+{
     MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
     previewUrl = [selctedMessage url];
     [self showMediaForIndexPath];
 }
-
-- (void)didSelectFileAtIndexPath:(NSInteger)tag {
-    
-    MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
-    previewUrl = [selctedMessage url];
-    [self showMediaForIndexPath];
-}
-
 @end

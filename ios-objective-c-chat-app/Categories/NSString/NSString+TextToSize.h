@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (TextToSize)
--(CGSize)getSizeForTextForView:(UIView*)view;
+-(CGSize)getSize;
 @end
 
 NS_ASSUME_NONNULL_END

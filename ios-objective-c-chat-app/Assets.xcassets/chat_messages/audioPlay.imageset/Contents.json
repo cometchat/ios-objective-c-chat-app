@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icons8-play-90.png",
+      "filename" : "icons8-play-button-circled-filled-96.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-play-90@2x.png",
+      "filename" : "icons8-play-button-circled-filled-96@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-play-90@3x.png",
+      "filename" : "icons8-play-button-circled-filled-96@3x.png",
       "scale" : "3x"
     }
   ],

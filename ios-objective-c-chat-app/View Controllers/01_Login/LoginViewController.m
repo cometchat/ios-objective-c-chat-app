@@ -56,7 +56,15 @@
          **/
         dispatch_async(dispatch_get_main_queue(), ^{
             [self indicatorstopAnimating];
-            [self presentNext];
+            
+            TabBarViewController *tabbarcontroller  = [self.storyboard instantiateViewControllerWithIdentifier:@"TabBarViewController"];
+            [self presentViewController:tabbarcontroller animated:YES completion:^{
+                
+                [[NSUserDefaults standardUserDefaults]setObject:[user uid] forKey:@LOGGED_IN_USER_ID];
+                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@IS_LOGGED_IN];
+                
+            }];
+            
         });
     } andError:^(CometChatException * _Nonnull error) {
         /**
@@ -66,7 +74,7 @@
             
             [self indicatorstopAnimating];
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:[error errorDescription] preferredStyle:(UIAlertControllerStyleAlert)];
-            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:nil];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle: NSLocalizedString(@"Ok", "") style:(UIAlertActionStyleDefault) handler:nil];
             [alert addAction:ok];
             [self presentViewController:alert animated:YES completion:nil];
         });
@@ -74,19 +82,8 @@
     }];
 }
 
--(void)presentNext
-{
-    TabBarViewController *tabbarcontroller  = [self.storyboard instantiateViewControllerWithIdentifier:@"TabBarViewController"];
-    [self presentViewController:tabbarcontroller animated:YES completion:^{
-        
-        [[NSUserDefaults standardUserDefaults]setObject:[self.userNameField text] forKey:@LOGGED_IN_USER_ID];
-        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@IS_LOGGED_IN];
-        
-    }];
-    
-}
-
 #pragma mark  - Keyboard Delegates
+
 -(void)dismissKeyboard
 {
     [self.view endEditing:YES];
@@ -141,11 +138,10 @@
         _userNameField = [UITextField new];
         _userNameField.delegate = self;
         _userNameField.layer.masksToBounds = YES;
-        _userNameField.placeholder = @"Username ";
+        _userNameField.placeholder = NSLocalizedString(@"Username", "");
         _userNameField.textAlignment = NSTextAlignmentCenter;
         _userNameField.returnKeyType = UIReturnKeyGo;
         [_userNameField becomeFirstResponder];
-//        [_userNameField setBackground:[UIImage imageNamed:@"underline"]];
         [_userNameField setBackgroundColor:[UIColor colorWithRed:220.0/255 green:220.0/255 blue:220.0/255.0 alpha:1.0]];
         _userNameField.layer.cornerRadius = 12.0f;
     }
@@ -155,7 +151,7 @@
     
     if (!_loginButton) {
         _loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [_loginButton setTitle:@"login" forState:UIControlStateNormal];
+        [_loginButton setTitle:NSLocalizedString(@"login", "") forState:UIControlStateNormal];
         [_loginButton.layer setCornerRadius:12.0f];
         [_loginButton setBackgroundColor:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f]];
         [_loginButton setTintColor:[UIColor whiteColor]];
@@ -170,14 +166,14 @@
         _tryADemo = [UILabel new];
         [_tryADemo setUserInteractionEnabled:YES];
         [_tryADemo setFont:[UIFont systemFontOfSize:14.0f]];
-        NSString *someString = @"DON'T HAVE AN ACCOUNT ? TRY A DEMO USER";
+        NSString *someString = NSLocalizedString(@"DON'T HAVE AN ACCOUNT ? TRY A DEMO USER", "");
         [_tryADemo setTextAlignment:NSTextAlignmentCenter];
         NSMutableAttributedString *some = [[NSMutableAttributedString alloc]initWithString: someString];
-        [some addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f] range:[someString rangeOfString:@" TRY A DEMO USER"]];
+        [some addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f] range:[someString rangeOfString:NSLocalizedString(@"TRY A DEMO USER", "")]];
         [_tryADemo setAttributedText:some];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]init];
         [_tryADemo addGestureRecognizer:tap];
-        [tap addTarget:self action:@selector(presentDemoUsers)];
+        [tap addTarget:self action:@selector(showDemoUsers)];
     }
     return _tryADemo;
 }
@@ -324,6 +320,7 @@
 {
     activityIndicator = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
 }
+
 -(void)indicatorstartAnimating
 {
     _userNameField.rightView = activityIndicator;
@@ -340,8 +337,7 @@
     [_userNameField setEnabled:YES];
 }
 
-#pragma mark <UIPopOver Initializations >
--(void)presentDemoUsers{
+-(void)showDemoUsers{
     
     UIBlurEffect * blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     UIVisualEffectView *beView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];

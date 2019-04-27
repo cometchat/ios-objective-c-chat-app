@@ -30,9 +30,9 @@
 -(void)bind:(TextMessage *)messsage withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection
 {
     
-    CGSize senderNameSize  = [[[messsage sender] name] getSizeForTextForView:self];
-    CGSize messageSize     = [[messsage text] getSizeForTextForView:self];
-    CGSize timeSize        = [[[NSString stringWithFormat:@"%ld",(long)[messsage sentAt]] sentAtToTime] getSizeForTextForView:self];
+    CGSize senderNameSize  = [[[messsage sender] name] getSize];
+    CGSize messageSize     = [[messsage text] getSize];
+    CGSize timeSize        = [[[NSString stringWithFormat:@"%ld",(long)[messsage sentAt]] sentAtToTime] getSize];
     
     if (senderNameSize.width > messageSize.width) {
         width = senderNameSize.width;
@@ -44,9 +44,10 @@
     }
     width = width + 28.0f;
     height = paddingY
-            + senderNameSize.height + paddingY
-            + messageSize.height + paddingY*2
-            + paddingY;
+    + senderNameSize.height + paddingY
+    + messageSize.height + paddingY
+    + [@"00:00" getSize].height
+    + paddingY;
     
     NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",[NSString stringWithFormat:@"%f",height],@"height",[NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
     
@@ -83,6 +84,7 @@
             layer.path = [bezierPath CGPath];
             layer.fillColor = [[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1] CGColor];
             [_bubble.layer addSublayer:layer];
+            
             
             
         }
@@ -135,8 +137,8 @@
     NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_senderNameLbl]-|" options:0 metrics:nil views:views];
     NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_messageLbl]-|" options:0 metrics:nil views:views];
     NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_timeLbl]-[_readReceipts]-|" options:0 metrics:nil views:views];
-    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl]-[_messageLbl]-[_timeLbl]" options:0 metrics:nil views:views];
-    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl]-[_messageLbl]-[_readReceipts]" options:0 metrics:nil views:views];
+    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl]-[_messageLbl]-[_timeLbl]|" options:0 metrics:nil views:views];
+    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl]-[_messageLbl]-[_readReceipts]|" options:0 metrics:nil views:views];
     
     [_bubble addConstraints:subViewH1];
     [_bubble addConstraints:subViewH2];
@@ -145,17 +147,22 @@
     [_bubble addConstraints:subViewV2];
     
     
-    _senderNameLbl.text = [[messsage sender] name];
     _messageLbl.text    = [messsage text];
     _timeLbl.text       = [[NSString stringWithFormat:@"%ld",(long)[messsage sentAt]] sentAtToTime];
-
+    
     switch (tailDirection) {
         case MessageBubbleViewButtonTailDirectionRight:
             _senderNameLbl.textColor = [UIColor whiteColor];
             _messageLbl.textColor   = [UIColor whiteColor];
             _timeLbl.textColor      = [UIColor whiteColor];
-            break;
             
+            break;
+        case MessageBubbleViewButtonTailDirectionLeft:
+            
+            if ([messsage receiverType] == ReceiverTypeGroup) {
+                 _senderNameLbl.text = [[messsage sender] name];
+            }           
+            break;
         default:
             break;
     }

@@ -18,7 +18,9 @@
 @end
 
 @implementation ContactsViewController
-
+{
+    User *LOGGED_IN_USER;
+}
 @synthesize contactListArray,userRequest;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,7 +36,7 @@
     [self configureFooterView];
     self.contactListArray = [NSMutableArray new];
     [self fetchNext];
-
+    LOGGED_IN_USER = [CometChat getLoggedInUser];
 }
 -(void)viewWillAppear:(BOOL)animated{
     
@@ -112,52 +114,46 @@
 }
 -(void)fetchNext
 {
+    [[NSOperationQueue new] addOperationWithBlock:^{
+        [self fetchUsers];
+    }];
+}
+-(void)fetchUsers
+{
     
     [userRequest fetchNextOnSuccess:^(NSArray<User *> * contacts) {
         
         if ([contacts count] != 0) {
-            
             [self.contactListArray addObjectsFromArray:contacts];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [__tableView reloadData];
-                _isMoreDataLoading = NO;
-                [_footerActivityIndicatorView stopAnimating];
-                [_backgroundActivityIndicatorView stopAnimating];
-                [_loadingMoreView setHidden:YES];
-            });
+            [self refreshContactsList];
         }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                _isMoreDataLoading = NO;
-                [_footerActivityIndicatorView stopAnimating];
-                [_backgroundActivityIndicatorView stopAnimating];
-                [_loadingMoreView setHidden:YES];
-            });
+            [self refreshContactsList];
         }
         
     } onError:^(CometChatException * error) {
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _isMoreDataLoading = NO;
-            [_footerActivityIndicatorView stopAnimating];
-            [_backgroundActivityIndicatorView stopAnimating];
-            [_loadingMoreView setHidden:YES];
-        });
+        [self refreshContactsList];
         NSLog(@"Error %@",[error errorDescription]);
     }];
+}
+-(void)refreshContactsList
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self._tableView reloadData];
+        self.isMoreDataLoading = NO;
+        [self.footerActivityIndicatorView stopAnimating];
+        [self.backgroundActivityIndicatorView stopAnimating];
+        [self.loadingMoreView setHidden:YES];
+    });
 }
 -(void)viewWillSetupNavigationBar{
     
     if (@available(iOS 11.0, *)) {
         self.navigationController.navigationBar.prefersLargeTitles = YES;
         self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor]};
-        
-    } else {
-        // Fallback on earlier versions
     }
-    
-    self.navigationItem.title = @"Contacts";
-    
+    self.navigationItem.title = NSLocalizedString(@"Contacts", @"");
+
     UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"user_details"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
     [self.navigationItem setRightBarButtonItems:@[user_details]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
@@ -166,14 +162,11 @@
 }
 -(void)showUserDetails
 {
-    
-    User *user = [CometChat getLoggedInUser];
-    
-    if (user) {
+    if (LOGGED_IN_USER) {
         
         InfoPageViewController *infoPage = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
         infoPage.hidesBottomBarWhenPushed = YES;
-        infoPage.appEntity = [[User alloc]initWithUid:[user uid] name:[user name]];
+        infoPage.appEntity = [[User alloc]initWithUid:[LOGGED_IN_USER uid] name:[LOGGED_IN_USER name]];
         [self.navigationController pushViewController:infoPage animated:YES];
     }
 }

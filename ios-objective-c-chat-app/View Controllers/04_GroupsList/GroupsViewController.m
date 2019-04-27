@@ -63,7 +63,7 @@
     [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
     //this view controller can be covered by theUISearchController's view (i.e. search/filter table)
     self.definesPresentationContext = YES;
-    [self.searchController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:@"Active",@"Inactive",nil]];
+    [self.searchController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:NSLocalizedString(@"Participant", @""),NSLocalizedString(@"Blocked User", @""),nil]];
 
     
     //define the frame for the UISearchController's search bar and tint
@@ -157,7 +157,7 @@
         // Fallback on earlier versions
     }
     
-    self.navigationItem.title = @"Groups";
+    self.navigationItem.title = NSLocalizedString(@"Groups", @"");
     UIBarButtonItem *creategroupBtn = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"group_create"] style:UIBarButtonItemStylePlain target:self action:@selector(showAlertSheet:)];
     
     
@@ -232,7 +232,7 @@
             view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, 44.0)];
             [view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20.0, view.frame.size.height - 30.0, 250.0, 25.0)];
-            label.text = [NSString stringWithFormat:@"Joined"];
+            label.text = [NSString stringWithFormat:NSLocalizedString(@"Joined Groups",@"")];
             [label setFont:[UIFont systemFontOfSize:14.0f]];
             [label setTextColor:[UIColor grayColor]];
             [view addSubview:label];
@@ -243,7 +243,7 @@
             view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, 44.0)];
             [view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20.0, view.frame.size.height - 30.0, 250.0, 25.0)];
-            label.text = [NSString stringWithFormat:@"Other"];
+            label.text = [NSString stringWithFormat:NSLocalizedString(@"Other Groups",@"")];
             [label setFont:[UIFont systemFontOfSize:14.0f]];
             [label setTextColor:[UIColor grayColor]];
             [view addSubview:label];
@@ -302,14 +302,14 @@
 }
 -(NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    UITableViewRowAction *join_group = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"JOIN" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    UITableViewRowAction *join_group = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:NSLocalizedString(@"Join", @"") handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         
         [self showAlertForToJoinGroupForIndexPath:indexPath];
         
     }];
     [join_group setBackgroundColor:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f]];
     
-    UITableViewRowAction *leave_group = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"LEAVE" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    UITableViewRowAction *leave_group = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Leave Group", @"") handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         
         [self showAlertForToLeaveGroupAtIndexPath:indexPath];
         
@@ -345,8 +345,8 @@
     Group *group = (Group *)[_unjoinedgroupListArray objectAtIndex:[indexPath row]];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[group name] message:[group name] preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
-    UIAlertAction *join = [UIAlertAction actionWithTitle:@"Join" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"") style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction *join = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         
         [self checkGroupAvailablity:group];
         
@@ -363,9 +363,9 @@
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[group name] message:[group name] preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:(UIAlertActionStyleCancel) handler:nil];
     
-    UIAlertAction *join = [UIAlertAction actionWithTitle:@"Leave" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+    UIAlertAction *join = [UIAlertAction actionWithTitle:NSLocalizedString(@"Leave Group", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         
         [self leaveGroup:(Group *)[self.joinedgroupListArray objectAtIndex:[indexPath row]]];
         
@@ -421,18 +421,18 @@
             break;
         case groupTypePassword:
         {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter Password" message:@"Please Enter Password To Join This Group" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Password", @"") message:NSLocalizedString(@"Kindly, Enter the password to proceed.", @"") preferredStyle:UIAlertControllerStyleAlert];
             
             [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
                 
-                textField.placeholder = @"Password";
+                textField.placeholder = NSLocalizedString(@"Enter Password", @"");
                 textField.clearButtonMode = UITextFieldViewModeWhileEditing;
                 textField.borderStyle = UITextBorderStyleNone;
                 
             }];
             
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:(UIAlertActionStyleCancel) handler:nil];
-            UIAlertAction *join = [UIAlertAction actionWithTitle:@"Join" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:(UIAlertActionStyleCancel) handler:nil];
+            UIAlertAction *join = [UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
                 
                 NSArray *textField = alert.textFields;
                 Password = [NSString stringWithFormat:@"%@",[[textField objectAtIndex:0] text]];

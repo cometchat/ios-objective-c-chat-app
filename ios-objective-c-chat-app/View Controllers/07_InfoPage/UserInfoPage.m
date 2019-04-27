@@ -32,6 +32,7 @@ static NSString *cellIdentifier = @"reuseIdentifier";
         __tableView.estimatedRowHeight = 60;
         __tableView.rowHeight = UITableViewAutomaticDimension;
         __tableView.estimatedSectionFooterHeight = 0.0f;
+        __tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         [__tableView registerClass:EntityDetailsTableViewCell.class forCellReuseIdentifier:EntityDetailsTableViewCell.cellIdentifier];
         [__tableView registerClass:EntityOtherDetailsTableViewCell.class forCellReuseIdentifier:EntityOtherDetailsTableViewCell.cellIdentifier];
@@ -189,11 +190,12 @@ static NSString *cellIdentifier = @"reuseIdentifier";
             EntityOtherDetailsTableViewCell *otherCell = [[EntityOtherDetailsTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[EntityOtherDetailsTableViewCell cellIdentifier]];
             
             
-            if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+            if ([[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID]  isEqualToString:[_user uid]]) {
                 
                 otherCell.alabel.text = [NSString stringWithFormat:@"Logout"];
                 otherCell.alabel.textColor = [UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f];
                 otherCell.alabel.textAlignment = NSTextAlignmentCenter;
+                [otherCell.alabel setFont:[UIFont systemFontOfSize:20]];
                 return otherCell;
             }
             
@@ -207,7 +209,7 @@ static NSString *cellIdentifier = @"reuseIdentifier";
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID]  isEqualToString:[_user uid]]) {
         return 9;
     }
     return 8;
@@ -235,24 +237,23 @@ static NSString *cellIdentifier = @"reuseIdentifier";
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, 44.0)];
-    [view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
+    [view setBackgroundColor:[UIColor whiteColor]];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20.0, view.frame.size.height - 30.0, 250.0, 25.0)];
-    [label setFont:[UIFont systemFontOfSize:14.0f]];
-    [label setTextColor:[UIColor grayColor]];
+    [label setFont:[UIFont systemFontOfSize:20.0f]];
     [view addSubview:label];
     
     switch (section) {
-        case 0: { label.text = [NSString stringWithFormat:@"details:"]; }       break;
-        case 1: { label.text = [NSString stringWithFormat:@"email-id:"]; }      break;
-        case 2: { label.text = [NSString stringWithFormat:@"status:"];}         break;
-        case 3: { label.text = [NSString stringWithFormat:@"role:"]; }          break;
-        case 4: { label.text = [NSString stringWithFormat:@"link:"]; }          break;
-        case 5: { label.text = [NSString stringWithFormat:@"metadata:"]; }      break;
-        case 6: { label.text = [NSString stringWithFormat:@"credits:"]; }       break;
+        case 0: { label.text = [NSString stringWithFormat:@""]; }       break;
+        case 1: { label.text = [NSString stringWithFormat:@"email-id"]; }      break;
+        case 2: { label.text = [NSString stringWithFormat:@"status"];}         break;
+        case 3: { label.text = [NSString stringWithFormat:@"role"]; }          break;
+        case 4: { label.text = [NSString stringWithFormat:@"link"]; }          break;
+        case 5: { label.text = [NSString stringWithFormat:@"metadata"]; }      break;
+        case 6: { label.text = [NSString stringWithFormat:@"credits"]; }       break;
         case 7:
         {
-            if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
-                label.text = [NSString stringWithFormat:@"logout:"];
+            if ([[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID]  isEqualToString:[_user uid]]) {
+                label.text = [NSString stringWithFormat:@"logout"];
             }
             
         }       break;

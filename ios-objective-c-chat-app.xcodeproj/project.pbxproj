@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		23AA61DCC6D5821F0616E026 /* libPods-ios-objective-c-chat-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 476278718998EAEF1F6C4F0B /* libPods-ios-objective-c-chat-app.a */; };
+		E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1067B37226DF9DC00A3237F /* Localizable.strings */; };
 		E106C7BB223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E106C7BA223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m */; };
 		E12220AB2238D5EB006352CB /* ActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = E12220AA2238D5EB006352CB /* ActivityIndicatorView.m */; };
 		E12220B222390DC5006352CB /* AudioVisualizer.m in Sources */ = {isa = PBXBuildFile; fileRef = E12220B122390DC5006352CB /* AudioVisualizer.m */; };
@@ -66,6 +67,10 @@
 		476278718998EAEF1F6C4F0B /* libPods-ios-objective-c-chat-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ios-objective-c-chat-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A1507F2EF92A15B63FBD55C /* Pods-ios-objective-c-chat-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.release.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.release.xcconfig"; sourceTree = "<group>"; };
 		74F3AA24FFAB31656D9279A5 /* Pods-ios-objective-c-chat-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.debug.xcconfig"; sourceTree = "<group>"; };
+		E1067B31226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
+		E1067B32226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		E1067B36226DF9DC00A3237F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E1067B38226DF9E300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E106C7B9223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CallManagerDelegate.h"; sourceTree = "<group>"; };
 		E106C7BA223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+CallManagerDelegate.m"; sourceTree = "<group>"; };
 		E12220A92238D5EB006352CB /* ActivityIndicatorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityIndicatorView.h; sourceTree = "<group>"; };
@@ -365,6 +370,7 @@
 		E1A1C454221AA34100F7076B = {
 			isa = PBXGroup;
 			children = (
+				E1067B37226DF9DC00A3237F /* Localizable.strings */,
 				E1A1C45F221AA34100F7076B /* ios-objective-c-chat-app */,
 				E1A1C45E221AA34100F7076B /* Products */,
 				CB9B4F828EEA244CE303330A /* Pods */,
@@ -679,6 +685,7 @@
 			knownRegions = (
 				en,
 				Base,
+				hi,
 			);
 			mainGroup = E1A1C454221AA34100F7076B;
 			productRefGroup = E1A1C45E221AA34100F7076B /* Products */;
@@ -698,6 +705,7 @@
 				E1A1C46D221AA34100F7076B /* LaunchScreen.storyboard in Resources */,
 				E145B7FF2262085F007E9641 /* NSDate+RelativeTime.bundle in Resources */,
 				E18AB05F2244C4C1007462F1 /* ringtone.caf in Resources */,
+				E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */,
 				E1A1C46A221AA34100F7076B /* Assets.xcassets in Resources */,
 				E1A1C468221AA34100F7076B /* Main.storyboard in Resources */,
 				E1926F20221E4DC700217B92 /* CometChat-info.plist in Resources */,
@@ -814,10 +822,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		E1067B37226DF9DC00A3237F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1067B36226DF9DC00A3237F /* en */,
+				E1067B38226DF9E300A3237F /* hi */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		E1A1C466221AA34100F7076B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				E1A1C467221AA34100F7076B /* Base */,
+				E1067B31226DF95300A3237F /* hi */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -826,6 +844,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				E1A1C46C221AA34100F7076B /* Base */,
+				E1067B32226DF95300A3237F /* hi */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -837,6 +856,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -896,6 +916,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

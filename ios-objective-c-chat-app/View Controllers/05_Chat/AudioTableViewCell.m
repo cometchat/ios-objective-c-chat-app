@@ -37,7 +37,7 @@
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {
     width = self.frame.size.width/2;
-    height = width/4;
+    height = width/2;
     
     layer = [CAShapeLayer new];
     
@@ -75,6 +75,7 @@
             layer.path = [bezierPath CGPath];
             layer.fillColor = [[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1] CGColor];
             [_bubble.layer addSublayer:layer];
+            
         }
             break;
         case MessageBubbleViewButtonTailDirectionLeft:
@@ -105,6 +106,7 @@
             layer.path = [bezierPath CGPath];
             layer.fillColor = [[UIColor colorWithRed:(223.0f/255.0f) green:(222.0f/255.0f) blue:(229.0f/255.0f) alpha:1.0f] CGColor];
             [_bubble.layer addSublayer:layer];
+            [self.audioPlayPause setTintColor:[UIColor blackColor]];
         }
         default:
             break;
@@ -121,11 +123,13 @@
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_senderNameLbl ,_audioPlayPause , _timeLbl , _readReceipts);
     
-    NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_senderNameLbl]-[_audioPlayPause(20)]-|" options:0 metrics:nil views:views];
-    NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_timeLbl]-[_audioPlayPause]-|" options:0 metrics:nil views:views];
-    NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_readReceipts]" options:0 metrics:nil views:views];
-    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_audioPlayPause(20)]-|" options:0 metrics:nil views:views];
-    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl]-[_timeLbl]-[_readReceipts(20)]-|" options:0 metrics:nil views:views];
+    NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_senderNameLbl]-|" options:0 metrics:nil views:views];
+    NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_audioPlayPause]" options:0 metrics:nil views:views];
+    NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(16)-[_timeLbl]-[_readReceipts]-|" options:0 metrics:nil views:views];
+
+    NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl][_audioPlayPause][_timeLbl]-|" options:0 metrics:nil views:views];
+    NSArray *subViewV2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_senderNameLbl][_audioPlayPause][_readReceipts(20)]-|" options:0 metrics:nil views:views];
+    
     
     [_bubble addConstraints:subViewH1];
     [_bubble addConstraints:subViewH2];
@@ -160,10 +164,21 @@
     
     if (!_audioPlayPause) {
         _audioPlayPause = [UIButton new];
-        [_audioPlayPause setImage:[UIImage imageNamed:@"audioPlay"] forState:UIControlStateNormal];
-        [_audioPlayPause setTintColor:[UIColor whiteColor]];
+        
+        UIImage *image = [[UIImage imageNamed:@"audioPlay"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [_audioPlayPause setImage:image forState:UIControlStateNormal];
+        _audioPlayPause.tintColor = [UIColor whiteColor];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImage:)];
+        tap.numberOfTapsRequired = 1;
+        [_audioPlayPause addGestureRecognizer:tap];
     }
     return _audioPlayPause;
+}
+- (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectAudioAtIndexPath:)]) {
+        [_delegate didSelectAudioAtIndexPath:self.tag];
+    }
 }
 -(UILabel*)timeLbl {
     

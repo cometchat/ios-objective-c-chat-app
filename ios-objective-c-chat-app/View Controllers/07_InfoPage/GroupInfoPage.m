@@ -473,7 +473,7 @@
     
     User *_user = (User *)user;
     
-    if ([[[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID] lowercaseString] isEqualToString:[_user uid]]) {
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID]  isEqualToString:[_user uid]]) {
         return ;
     }
     UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

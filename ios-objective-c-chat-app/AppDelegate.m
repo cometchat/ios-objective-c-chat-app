@@ -29,6 +29,7 @@
         
         [self switchViewControllerIfLoggedIn];
         
+        
     } onError:^(CometChatException * error) {
         // Error in init CometChat
         NSLog(@"Error %@",[error errorDescription]);
