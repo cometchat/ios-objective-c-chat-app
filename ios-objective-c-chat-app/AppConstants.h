@@ -22,7 +22,7 @@
 #import "NSString+TextToSize.h"
 #import "NSDate+Utilities.h"
 #import "NSString+sentAtToTime.h"
-#import "CustomTableViewCell.h"
+#import "EntityListTableViewCell.h"
 #import "Avatar.h"
 #import "UITableView+scrollToBottom.h"
 #import "AppDelegate.h"
@@ -43,11 +43,13 @@
 #import "UserInfoPage.h"
 #import "GroupInfoPage.h"
 #import "NSDate+NVTimeAgo.h"
+#import "AppSettings.h"
+
 #endif /* AppConstants_h */
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define API_KEY             "YOUR_API_KEY_HERE"
-#define APP_ID              "YOUR_APP_ID_HERE"
+#define API_KEY             "3de4f1672b44a43f1593ea03a27e3b3202a3869b"
+#define APP_ID              "6e13b23d7a3"
 
 #define IS_LOGGED_IN        "isLoggedin"
 #define LOGGED_IN_USER_ID   "logged_in_user_id"

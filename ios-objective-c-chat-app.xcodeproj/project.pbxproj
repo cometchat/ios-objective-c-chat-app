@@ -36,6 +36,7 @@
 		E18A1D2E223FB7DF00662831 /* NSError+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = E18A1D2D223FB7DF00662831 /* NSError+Util.m */; };
 		E18AB05D2244C284007462F1 /* CallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E18AB05C2244C284007462F1 /* CallManager.m */; };
 		E18AB05F2244C4C1007462F1 /* ringtone.caf in Resources */ = {isa = PBXBuildFile; fileRef = E18AB05E2244C4C1007462F1 /* ringtone.caf */; };
+		E18D5CF722798AF70019A4A2 /* AppSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = E18D5CF622798AF70019A4A2 /* AppSettings.m */; };
 		E1926F20221E4DC700217B92 /* CometChat-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E1926F1F221E4DC700217B92 /* CometChat-info.plist */; };
 		E1926F24221E519000217B92 /* AppTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = E1926F23221E519000217B92 /* AppTheme.m */; };
 		E1926F29221E5F8F00217B92 /* CreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1926F28221E5F8F00217B92 /* CreateGroupViewController.m */; };
@@ -60,7 +61,7 @@
 		E1B7619022377C0C001EF19B /* CometChatProRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B7618F22377C0C001EF19B /* CometChatProRequests.m */; };
 		E1BD24BC22587CB2008BCA2D /* TextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1BD24BA22587CB0008BCA2D /* TextTableViewCell.m */; };
 		E1BD24BF22589E51008BCA2D /* MediaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1BD24BE22589E51008BCA2D /* MediaTableViewCell.m */; };
-		E1EA28AF221BC7390088054D /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EA28AE221BC7390088054D /* CustomTableViewCell.m */; };
+		E1EA28AF221BC7390088054D /* EntityListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1EA28AE221BC7390088054D /* EntityListTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +124,8 @@
 		E18AB05B2244C284007462F1 /* CallManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallManager.h; sourceTree = "<group>"; };
 		E18AB05C2244C284007462F1 /* CallManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CallManager.m; sourceTree = "<group>"; };
 		E18AB05E2244C4C1007462F1 /* ringtone.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ringtone.caf; sourceTree = "<group>"; };
+		E18D5CF522798AF70019A4A2 /* AppSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppSettings.h; sourceTree = "<group>"; };
+		E18D5CF622798AF70019A4A2 /* AppSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppSettings.m; sourceTree = "<group>"; };
 		E1926F1F221E4DC700217B92 /* CometChat-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CometChat-info.plist"; sourceTree = "<group>"; };
 		E1926F22221E519000217B92 /* AppTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppTheme.h; sourceTree = "<group>"; };
 		E1926F23221E519000217B92 /* AppTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppTheme.m; sourceTree = "<group>"; };
@@ -170,8 +173,8 @@
 		E1BD24BB22587CB2008BCA2D /* TextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextTableViewCell.h; sourceTree = "<group>"; };
 		E1BD24BD22589E51008BCA2D /* MediaTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaTableViewCell.h; sourceTree = "<group>"; };
 		E1BD24BE22589E51008BCA2D /* MediaTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaTableViewCell.m; sourceTree = "<group>"; };
-		E1EA28AD221BC7390088054D /* CustomTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
-		E1EA28AE221BC7390088054D /* CustomTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
+		E1EA28AD221BC7390088054D /* EntityListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntityListTableViewCell.h; sourceTree = "<group>"; };
+		E1EA28AE221BC7390088054D /* EntityListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntityListTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -413,6 +416,8 @@
 				E1A1C476221AA56C00F7076B /* AppConstants.h */,
 				E18AB05E2244C4C1007462F1 /* ringtone.caf */,
 				E145B7FE2262085F007E9641 /* NSDate+RelativeTime.bundle */,
+				E18D5CF522798AF70019A4A2 /* AppSettings.h */,
+				E18D5CF622798AF70019A4A2 /* AppSettings.m */,
 			);
 			path = "ios-objective-c-chat-app";
 			sourceTree = "<group>";
@@ -438,8 +443,8 @@
 		E1A1C485221AB7DE00F7076B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E1EA28AD221BC7390088054D /* CustomTableViewCell.h */,
-				E1EA28AE221BC7390088054D /* CustomTableViewCell.m */,
+				E1EA28AD221BC7390088054D /* EntityListTableViewCell.h */,
+				E1EA28AE221BC7390088054D /* EntityListTableViewCell.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -779,6 +784,7 @@
 				E14390092226814700627EA5 /* Avatar.m in Sources */,
 				E18A1D2A223FB6A800662831 /* DownloadManager.m in Sources */,
 				E1A1C48B221AC4E900F7076B /* ListTableViewController.m in Sources */,
+				E18D5CF722798AF70019A4A2 /* AppSettings.m in Sources */,
 				E1BD24BC22587CB2008BCA2D /* TextTableViewCell.m in Sources */,
 				E1A1C462221AA34100F7076B /* AppDelegate.m in Sources */,
 				E1926F24221E519000217B92 /* AppTheme.m in Sources */,
@@ -797,7 +803,7 @@
 				E12220AB2238D5EB006352CB /* ActivityIndicatorView.m in Sources */,
 				E1B6B55A221EA8BD00DFC404 /* MessageBubbleView.m in Sources */,
 				E1A1C484221AB7C300F7076B /* GroupsViewController.m in Sources */,
-				E1EA28AF221BC7390088054D /* CustomTableViewCell.m in Sources */,
+				E1EA28AF221BC7390088054D /* EntityListTableViewCell.m in Sources */,
 				E18992AD22608C61009C2EA3 /* AudioTableViewCell.m in Sources */,
 				E144857B2228068C004B6B78 /* ResultsTableController.m in Sources */,
 				E18992AA226072D1009C2EA3 /* FilesTableViewCell.m in Sources */,

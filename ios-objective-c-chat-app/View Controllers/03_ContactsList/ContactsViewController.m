@@ -20,6 +20,7 @@
 @implementation ContactsViewController
 {
     User *LOGGED_IN_USER;
+    HexToRGBConvertor *hexToRGB;
 }
 @synthesize contactListArray,userRequest;
 - (void)viewDidLoad {
@@ -29,6 +30,10 @@
     
     userRequest = [[[UsersRequestBuilder alloc]initWithLimit:limit] build];
     _resultTableViewController = [ResultsTableController new];
+    hexToRGB = [HexToRGBConvertor new];
+    [self.view setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+    [self.navigationController.navigationBar setBarTintColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+    
     [_resultTableViewController setDelegate:self];
     
     [self setUpActivityIndicatorView];
@@ -58,6 +63,8 @@
     __tableView.estimatedSectionFooterHeight = 0.0f;
     __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     __tableView.backgroundView = _backgroundActivityIndicatorView;
+    [__tableView.layer setCornerRadius:10.0f];
+    [__tableView registerClass:[EntityListTableViewCell class] forCellReuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
     [_backgroundActivityIndicatorView startAnimating];
 
 }
@@ -150,13 +157,14 @@
     
     if (@available(iOS 11.0, *)) {
         self.navigationController.navigationBar.prefersLargeTitles = YES;
-        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor]};
+        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     }
     self.navigationItem.title = NSLocalizedString(@"Contacts", @"");
 
     UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"user_details"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
+    [user_details setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[user_details]];
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
 
 }
@@ -183,10 +191,10 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    CustomTableViewCell *cell = (CustomTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[CustomTableViewCell reuseIdentifier]];
+    EntityListTableViewCell *cell = (EntityListTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[EntityListTableViewCell reuseIdentifier]];
     
-    if (cell == nil) {
-        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[CustomTableViewCell reuseIdentifier]];
+    if (!cell) {
+        cell = [[EntityListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
     }
     [cell bind:[contactListArray objectAtIndex:[indexPath row]] withIndexPath:indexPath];
     return cell;

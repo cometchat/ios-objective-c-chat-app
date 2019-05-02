@@ -70,7 +70,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return @"SELECT DEMO USER TO LOGIN";
+    return @"Demo Users";
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 65.0f;

@@ -18,7 +18,9 @@
 @end
 
 @implementation GroupsViewController
-
+{
+    HexToRGBConvertor *hexToRGB;
+}
 @synthesize groupRequest;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -27,6 +29,9 @@
     _selectedScope = 0 ;
     groupRequest = [[[GroupsRequestBuilder alloc]initWithLimit:limit] build];
     _resultTableViewController = [ResultsTableController new];
+    hexToRGB = [HexToRGBConvertor new];
+    [self.view setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+    [self.navigationController.navigationBar setBarTintColor:[hexToRGB colorWithHexString:@"#2636BE"]];
     [_resultTableViewController setDelegate:self];
     
     self.joinedgroupListArray = [NSMutableArray new];
@@ -52,6 +57,7 @@
     __tableView.estimatedSectionFooterHeight = 0.0f;
     __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     __tableView.backgroundView = _backGroundActivityIndicatorView;
+    [__tableView.layer setCornerRadius:10.0f];
     [_backGroundActivityIndicatorView startAnimating];
 }
 - (void)initializeSearchController {
@@ -151,7 +157,7 @@
     
     if (@available(iOS 11.0, *)) {
         self.navigationController.navigationBar.prefersLargeTitles = YES;
-        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor]};
+        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
         
     } else {
         // Fallback on earlier versions
@@ -160,9 +166,9 @@
     self.navigationItem.title = NSLocalizedString(@"Groups", @"");
     UIBarButtonItem *creategroupBtn = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"group_create"] style:UIBarButtonItemStylePlain target:self action:@selector(showAlertSheet:)];
     
-    
+    [creategroupBtn setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[creategroupBtn]];
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
     
 }
@@ -201,10 +207,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    CustomTableViewCell *cell = (CustomTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[CustomTableViewCell reuseIdentifier]];
+    EntityListTableViewCell *cell = (EntityListTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[EntityListTableViewCell reuseIdentifier]];
     
     if (cell == nil) {
-        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[CustomTableViewCell reuseIdentifier]];
+        cell = [[EntityListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
     }
     
     Group *group;
@@ -236,7 +242,7 @@
             [label setFont:[UIFont systemFontOfSize:14.0f]];
             [label setTextColor:[UIColor grayColor]];
             [view addSubview:label];
-            
+            return view;
             break;
         }
         case 1:{
@@ -247,6 +253,7 @@
             [label setFont:[UIFont systemFontOfSize:14.0f]];
             [label setTextColor:[UIColor grayColor]];
             [view addSubview:label];
+            return view;
             break;
         }
         default:

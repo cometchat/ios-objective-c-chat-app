@@ -30,15 +30,15 @@
 	<key>UIAppearanceColor</key>
 	<dict>
 		<key>NAVIGATION_BAR_COLOR</key>
-		<string>FF4500</string>
+		<string>2636BE</string>
 		<key>NAVIGATION_BAR_TITLE_COLOR</key>
-		<string>FFFFFF</string>
+		<string>2636BE</string>
 		<key>NAVIGATION_BAR_BUTTON_TINT_COLOR</key>
 		<string>FFFFFF</string>
 		<key>BACKGROUND_COLOR</key>
-		<string>FF4500</string>
+		<string>2636BE</string>
 		<key>LOGIN_BUTTON_TINT_COLOR</key>
-		<string>FF4500</string>
+		<string>FFFFFF</string>
 		<key>LOGO_TINT_COLOR</key>
 		<string>FFFFFF</string>
 		<key>RIGHT_BUBBLE_BACKGROUND_COLOR</key>

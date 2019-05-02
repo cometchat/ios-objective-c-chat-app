@@ -10,15 +10,16 @@
 
 @interface TextTableViewCell()
 
-@property (nonatomic ,retain) UIView *bubble;
-@property (nonatomic ,retain) UILabel *senderNameLbl;
-@property (nonatomic ,retain) UILabel *messageLbl;
-@property (nonatomic ,retain) UILabel *timeLbl;
-@property (nonatomic ,retain) UIImageView *readReceipts;
+@property (nonatomic ,retain) UIView        *bubble;
+@property (nonatomic ,retain) UILabel       *senderNameLbl;
+@property (nonatomic ,retain) UILabel       *messageLbl;
+@property (nonatomic ,retain) UILabel       *timeLbl;
+@property (nonatomic ,retain) UIImageView   *readReceipts;
 
 @end
 
-@implementation TextTableViewCell{
+@implementation TextTableViewCell
+{
     
     CGFloat width , height;
     CAShapeLayer *layer;

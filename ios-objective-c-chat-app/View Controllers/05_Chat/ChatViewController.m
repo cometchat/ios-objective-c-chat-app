@@ -92,7 +92,7 @@ static int textFiledHeight;
     
     [self delegate].messagedelegate = self;
     
-    NSInteger limit = 30;
+    NSInteger limit = 4;
     
     _chatEntity = [[ChatEntity alloc]initIMessageWithEntity:appEntity];
     
@@ -132,6 +132,7 @@ static int textFiledHeight;
     [__tableView setBackgroundView:_backgroundActivityIndicatorView];
     [_backgroundActivityIndicatorView startAnimating];
     [self.sendMessageTextView addSubview:self.placeholderLabel];
+    self.sendMessageTextView.returnKeyType = UIReturnKeySend;
     logged_in_user_uid = [[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID];
 }
 - (void)actionCallAudio
@@ -172,7 +173,7 @@ static int textFiledHeight;
     // Initialize the refresh control.
     _refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl addTarget:self
-                        action:@selector(fetchNext)
+                        action:@selector(loadPrevious)
               forControlEvents:UIControlEventValueChanged];
     [__tableView setRefreshControl:_refreshControl];
     [self delegate].usereventdelegate = self;
@@ -180,34 +181,55 @@ static int textFiledHeight;
 -(void)viewWillSetupNavigationBar{
     
     if (@available(iOS 11.0, *)) {
-        self.navigationController.navigationBar.prefersLargeTitles = NO;
-        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor]};
+        self.navigationController.navigationBar.prefersLargeTitles = YES;
+        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
         
     } else {
         // Fallback on earlier versions
     }
     
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     UIBarButtonItem *buttonCallAudio = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callaudio"]
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
     UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
     //    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
     
-    if ([_chatEntity receiverType] == ReceiverTypeUser) {
-        
-        NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-        self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:NSLocalizedString(@"Online", @"")];
-    }else{
-        self.navigationItem.titleView = [self chatTitle:[_chatEntity receiverName] WithUserStatus:@""];
+    if ([_chatEntity receiverType] == ReceiverTypeUser)
+    {
+    }
+    else
+    {
     }
     
 }
-
--(void)fetchNext{
+-(void)loadPrevious{
     
     [_refreshControl beginRefreshing];
+    [messageRequest fetchPreviousOnSuccess:^(NSArray<BaseMessage *> * messages) {
+        
+        if (messages) {
+            NSIndexSet *set = [[NSIndexSet alloc]initWithIndexesInRange:NSMakeRange(0, [messages count])];
+            [messsagesArray insertObjects:messages atIndexes:set];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [__tableView reloadData];
+            [_refreshControl endRefreshing];
+            
+        });
+        
+    } onError:^(CometChatException * error) {
+        
+        NSLog(@"%@",[error errorDescription]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_refreshControl endRefreshing];
+        });
+    }];
+}
+-(void)fetchNext{
+    
     [messageRequest fetchPreviousOnSuccess:^(NSArray<BaseMessage *> * messages) {
         
         if (messages) {
@@ -215,7 +237,6 @@ static int textFiledHeight;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [__tableView reloadData];
-            [_refreshControl endRefreshing];
             [_backgroundActivityIndicatorView stopAnimating];
             
         });
@@ -588,6 +609,25 @@ static int textFiledHeight;
     [CometChat endTypingWithIndicator:endTying];
     
 }
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        NSString *message = _sendMessageTextView.text;
+        if (![message isEqualToString:@""]) {
+            
+            message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [_sendMessageTextView setText:@""];
+            _sendMessageHeightConstraint.constant = textFiledHeight;
+            [_sendMessageTextView layoutIfNeeded];
+            [_sendMessageTextView setNeedsUpdateConstraints];
+            [_wrapperView layoutIfNeeded];
+            [_wrapperView setNeedsUpdateConstraints];
+            [_placeholderLabel setHidden:NO];
+            [self sendMessage:message];
+        }
+    }
+    return YES;
+}
 -(void)textViewDidChange:(UITextView *)textView{
     
     
@@ -835,27 +875,29 @@ static int textFiledHeight;
     
     TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage messageType:MessageTypeText receiverType:[_chatEntity receiverType]];
     
-    [CometChat sendTextMessageWithMessage:message onSuccess:^(TextMessage * sent_message) {
-        
-        [messsagesArray addObject:sent_message];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
+    
+        [CometChat sendTextMessageWithMessage:message onSuccess:^(TextMessage * sent_message) {
             
-            if ([messsagesArray count]) {
+            [messsagesArray addObject:sent_message];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
                 
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
-                [__tableView endUpdates];
-                [__tableView scrollToBottom];
-            }
-        });
-        
-    } onError:^(CometChatException * error) {
-        
-        NSLog(@"Error Sending Text Messages %@",[error errorDescription]);
-        
-    }];
+                if ([messsagesArray count]) {
+                    
+                    [__tableView beginUpdates];
+                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
+                    [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                    [__tableView endUpdates];
+                    [__tableView scrollToBottom];
+                }
+            });
+            
+        } onError:^(CometChatException * error) {
+            
+            NSLog(@"Error Sending Text Messages %@",[error errorDescription]);
+            
+        }];
+    
     message = nil;
 }
 - (void)applicationdidReceiveNewMessage:(BaseMessage *)message {
@@ -902,62 +944,11 @@ static int textFiledHeight;
     
     if ([[[typingIndicator sender] uid] isEqualToString:[_chatEntity receiverId]]) {
         if (isComposing) {
-            self.navigationItem.titleView = [self chatTitle:@"typing..." WithUserStatus:@"online"];
         } else {
-            NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-            self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
         }
     }
 }
--(UIView *)chatTitle:(NSString *)status WithUserStatus:(NSString *)userStatus{
-    
-    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
-    CGFloat width = 0.95 * self.view.frame.size.width;
-    
-    UIView *containerView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, width, navBarHeight)];
-    
-    UILabel *_nameLbl , *_statusLbl;
-    
-    _nameLbl = [[UILabel alloc]initWithFrame:CGRectMake(0.0f, 0.0f, containerView.frame.size.width, containerView.frame.size.height/2)];
-    [_nameLbl setFont:[UIFont boldSystemFontOfSize:14.0f]];
-    _statusLbl = [[UILabel alloc]initWithFrame:CGRectMake(0.0f, _nameLbl.frame.size.height, containerView.frame.size.width, containerView.frame.size.height/2)];
-    [_statusLbl setFont:[UIFont systemFontOfSize:12.0f weight:(UIFontWeightSemibold)]];
-    
-    _statusLbl.text = status;
-    
-    if ([_chatEntity receiverType] == ReceiverTypeUser) {
-        
-        NSTextAttachment *attachment = [NSTextAttachment new];
-        
-        NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
-        NSAttributedString *status = [[NSMutableAttributedString alloc]initWithString: [_chatEntity receiverName]];
-        
-        NSMutableAttributedString *imageString = [[NSMutableAttributedString alloc]initWithAttributedString:status];
-        [imageString appendAttributedString:attachmentString];
-        
-        [imageString appendAttributedString: [[NSAttributedString alloc] initWithString:@" "]];
-        
-        if ([userStatus isEqualToString:@"online"])
-        {
-            [attachment setImage:[UIImage imageNamed:@"user_online"]];
-        }else
-        {
-            [attachment setImage:[UIImage imageNamed:@"user_offline"]];
-        }
-        _nameLbl.attributedText = imageString;
-    }else{
-        _nameLbl.text = [_chatEntity receiverName];
-    }
-    
-    
-    [containerView addSubview:_nameLbl];
-    [containerView addSubview:_statusLbl];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showInfo)];
-    [tap setNumberOfTapsRequired:1];
-    [containerView addGestureRecognizer:tap];
-    return containerView;
-}
+
 -(void)showInfo
 {
     
@@ -1107,13 +1098,8 @@ static int textFiledHeight;
     }
 }
 
--(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
-    
-    NSLog(@"audioPlayerDidFinishPlaying");
-}
 -(void)applicationDidReceiveUserEvent:(User *)user
 {
-    NSLog(@"USER %@",[user stringValue]);
     
     if ([[user uid]isEqualToString:[_chatEntity receiverId]]) {
         
@@ -1121,14 +1107,12 @@ static int textFiledHeight;
                 
             case UserStatusOnline:
             {
-                NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-                self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Online"];
+                
             }
                 break;
             case UserStatusOffline:
             {
-                NSString *time = [[NSString stringWithFormat:@"%@",[_chatEntity lastActiveAt]] sentAtToTime];
-                self.navigationItem.titleView = [self chatTitle:[NSString stringWithFormat:@"last active at %@",time] WithUserStatus:@"Offline"];
+                
             }
                 break;
         }

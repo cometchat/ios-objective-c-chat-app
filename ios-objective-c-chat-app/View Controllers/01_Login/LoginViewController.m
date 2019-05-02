@@ -11,25 +11,26 @@
 
 @interface LoginViewController ()
 @property(strong ,nonatomic) UIView  *holderView;
+@property(strong ,nonatomic) UIView  *imageHolder;
 @property(strong ,nonatomic) UITextField *userNameField;
 @property(strong ,nonatomic) UIButton *loginButton;
 @property(strong ,nonatomic) UIImageView *logoImage;
-@property(strong ,nonatomic) CALayer *border;
 @property(nonatomic ,strong) UILabel *tryADemo;
 @end
 
 @implementation LoginViewController
 {
-     ActivityIndicatorView *activityIndicator;
-     DemoUsersViewController *demousers;
+    ActivityIndicatorView *activityIndicator;
+    DemoUsersViewController *demousers;
+    HexToRGBConvertor *hexToRGB;
 }
 - (void)viewDidLoad
 {
     
     [super viewDidLoad];
     demousers = [[DemoUsersViewController alloc] init];
+    hexToRGB = [HexToRGBConvertor new];
     demousers.delegate = self;
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -73,6 +74,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self indicatorstopAnimating];
+            self.loginButton.backgroundColor = [UIColor redColor];
+            
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:[error errorDescription] preferredStyle:(UIAlertControllerStyleAlert)];
             UIAlertAction *ok = [UIAlertAction actionWithTitle: NSLocalizedString(@"Ok", "") style:(UIAlertActionStyleDefault) handler:nil];
             [alert addAction:ok];
@@ -127,7 +130,7 @@
         _logoImage = [UIImageView new];
         [_logoImage setImage:[UIImage imageNamed:@"cometchat_white"]];
         [_logoImage setImage:[[_logoImage image] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
-        [_logoImage setTintColor:[UIColor darkGrayColor]];
+        [_logoImage setTintColor:[UIColor whiteColor]];
         [_logoImage setContentMode:(UIViewContentModeScaleAspectFit)];
     }
     return _logoImage;
@@ -138,7 +141,7 @@
         _userNameField = [UITextField new];
         _userNameField.delegate = self;
         _userNameField.layer.masksToBounds = YES;
-        _userNameField.placeholder = NSLocalizedString(@"Username", "");
+        _userNameField.placeholder = NSLocalizedString(@"Enter UID", "");
         _userNameField.textAlignment = NSTextAlignmentCenter;
         _userNameField.returnKeyType = UIReturnKeyGo;
         [_userNameField becomeFirstResponder];
@@ -153,7 +156,7 @@
         _loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [_loginButton setTitle:NSLocalizedString(@"login", "") forState:UIControlStateNormal];
         [_loginButton.layer setCornerRadius:12.0f];
-        [_loginButton setBackgroundColor:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f]];
+        [_loginButton setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
         [_loginButton setTintColor:[UIColor whiteColor]];
         [[_loginButton titleLabel] setFont:[UIFont systemFontOfSize:17.0f weight:(UIFontWeightSemibold)]];
         [_loginButton addTarget:self action:@selector(loginButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
@@ -169,7 +172,7 @@
         NSString *someString = NSLocalizedString(@"DON'T HAVE AN ACCOUNT ? TRY A DEMO USER", "");
         [_tryADemo setTextAlignment:NSTextAlignmentCenter];
         NSMutableAttributedString *some = [[NSMutableAttributedString alloc]initWithString: someString];
-        [some addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:0 green:(122.0f/255.0f) blue:1.0f alpha:1.0f] range:[someString rangeOfString:NSLocalizedString(@"TRY A DEMO USER", "")]];
+        [some addAttribute:NSForegroundColorAttributeName value:[hexToRGB colorWithHexString:@"#2636BE"] range:[someString rangeOfString:NSLocalizedString(@"TRY A DEMO USER", "")]];
         [_tryADemo setAttributedText:some];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]init];
         [_tryADemo addGestureRecognizer:tap];
@@ -181,70 +184,60 @@
     
     if (!_holderView) {
         _holderView = [UIView new];
+        [_holderView.layer setCornerRadius:10.0f];
     }
     return _holderView;
 }
--(CALayer *)border{
-    
-    if (!_border) {
-        
-        _border = [CALayer new];
-        
-        _border.cornerRadius = 2.0f;
-        _border.borderWidth = 1.0f;
-        _border.borderColor = [UIColor clearColor].CGColor;
-        _border.masksToBounds = YES;
-        _border.shadowColor = [UIColor lightGrayColor].CGColor;
-        _border.shadowOffset = CGSizeMake(0, 2.0f);
-        _border.shadowRadius = 5.0f;
-        _border.shadowOpacity = 1.0f;
-        _border.masksToBounds = NO;
-        _border.shadowPath = [UIBezierPath bezierPathWithRoundedRect:_holderView.bounds cornerRadius:_border.cornerRadius].CGPath;
-        
+-(UIView *)imageHolder
+{
+    if (!_imageHolder) {
+        _imageHolder = [UIView new];
     }
-    return _border;
+    return _imageHolder;
 }
 -(void)setupsubViews{
     
     [self.contentView addSubview:self.holderView];
+    [self.contentView addSubview:self.imageHolder];
     [_holderView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_imageHolder setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    [self.view setBackgroundColor:[UIColor whiteColor]];
-    [_holderView setBackgroundColor:[UIColor whiteColor]];
+    [_imageHolder addSubview:self.logoImage];
+    [_logoImage setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    [_holderView addSubview:self.logoImage];
     [_holderView addSubview:self.userNameField];
     [_holderView addSubview:self.loginButton];
     [_holderView addSubview:self.tryADemo];
-    
-    [_logoImage setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_userNameField setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_loginButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_tryADemo setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    [self addConstraints];
+    [self.contentView setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+    [self.holderView setBackgroundColor:[UIColor whiteColor]];
+    
+    [self addConstraintsforSize:self.view.frame.size];
 }
--(void)addConstraints
+
+-(void)addConstraintsforSize:(CGSize)size
 {
     
-    CGFloat height = IS_IPAD?(self.view.frame.size.height) * 73/100:self.view.frame.size.height;
-    CGFloat width  = IS_IPAD?(self.view.frame.size.width) * 69/100:self.view.frame.size.width;
+    CGFloat height = IS_IPAD?(size.height) * 73/100:size.height;
+    CGFloat width  = IS_IPAD?(size.width) * 69/100:size.width;
     
-    NSLayoutConstraint *centerX = [NSLayoutConstraint constraintWithItem:_holderView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0.0f];
-    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:_holderView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0.0f];
+    NSDictionary *views = NSDictionaryOfVariableBindings(_userNameField,_loginButton,_tryADemo,_holderView,_imageHolder);
     
-    NSLayoutConstraint *heightForView = [NSLayoutConstraint constraintWithItem:_holderView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:height];
-    NSLayoutConstraint *widthForView = [NSLayoutConstraint constraintWithItem:_holderView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:width];
-    
-    [self.contentView addConstraints:@[centerX, centerY]];
-    [self.contentView addConstraints:@[heightForView, widthForView]];
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_logoImage,_userNameField,_loginButton,_tryADemo);
-    
-    if ([[UIApplication sharedApplication]statusBarOrientation] == UIInterfaceOrientationPortrait) {
+    if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait || [[UIDevice currentDevice] orientation] == UIDeviceOrientationUnknown) {
         
-        CGFloat _logoImageWidth = width - paddingX*2;
-        CGFloat _logoImageHeight = height/3;
+        
+        NSArray *horizonatal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_imageHolder]|" options:0 metrics:nil views:views];
+        NSArray *horizonatal2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_holderView]|" options:0 metrics:nil views:views];
+        NSArray *vertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(16)-[_imageHolder]-(20)-[_holderView]-(-5)-|" options:0 metrics:nil views:views];
+        
+        [self.contentView addConstraints:horizonatal];
+        [self.contentView addConstraints:horizonatal2];
+        [self.contentView addConstraints:vertical];
+        
+        
         CGFloat textFieldWidth = width*0.50;
         CGFloat textfieldHeight = 50;
         CGFloat _loginButtonWidth = textFieldWidth ;
@@ -253,8 +246,6 @@
         CGFloat verticalSpacing = height * 0.15;
         
         NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 [NSString stringWithFormat:@"%f",_logoImageWidth],@"_logoImageWidth",
-                                 [NSString stringWithFormat:@"%f",_logoImageHeight],@"_logoImageHeight",
                                  [NSString stringWithFormat:@"%f",textFieldWidth],@"textFieldWidth",
                                  [NSString stringWithFormat:@"%f",textfieldHeight],@"textfieldHeight",
                                  [NSString stringWithFormat:@"%f",_loginButtonWidth],@"_loginButtonWidth",
@@ -262,57 +253,69 @@
                                  [NSString stringWithFormat:@"%f",horizntalSpacing],@"horizntalSpacing",
                                  [NSString stringWithFormat:@"%f",verticalSpacing],@"verticalSpacing",nil];
         
-        NSArray *verticalConstraints =[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_logoImage(_logoImageHeight)]-(40)-[_userNameField(textfieldHeight)]-(16)-[_loginButton(_loginButtonHeight)]-(16)-[_tryADemo]-(verticalSpacing)-|"  options:0 metrics:metrics views:views];
+        NSArray *verticalConstraints =[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(verticalSpacing)-[_userNameField(textfieldHeight)]-(16)-[_loginButton(_loginButtonHeight)]-(16)-[_tryADemo]-(verticalSpacing)-|"  options:0 metrics:metrics views:views];
         
         
-        NSArray *horizontalConstraints1 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_logoImage(_logoImageWidth)]-|"  options:0 metrics:metrics views:views];
         NSArray *horizontalConstraints2 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_userNameField]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
         
         NSArray *horizontalConstraints3 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_loginButton]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
         NSArray *horizontalConstraints4 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_tryADemo]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
         
-        [_holderView addConstraints:horizontalConstraints1];
         [_holderView addConstraints:horizontalConstraints2];
         [_holderView addConstraints:horizontalConstraints3];
         [_holderView addConstraints:horizontalConstraints4];
         [_holderView addConstraints:verticalConstraints];
         
+        [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeWidth) relatedBy:(NSLayoutRelationEqual) toItem:nil attribute:(NSLayoutAttributeWidth) multiplier:1 constant:width/3]];
+        [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeHeight) relatedBy:(NSLayoutRelationEqual) toItem:nil attribute:(NSLayoutAttributeHeight) multiplier:1 constant:width/3]];
+        
     } else {
         
-        CGFloat _logoImageWidth = width *30/100;
-        CGFloat _logoImageHeight = height - paddingY*2;
-        CGFloat textFieldWidth = width* 70/100 - paddingX*9;
-        CGFloat textfieldHeight = 40;
+        CGFloat textFieldWidth = width*0.50;
+        CGFloat textfieldHeight = 50;
         CGFloat _loginButtonWidth = textFieldWidth ;
-        CGFloat _loginButtonHeight = 40;
+        CGFloat _loginButtonHeight = 50;
         CGFloat horizntalSpacing = paddingX*3;
         CGFloat verticalSpacingFortextField = height * 30/100;
+        CGFloat imageHolderWidth = width*0.30;
+        CGFloat holderViewWidth = width*0.70 - paddingX*2;
         
         NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 [NSString stringWithFormat:@"%f",_logoImageWidth],@"_logoImageWidth",
-                                 [NSString stringWithFormat:@"%f",_logoImageHeight],@"_logoImageHeight",
                                  [NSString stringWithFormat:@"%f",textFieldWidth],@"textFieldWidth",
                                  [NSString stringWithFormat:@"%f",textfieldHeight],@"textfieldHeight",
                                  [NSString stringWithFormat:@"%f",_loginButtonWidth],@"_loginButtonWidth",
                                  [NSString stringWithFormat:@"%f",_loginButtonHeight],@"_loginButtonHeight",
                                  [NSString stringWithFormat:@"%f",horizntalSpacing],@"horizntalSpacing",
-                                 [NSString stringWithFormat:@"%f",verticalSpacingFortextField],@"verticalSpacingFortextField",nil];
+                                 [NSString stringWithFormat:@"%f",verticalSpacingFortextField],@"verticalSpacingFortextField",
+                                 [NSString stringWithFormat:@"%f",imageHolderWidth],@"imageHolderWidth",
+                                 [NSString stringWithFormat:@"%f",holderViewWidth],@"holderViewWidth",nil];
         
         
-        NSArray *verticalConstraints1 =[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_logoImage(_logoImageHeight)]-|"  options:0 metrics:metrics views:views];
+        NSArray *horizonatal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_imageHolder(imageHolderWidth)]-[_holderView(holderViewWidth)]|" options:0 metrics:metrics views:views];
+        NSArray *vertical1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_imageHolder]|" options:0 metrics:nil views:views];
+        NSArray *vertical2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_holderView]|" options:0 metrics:nil views:views];
+        
+        [self.contentView addConstraints:horizonatal];
+        [self.contentView addConstraints:vertical1];
+        [self.contentView addConstraints:vertical2];
         
         NSArray *verticalConstraints2 =[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(verticalSpacingFortextField)-[_userNameField(textfieldHeight)]-(16)-[_loginButton(_loginButtonHeight)]-(16)-[_tryADemo]"  options:0 metrics:metrics views:views];
         
-        NSArray *horizontalConstraints1 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_logoImage(_logoImageWidth)]-(horizntalSpacing)-[_userNameField(textFieldWidth)]-|"  options:0 metrics:metrics views:views];
-        NSArray *horizontalConstraints2 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_logoImage(_logoImageWidth)]-(horizntalSpacing)-[_loginButton(_loginButtonWidth)]-|"  options:0 metrics:metrics views:views];
-        NSArray *horizontalConstraints3 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_logoImage(_logoImageWidth)]-(horizntalSpacing)-[_tryADemo(_loginButtonWidth)]-|"  options:0 metrics:metrics views:views];
+        NSArray *horizontalConstraints1 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_userNameField]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
+        NSArray *horizontalConstraints2 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_loginButton]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
+        NSArray *horizontalConstraints3 =[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(horizntalSpacing)-[_tryADemo]-(horizntalSpacing)-|"  options:0 metrics:metrics views:views];
         
         [_holderView addConstraints:horizontalConstraints1];
         [_holderView addConstraints:horizontalConstraints2];
         [_holderView addConstraints:horizontalConstraints3];
-        [_holderView addConstraints:verticalConstraints1];
         [_holderView addConstraints:verticalConstraints2];
+        
+        [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeWidth) relatedBy:(NSLayoutRelationEqual) toItem:nil attribute:(NSLayoutAttributeWidth) multiplier:1 constant:height/3]];
+        [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeHeight) relatedBy:(NSLayoutRelationEqual) toItem:nil attribute:(NSLayoutAttributeHeight) multiplier:1 constant:height/3]];
     }
+    
+    [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeCenterX) relatedBy:(NSLayoutRelationEqual) toItem:self.imageHolder attribute:(NSLayoutAttributeCenterX) multiplier:1 constant:0]];
+    [self.imageHolder addConstraint:[NSLayoutConstraint constraintWithItem:self.logoImage attribute:(NSLayoutAttributeCenterY) relatedBy:(NSLayoutRelationEqual) toItem:self.imageHolder attribute:(NSLayoutAttributeCenterY) multiplier:1 constant:0]];
     
 }
 
@@ -354,23 +357,21 @@
 }
 -(void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.contentView removeConstraints:self.contentView.constraints];
-        [self.holderView removeConstraints:self.holderView.constraints];
-        [self addConstraints];
-    }];
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
 }
--(void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    [self.border removeFromSuperlayer];
-    [_holderView.layer addSublayer:_border];
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
 -(void)selectedUser:(DemoUser *)user{
     
     [_userNameField setText:[user uid]];
+}
+-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        [self.contentView removeConstraints:self.contentView.constraints];
+        [self.holderView removeConstraints:self.holderView.constraints];
+        [self.imageHolder removeConstraints:self.imageHolder.constraints];
+        [self addConstraintsforSize:size];
+    }];
 }
 
 -(void)dealloc
