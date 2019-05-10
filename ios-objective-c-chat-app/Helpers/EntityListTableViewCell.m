@@ -134,21 +134,25 @@
         switch ([person status]) {
                 
             case UserStatusOnline:
+                
+                {
+                    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                    attachment.image = [UIImage imageNamed:@"user_online"];
+                    CGFloat imageOffsetY = -2.0;
+                    attachment.bounds = CGRectMake(5, imageOffsetY, attachment.image.size.width, attachment.image.size.height);
+                    
+                    NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
+                    
+                    NSMutableAttributedString *online= [[NSMutableAttributedString alloc] initWithString:@"\tOnline"];
+                    
+                    NSMutableAttributedString *attributedString = [NSMutableAttributedString new];
+                    
+                    [attributedString appendAttributedString:attachmentString];
+                    [attributedString appendAttributedString:online];
+                    
+                    self.detailsLabel.attributedText = attributedString;
+                }
             
-            {
-                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-                attachment.image = [UIImage imageNamed:@"user_online"];
-                CGFloat imageOffsetY = -2.0;
-                attachment.bounds = CGRectMake(5, imageOffsetY, attachment.image.size.width, attachment.image.size.height);
-                
-                NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
-                
-                NSMutableAttributedString *myString= [[NSMutableAttributedString alloc] initWithString:@"Online"];
-                [myString appendAttributedString:attachmentString];
-                
-                
-                self.detailsLabel.attributedText = myString;
-            }
                 break;
             case UserStatusOffline:
             
@@ -160,11 +164,14 @@
 
                 NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
                 
-                NSMutableAttributedString *myString= [[NSMutableAttributedString alloc] initWithString:@"Offline"];
-                [myString appendAttributedString:attachmentString];
+                NSMutableAttributedString *offline= [[NSMutableAttributedString alloc] initWithString:@"\tOffline"];
                 
+                NSMutableAttributedString *attributedString = [NSMutableAttributedString new];
+                
+                [attributedString appendAttributedString:attachmentString];
+                [attributedString appendAttributedString:offline];
 
-                self.detailsLabel.attributedText = myString;
+                self.detailsLabel.attributedText = attributedString;
             }
                 break;
         }

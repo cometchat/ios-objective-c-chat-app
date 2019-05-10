@@ -43,7 +43,6 @@ static NSString *cellIdentifier = @"reuseIdentifier";
 {
     [CometChat logoutOnSuccess:^(NSString * _Nonnull isSuccess) {
         
-        NSLog(@"%@",isSuccess);
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         
         LoginViewController *lg = [sb instantiateViewControllerWithIdentifier:@"LoginViewController"];
@@ -103,7 +102,7 @@ static NSString *cellIdentifier = @"reuseIdentifier";
             
             [entityCell setNeedsLayout];
             [entityCell layoutIfNeeded];
-            
+            [entityCell setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
             return entityCell;
         }
             
@@ -232,7 +231,15 @@ static NSString *cellIdentifier = @"reuseIdentifier";
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 44.0f;
+    switch (section) {
+        case 0:
+            return 0.0f;
+            break;
+        default:
+            return 44.0f;
+            break;
+    }
+    return 0.0f;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     

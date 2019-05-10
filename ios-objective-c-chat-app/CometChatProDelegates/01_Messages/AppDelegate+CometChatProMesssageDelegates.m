@@ -41,4 +41,18 @@
         [self.messagedelegate applicationDidReceivedisTypingEvent:typingDetails isComposing:NO];
     }
 }
+-(void)onMessageDeliveredWithReceipt:(MessageReceipt *)receipt
+{
+    if (self.messagedelegate && [self.messagedelegate respondsToSelector:@selector(applicationDidReceivedReadAndDeliveryReceipts:)]) {
+        
+        [self.messagedelegate applicationDidReceivedReadAndDeliveryReceipts:receipt];
+    }
+}
+-(void)onMessageReadWithReceipt:(MessageReceipt *)receipt
+{
+    if (self.messagedelegate && [self.messagedelegate respondsToSelector:@selector(applicationDidReceivedReadAndDeliveryReceipts:)]) {
+        
+        [self.messagedelegate applicationDidReceivedReadAndDeliveryReceipts:receipt];
+    }
+}
 @end

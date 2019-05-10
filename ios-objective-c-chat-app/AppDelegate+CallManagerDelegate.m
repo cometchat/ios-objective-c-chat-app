@@ -21,7 +21,7 @@
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             
-            [CometChat startCallWithSessionID:[answered_call sessionID] inView:[[self topMostController] view] userJoined:^(User * joined_user) {
+            [CometChat startCallWithSessionID:[answered_call sessionID] inView:[self topMostView] userJoined:^(User * joined_user) {
                 
                 NSLog(@"%@",[joined_user stringValue]);
                 
@@ -66,18 +66,5 @@
     
     NSLog(@"failedCall :- %@",[failedCall stringValue]);
 }
-- (UIViewController*) topMostController {
-    
-    __block UIViewController *topController;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        topController = [UIApplication sharedApplication].keyWindow.rootViewController;
-        while (topController.presentedViewController) {
-            topController = topController.presentedViewController;
-        }
-    });
-    return topController;
-}
-@end
 
+@end

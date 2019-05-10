@@ -92,7 +92,7 @@ static int textFiledHeight;
     
     [self delegate].messagedelegate = self;
     
-    NSInteger limit = 4;
+    NSInteger limit = 50;
     
     _chatEntity = [[ChatEntity alloc]initIMessageWithEntity:appEntity];
     
@@ -135,6 +135,12 @@ static int textFiledHeight;
     self.sendMessageTextView.returnKeyType = UIReturnKeySend;
     logged_in_user_uid = [[NSUserDefaults standardUserDefaults]objectForKey:@LOGGED_IN_USER_ID];
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    TypingIndicator *endTying = [[TypingIndicator alloc]initWithReceiverID:[_chatEntity receiverId] receiverType: [_chatEntity receiverType]];
+    [CometChat endTypingWithIndicator:endTying];
+}
 - (void)actionCallAudio
 {
     Call *outgoingcall = [[Call alloc]initWithReceiverId:[_chatEntity receiverId] callType:CallTypeAudio receiverType:[_chatEntity receiverType]];
@@ -157,6 +163,7 @@ static int textFiledHeight;
     [CometChat initiateCallWithCall:outgoingcall onSuccess:^(Call * _Nullable outgoing_call) {
         
         // show UIViewController Call screen , so the user can cancel the ongoin call //
+        [[CallManager sharedInstance] reportOutGoingCall:outgoingcall forEntity:[self->_chatEntity entity]];
         
     } onError:^(CometChatException * _Nullable error) {
         
@@ -181,7 +188,7 @@ static int textFiledHeight;
 -(void)viewWillSetupNavigationBar{
     
     if (@available(iOS 11.0, *)) {
-        self.navigationController.navigationBar.prefersLargeTitles = YES;
+        self.navigationController.navigationBar.prefersLargeTitles = NO;
         self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
         
     } else {
@@ -191,17 +198,22 @@ static int textFiledHeight;
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-    UIBarButtonItem *buttonCallAudio = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callaudio"]
-                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
-    UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
-                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
-    //    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
+//    UIBarButtonItem *buttonCallAudio = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callaudio"]
+//                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
+//    UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
+//                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
+//    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
     
     if ([_chatEntity receiverType] == ReceiverTypeUser)
     {
+        UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[[_chatEntity lastActiveAt] sentAtToTime]];
+        [self.navigationItem setTitleView:new];
+        // set up naviagtion bar with typing indicator and title "USER"
     }
     else
     {
+        UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:nil];
+        [self.navigationItem setTitleView:new];
     }
     
 }
@@ -213,6 +225,9 @@ static int textFiledHeight;
         if (messages) {
             NSIndexSet *set = [[NSIndexSet alloc]initWithIndexesInRange:NSMakeRange(0, [messages count])];
             [messsagesArray insertObjects:messages atIndexes:set];
+            for (BaseMessage *object in messages) {
+                [CometChat markMessageAsReadWithMessage:object];
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [__tableView reloadData];
@@ -234,6 +249,10 @@ static int textFiledHeight;
         
         if (messages) {
             [messsagesArray addObjectsFromArray:messages];
+            
+            for (BaseMessage *object in messages) {
+                [CometChat markMessageAsReadWithMessage:object];
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [__tableView reloadData];
@@ -354,7 +373,7 @@ static int textFiledHeight;
             }
         }
         if (message.messageType == MessageTypeAudio) {
-        
+            
             AudioTableViewCell *audioCell = [[AudioTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[AudioTableViewCell reuseIdentifier]];
             audioCell.delegate = self ;
             
@@ -430,31 +449,83 @@ static int textFiledHeight;
         
         TextMessage *textMessage = (TextMessage *)message;
         
-        return CELL_ANIMATION_HEIGHT
-        + paddingY
-        + [[[textMessage sender] name] getSize].height + paddingY
-        + [[textMessage text] getSize].height + paddingY
-        + [@"00:00" getSize].height + paddingY
-        ;
+        if ([[textMessage senderUid] isEqualToString:logged_in_user_uid]) {
+            
+            return CELL_ANIMATION_HEIGHT
+            + [[[textMessage sender] name] getSize].height
+            + [[textMessage text] getSize].height ;
+        } else {
+            
+            return CELL_ANIMATION_HEIGHT
+            + paddingY * 2
+            + [[[textMessage sender] name] getSize].height
+            + [[textMessage text] getSize].height ;
+        }
         
     }else if ([message isKindOfClass:MediaMessage.class]){
         
         if (message.messageType == MessageTypeFile) {
             
-            CGFloat width = self.view.frame.size.width *40/100;
-            return width + paddingY*2;
+            if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
+                
+                CGFloat width = self.view.frame.size.width *0.40;
+                return width*0.40f;
+                
+            } else {
+                
+                if ([message receiverType] == ReceiverTypeUser) {
+                    
+                    CGFloat width = self.view.frame.size.width *40/100;
+                    return width*0.40f;
+                } else {
+                    
+                    CGFloat width = self.view.frame.size.width *40/100;
+                    return width*0.40f + paddingY*2;
+                }
+            }
+            
             
         }else if (message.messageType == MessageTypeVideo || message.messageType == MessageTypeImage){
             
-            CGFloat width = self.view.frame.size.width *0.66;
-            CGFloat height = width/0.75;
-            return paddingY*2 + height;
+            if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
+                
+                CGFloat width = self.view.frame.size.width *0.50;
+                CGFloat height = width/0.75;
+                return height;
+                
+            } else {
+                
+                if ([message receiverType] == ReceiverTypeUser) {
+                    CGFloat width = self.view.frame.size.width *0.66;
+                    CGFloat height = width/0.75;
+                    return  height;
+                } else {
+                    CGFloat width = self.view.frame.size.width *0.66;
+                    CGFloat height = width/0.75;
+                    return paddingY*2 + height; // added height for sender name
+                }
+            }
+            
             
         } else if (message.messageType == MessageTypeAudio){
             
-            CGFloat width = self.view.frame.size.width/2;
-            CGFloat height = width/2 + CELL_ANIMATION_HEIGHT;
-            return height;
+            if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
+                
+                CGFloat width = self.view.frame.size.width *0.40;
+                return width*0.40f;
+                
+            } else {
+                
+                if ([message receiverType] == ReceiverTypeUser) {
+                    
+                    CGFloat width = self.view.frame.size.width *40/100;
+                    return width*0.40f;
+                } else {
+                    
+                    CGFloat width = self.view.frame.size.width *40/100;
+                    return width*0.40f + paddingY*2;
+                }
+            }
         }
     }else if ([message isKindOfClass:ActionMessage.class]){
         
@@ -463,9 +534,9 @@ static int textFiledHeight;
         return sizeOfText.height + paddingY*2;
     }else if ([message isKindOfClass:Call.class]){
         
-        CGFloat width = self.view.frame.size.width *0.10;
+        CGFloat width = self.view.frame.size.width *0.20;
         CGFloat height = width/2;
-        return height + 10.0f;
+        return height + paddingX*2;
     }
     
     return 0.0f;
@@ -596,7 +667,6 @@ static int textFiledHeight;
     if (![textView.text isEqualToString:@""]) {
         _placeholderLabel.hidden = YES;
     }
-    
     return YES;
 }
 -(void)textViewDidEndEditing:(UITextView *)textView{
@@ -846,11 +916,15 @@ static int textFiledHeight;
 }
 -(void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url{
     
-    NSLog(@"THIS IS IT %@",url);
     
     MediaMessage *fileMessage = [[MediaMessage alloc]initWithReceiverUid:_chatEntity.receiverId fileurl:url.absoluteString messageType:MessageTypeFile receiverType:_chatEntity.receiverType];
     
+    [fileMessage setMetaData:[NSDictionary dictionaryWithObjectsAndKeys:[url lastPathComponent],@"fileName",nil]];
+    
     [CometChat sendMediaMessageWithMessage:fileMessage onSuccess:^(MediaMessage * sent_message) {
+        
+        
+        NSLog(@"asdad %@",[sent_message stringValue]);
         
         [messsagesArray addObject:sent_message];
         
@@ -876,27 +950,30 @@ static int textFiledHeight;
     TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage messageType:MessageTypeText receiverType:[_chatEntity receiverType]];
     
     
-        [CometChat sendTextMessageWithMessage:message onSuccess:^(TextMessage * sent_message) {
+    [CometChat sendTextMessageWithMessage:message onSuccess:^(TextMessage * sent_message) {
+        
+        
+        NSLog(@"sent message %@",[sent_message stringValue]);
+        
+        [messsagesArray addObject:sent_message];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            [messsagesArray addObject:sent_message];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+            if ([messsagesArray count]) {
                 
-                if ([messsagesArray count]) {
-                    
-                    [__tableView beginUpdates];
-                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                    [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
-                    [__tableView endUpdates];
-                    [__tableView scrollToBottom];
-                }
-            });
-            
-        } onError:^(CometChatException * error) {
-            
-            NSLog(@"Error Sending Text Messages %@",[error errorDescription]);
-            
-        }];
+                [__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
+                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [__tableView endUpdates];
+                [__tableView scrollToBottom];
+            }
+        });
+        
+    } onError:^(CometChatException * error) {
+        
+        NSLog(@"Error Sending Text Messages %@",[error errorDescription]);
+        
+    }];
     
     message = nil;
 }
@@ -913,28 +990,32 @@ static int textFiledHeight;
                 
                 [__tableView beginUpdates];
                 NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
                 [__tableView endUpdates];
                 [__tableView scrollToBottom];
+                [CometChat markMessageAsReadWithMessage:message];
             }
             
         }
     } else if ([appEntity isKindOfClass:Group.class]) {
         
         Group *group = (Group *)appEntity;
-        if ([[message senderUid] isEqualToString:[group guid]]) {
+        if ([[message receiverUid] isEqualToString:[group guid]]) {
             
             [messsagesArray addObject:message];
             if ([messsagesArray count]) {
                 
                 [__tableView beginUpdates];
                 NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
                 [__tableView endUpdates];
                 [__tableView scrollToBottom];
+                [CometChat markMessageAsReadWithMessage:message];
             }
         }
     }
+    
+    
 }
 
 -(void)applicationDidReceivedisTypingEvent:(TypingIndicator *)typingIndicator isComposing:(BOOL)isComposing
@@ -944,11 +1025,53 @@ static int textFiledHeight;
     
     if ([[[typingIndicator sender] uid] isEqualToString:[_chatEntity receiverId]]) {
         if (isComposing) {
+            UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Typing.."];
+            [self.navigationItem setTitleView:new];
         } else {
+            
+            NSString *lastActiveAt = [NSString stringWithFormat:@"%f",[[typingIndicator sender] lastActiveAt]];
+            UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[lastActiveAt sentAtToTime]];
+            [self.navigationItem setTitleView:new];
         }
     }
 }
 
+- (void)applicationDidReceivedReadAndDeliveryReceipts:(MessageReceipt *)receipts {
+    
+    if ([[[receipts sender] uid] isEqualToString:[_chatEntity receiverId]]){
+        
+        NSPredicate *findMessage = [NSPredicate predicateWithBlock: ^BOOL(BaseMessage* obj, NSDictionary *bind){
+            return  obj.id == [[receipts messageId] integerValue];
+        }];
+        
+        NSArray <BaseMessage *> *messages = [messsagesArray filteredArrayUsingPredicate: findMessage];
+        if ([messages count] == 1) {
+            
+            BaseMessage *originalMessage = [messsagesArray objectAtIndex:[messsagesArray indexOfObject:[messages objectAtIndex:0]]];
+            BaseMessage *original = [messsagesArray objectAtIndex:[messsagesArray indexOfObject:[messages objectAtIndex:0]]];
+            switch ([receipts receiptType])
+            {
+                    
+                case ReceiptTypeDelivered:
+                    originalMessage.deliveredAt = [receipts timeStamp];
+                    break;
+                case ReceiptTypeRead:
+                    originalMessage.readAt = [receipts timeStamp];
+                    break;
+            }
+            
+            [messsagesArray replaceObjectAtIndex:[messsagesArray indexOfObject:original] withObject:originalMessage];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
+                [__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
+                [__tableView endUpdates];
+            });
+        }
+    }
+}
 -(void)showInfo
 {
     
@@ -1065,7 +1188,10 @@ static int textFiledHeight;
             
             if ([messsagesArray count]) {
                 
-                [__tableView reloadData];
+                [__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
+                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [__tableView endUpdates];
                 [__tableView scrollToBottom];
             }
         });
@@ -1107,17 +1233,17 @@ static int textFiledHeight;
                 
             case UserStatusOnline:
             {
-                
+                UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Online"];
+                [self.navigationItem setTitleView:new];
             }
                 break;
             case UserStatusOffline:
             {
-                
+                UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Offline"];
+                [self.navigationItem setTitleView:new];
             }
                 break;
         }
-        
-        
     }
 }
 /*pop up Animation*/
@@ -1154,5 +1280,46 @@ static int textFiledHeight;
     MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
     previewUrl = [selctedMessage url];
     [self showMediaForIndexPath];
+}
+-(UIView *)naviagtionTitle:(NSString *)name WithStatus:(NSString *)status
+{
+    
+    
+    UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, self.navigationController.navigationBar.frame.size.width - 44.0f, self.navigationController.navigationBar.frame.size.height )];
+    
+    UILabel *nameLbl = [UILabel new];
+    nameLbl.textColor = [UIColor whiteColor];
+    [nameLbl setFont:[UIFont systemFontOfSize:14.0f weight:(UIFontWeightSemibold)]];
+    nameLbl.textAlignment = NSTextAlignmentCenter;
+    
+    UILabel *statusLbl = [UILabel new];
+    statusLbl.textColor = [UIColor whiteColor];
+    [statusLbl setFont:[UIFont systemFontOfSize:12.0f]];
+    statusLbl.textAlignment = NSTextAlignmentCenter;
+    
+    [titleView addSubview:nameLbl];
+    [nameLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [titleView addSubview:statusLbl];
+    [statusLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(nameLbl,statusLbl);
+    
+    NSArray *h1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[nameLbl]|" options:0 metrics:nil views:views];
+    NSArray *h2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[statusLbl]|" options:0 metrics:nil views:views];
+    NSArray *v = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[nameLbl][statusLbl]|" options:0 metrics:nil views:views];
+    
+    [titleView addConstraints:h1];
+    [titleView addConstraints:h2];
+    [titleView addConstraints:v];
+    
+    
+    nameLbl.text = name;
+    statusLbl.text = status;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showInfo)];
+    [tap setNumberOfTapsRequired:1];
+    [titleView addGestureRecognizer:tap];
+    
+    return titleView;
 }
 @end

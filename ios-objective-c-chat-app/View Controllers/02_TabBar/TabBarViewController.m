@@ -12,10 +12,15 @@
 @end
 
 @implementation TabBarViewController
-
+{
+    HexToRGBConvertor *hexToRgb;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [[UITabBar appearance] setTintColor:[UIColor redColor]];
+    
+    hexToRgb = [HexToRGBConvertor new];
+    
+    [[UITabBar appearance] setTintColor:[hexToRgb colorWithHexString:@"#2636BE"]];
     [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
 }
 

@@ -40,7 +40,7 @@
     [self setUpActivityIndicatorView];
     [self configureTable:UITableViewStylePlain];
     [self viewWillSetNavigationBar];
-    [self initializeSearchController];
+//    [self initializeSearchController];
     [self configureFooterView];
     [self fetchNext];
 }
@@ -60,39 +60,26 @@
     [__tableView.layer setCornerRadius:10.0f];
     [_backGroundActivityIndicatorView startAnimating];
 }
-- (void)initializeSearchController {
-    
-    //instantiate a search results controller for presenting the search/filter results (will be presented on top of the parent table view)
-    
-    //instantiate a UISearchController - passing in the search results controller table
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
-    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
-    //this view controller can be covered by theUISearchController's view (i.e. search/filter table)
-    self.definesPresentationContext = YES;
-    [self.searchController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:NSLocalizedString(@"Participant", @""),NSLocalizedString(@"Blocked User", @""),nil]];
-
-    
-    //define the frame for the UISearchController's search bar and tint
-    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
-    
-    //    self.searchController.searchBar.tintColor = [UIColor whiteColor];
-    self.searchController.obscuresBackgroundDuringPresentation = YES;
-    
-    //this ViewController will be responsible for implementing UISearchResultsDialog protocol method(s) - so handling what happens when user types into the search bar
-    self.searchController.searchResultsUpdater = self;
-    
-    
-    //this ViewController will be responsisble for implementing UISearchBarDelegate protocol methods(s)
-    self.searchController.searchBar.delegate = self;
-    
-    //add the UISearchController's search bar to the header of this table
-    if (@available(iOS 11.0, *)) {
-        self.navigationItem.searchController = self.searchController;
-    } else {
-        // Fallback on earlier versions
-        self._tableView.tableHeaderView = self.searchController.searchBar;
-    }
-}
+//- (void)initializeSearchController {
+//
+//    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
+//    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
+//    self.definesPresentationContext = YES;
+//    [self.searchController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:NSLocalizedString(@"Participant", @""),NSLocalizedString(@"Blocked User", @""),nil]];
+//
+//    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
+//
+//    self.searchController.searchBar.tintColor = [UIColor whiteColor];
+//    self.searchController.obscuresBackgroundDuringPresentation = YES;
+//    self.searchController.searchResultsUpdater = self;
+//    self.searchController.searchBar.delegate = self;
+//
+//    if (@available(iOS 11.0, *)) {
+//        self.navigationItem.searchController = self.searchController;
+//    } else {
+//        self._tableView.tableHeaderView = self.searchController.searchBar;
+//    }
+//}
 -(void)configureFooterView
 {
     CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
@@ -352,8 +339,8 @@
     Group *group = (Group *)[_unjoinedgroupListArray objectAtIndex:[indexPath row]];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[group name] message:[group name] preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"") style:(UIAlertActionStyleCancel) handler:nil];
-    UIAlertAction *join = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction *join = [UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         
         [self checkGroupAvailablity:group];
         

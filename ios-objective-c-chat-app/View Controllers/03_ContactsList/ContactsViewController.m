@@ -13,8 +13,8 @@
 @property (nonatomic, strong) ResultsTableController *resultTableViewController;
 @property (nonatomic) BOOL isMoreDataLoading;
 @property (nonatomic ,strong) UIView *loadingMoreView;
-@property (nonatomic ,strong) ActivityIndicatorView *footerActivityIndicatorView;
-@property (nonatomic ,strong) ActivityIndicatorView *backgroundActivityIndicatorView;
+@property (nonatomic ,strong) ActivityIndicatorView *footerLoader;
+@property (nonatomic ,strong) ActivityIndicatorView *backgroundLoader;
 @end
 
 @implementation ContactsViewController
@@ -46,7 +46,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-    [self initializeSearchController];
+    //    [self initializeSearchController];
     [self viewWillSetupNavigationBar];
     [self delegate].usereventdelegate = self;
 }
@@ -56,56 +56,47 @@
 -(void)configureTable:(UITableViewStyle)style{
     
     // the tableview
-    __tableView.delegate = self;
-    __tableView.dataSource = self;
-    __tableView.estimatedRowHeight = 60;
-    __tableView.rowHeight = UITableViewAutomaticDimension;
-    __tableView.estimatedSectionFooterHeight = 0.0f;
-    __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    __tableView.backgroundView = _backgroundActivityIndicatorView;
+    [__tableView setDelegate:self];
+    [__tableView setDataSource:self];
+    [__tableView setEstimatedRowHeight:60.0f];
+    [__tableView setRowHeight:UITableViewAutomaticDimension];
+    [__tableView setSectionFooterHeight:0.0f];
+    [__tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [__tableView setBackgroundView:[self backgroundLoader]];
     [__tableView.layer setCornerRadius:10.0f];
     [__tableView registerClass:[EntityListTableViewCell class] forCellReuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
-    [_backgroundActivityIndicatorView startAnimating];
-
+    [[self backgroundLoader] startAnimating];
+    
 }
-- (void)initializeSearchController {
-    
-    //instantiate a search results controller for presenting the search/filter results (will be presented on top of the parent table view)
-    
-    //instantiate a UISearchController - passing in the search results controller table
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
-    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
-    //this view controller can be covered by theUISearchController's view (i.e. search/filter table)
-    self.definesPresentationContext = YES;
-    
-    
-    //define the frame for the UISearchController's search bar and tint
-    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
-    
-    //    self.searchController.searchBar.tintColor = [UIColor whiteColor];
-    self.searchController.obscuresBackgroundDuringPresentation = YES;
-    
-    //this ViewController will be responsible for implementing UISearchResultsDialog protocol method(s) - so handling what happens when user types into the search bar
-    self.searchController.searchResultsUpdater = self;
-    
-    
-    //this ViewController will be responsisble for implementing UISearchBarDelegate protocol methods(s)
-    self.searchController.searchBar.delegate = self;
-    
-    //add the UISearchController's search bar to the header of this table
-    if (@available(iOS 11.0, *)) {
-        self.navigationItem.searchController = self.searchController;
-    } else {
-        // Fallback on earlier versions
-        self._tableView.tableHeaderView = self.searchController.searchBar;
-    }
-}
+//- (void)initializeSearchController {
+//
+//
+//    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
+//    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
+//    self.definesPresentationContext = YES;
+//
+//    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
+//
+//        self.searchController.searchBar.tintColor = [UIColor whiteColor];
+//    self.searchController.obscuresBackgroundDuringPresentation = YES;
+//
+//    self.searchController.searchResultsUpdater = self;
+//
+//
+//    self.searchController.searchBar.delegate = self;
+//
+//    if (@available(iOS 11.0, *)) {
+//        self.navigationItem.searchController = self.searchController;
+//    } else {
+//        self._tableView.tableHeaderView = self.searchController.searchBar;
+//    }
+//}
 -(void)configureFooterView
 {
     CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
     _loadingMoreView = [[UIView alloc]initWithFrame:frame];
-    [_loadingMoreView addSubview:_footerActivityIndicatorView];
-    _footerActivityIndicatorView.center = CGPointMake(_loadingMoreView.bounds.size.width/2, _loadingMoreView.bounds.size.height/2);
+    [_loadingMoreView addSubview:_footerLoader];
+    _footerLoader.center = CGPointMake(_loadingMoreView.bounds.size.width/2, _loadingMoreView.bounds.size.height/2);
     
     _loadingMoreView.hidden = true;
     [__tableView addSubview:_loadingMoreView];
@@ -116,8 +107,8 @@
 }
 -(void)setUpActivityIndicatorView
 {
-    _footerActivityIndicatorView = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
-    _backgroundActivityIndicatorView = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
+    _footerLoader = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
+    _backgroundLoader = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
 }
 -(void)fetchNext
 {
@@ -148,8 +139,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self._tableView reloadData];
         self.isMoreDataLoading = NO;
-        [self.footerActivityIndicatorView stopAnimating];
-        [self.backgroundActivityIndicatorView stopAnimating];
+        [self.footerLoader stopAnimating];
+        [self.backgroundLoader stopAnimating];
         [self.loadingMoreView setHidden:YES];
     });
 }
@@ -160,22 +151,22 @@
         self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     }
     self.navigationItem.title = NSLocalizedString(@"Contacts", @"");
-
+    
     UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"user_details"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
     [user_details setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[user_details]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
-
+    
 }
 -(void)showUserDetails
 {
     if (LOGGED_IN_USER) {
-        
+        __weak typeof(self) weakSelf = self;
         InfoPageViewController *infoPage = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
         infoPage.hidesBottomBarWhenPushed = YES;
-        infoPage.appEntity = [[User alloc]initWithUid:[LOGGED_IN_USER uid] name:[LOGGED_IN_USER name]];
-        [self.navigationController pushViewController:infoPage animated:YES];
+        infoPage.appEntity = (User *)LOGGED_IN_USER;
+        [weakSelf.navigationController pushViewController:infoPage animated:YES];
     }
 }
 #pragma mark - UITableViewDataSource
@@ -220,7 +211,8 @@
     ChatViewController *chatviewcontroller = [self.storyboard instantiateViewControllerWithIdentifier:@"ChatViewController"];
     chatviewcontroller.hidesBottomBarWhenPushed = YES;
     [chatviewcontroller setAppEntity:user];
-    [self.navigationController pushViewController:chatviewcontroller animated:YES];
+    __weak typeof(self) weakSelf = self;
+    [weakSelf.navigationController pushViewController:chatviewcontroller animated:YES];
     
 }
 #pragma mark - UISearchResultsUpdating
@@ -262,8 +254,6 @@
 }
 -(void)applicationDidReceiveUserEvent:(User *)user{
     
-    NSLog(@"USER %@",[user stringValue]);
-    
     NSMutableArray *listArray = [NSMutableArray arrayWithArray:contactListArray];
     
     for (User *object in contactListArray) {
@@ -291,7 +281,7 @@
     }
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-   
+    
     if(!_isMoreDataLoading){
         
         int scrollViewContentHeight = __tableView.contentSize.height;
@@ -303,7 +293,7 @@
             
             CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
             _loadingMoreView.frame = frame;
-            [_footerActivityIndicatorView startAnimating];
+            [_footerLoader startAnimating];
             [_loadingMoreView setHidden:NO];
             [self fetchNext];
         }

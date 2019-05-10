@@ -82,7 +82,20 @@
         loginViewController = nil;
     }
 }
-
+- (UIView*) topMostView {
+    
+    __block UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        while (topController.presentedViewController) {
+            topController = topController.presentedViewController;
+        }
+    });
+    
+    UIView *topMostView = [topController view];
+    return topMostView;
+}
 
 
 @end

@@ -8,13 +8,15 @@
 
 #import "MediaTableViewCell.h"
 @interface MediaTableViewCell()
-@property (nonatomic ,retain) UIImageView* imageHolder;
+@property (nonatomic ,retain) UIImageView   *imageHolder;
+@property (nonatomic ,retain) UILabel       *senderNameLbl;
+@property (nonatomic ,retain) UILabel       *timeLbl;
+@property (nonatomic ,retain) UIImageView   *readReceipts;
 @end
 
 @implementation MediaTableViewCell
 {
     CGFloat width , height;
-    CAShapeLayer *layer;
     MessageBubbleViewButtonTailDirection taildirection;
 }
 +(NSString*)reuseIdentifier{
@@ -22,75 +24,108 @@
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath {
     
-    width = self.frame.size.width *0.66;
-    height = width/0.75 + paddingY*2;
-    
-    layer = [CAShapeLayer new];
+    width = self.frame.size.width *0.50;
+    height = width/0.75;
     
     [self.contentView addSubview:self.imageHolder];
     [_imageHolder setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView addSubview:self.timeLbl];
+    [_timeLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
     
-    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",[NSString stringWithFormat:@"%f",height],@"height",[NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
+    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",
+                             [NSString stringWithFormat:@"%f",height],@"height",
+                             [NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
     
     
     switch (tailDirection) {
         case MessageBubbleViewButtonTailDirectionRight:
         {
             
-            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_imageHolder(width)]-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+            [self.contentView addSubview:self.readReceipts];
+            [_readReceipts setTranslatesAutoresizingMaskIntoConstraints:NO];
+            
+            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_timeLbl]-[_imageHolder(width)]-(2)-[_readReceipts]-(2)-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_timeLbl,_readReceipts)];
+            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+            
+            //Bottom
+            NSLayoutConstraint *bottom1 =[NSLayoutConstraint
+                                          constraintWithItem:_timeLbl
+                                          attribute:NSLayoutAttributeBottom
+                                          relatedBy:NSLayoutRelationEqual
+                                          toItem:self.contentView
+                                          attribute:NSLayoutAttributeBottom
+                                          multiplier:1.0f
+                                          constant:-paddingY*3];
+            
+            NSLayoutConstraint *bottom3 =[NSLayoutConstraint
+                                          constraintWithItem:_readReceipts
+                                          attribute:NSLayoutAttributeBottom
+                                          relatedBy:NSLayoutRelationEqual
+                                          toItem:self.contentView
+                                          attribute:NSLayoutAttributeBottom
+                                          multiplier:1.0f
+                                          constant:-paddingY*3];
             
             [self.contentView addConstraints:subViewH1];
             [self.contentView addConstraints:subViewV1];
+            [self.contentView addConstraint:bottom1];
+            [self.contentView addConstraint:bottom3];
             
-            UIBezierPath *bezierPath = [UIBezierPath new];
-            [bezierPath moveToPoint:CGPointMake(width - 22, height)];
-            [bezierPath addLineToPoint:CGPointMake(17, height)];
-            [bezierPath addCurveToPoint:CGPointMake(0,height -17 ) controlPoint1:CGPointMake( 7.61, height) controlPoint2:CGPointMake(0, height-7.61)];
-            [bezierPath addLineToPoint:CGPointMake(0, 17)];
-            [bezierPath addCurveToPoint:CGPointMake(17, 0) controlPoint1:CGPointMake(0, 7.61) controlPoint2:CGPointMake(7.61, 0)];
-            [bezierPath addLineToPoint:CGPointMake(width -21, 0)];
-            [bezierPath addCurveToPoint:CGPointMake(width -4, 17) controlPoint1:CGPointMake(width -11.61, 0) controlPoint2:CGPointMake(width -4, 7.61)];
-            [bezierPath addLineToPoint:CGPointMake(width - 4, height - 11)];
-            [bezierPath addCurveToPoint:CGPointMake(width, height) controlPoint1:CGPointMake(width -4, height - 1) controlPoint2:CGPointMake(width, height)];
-            [bezierPath addLineToPoint:CGPointMake(width +0.05, height - 0.01)];
-            [bezierPath addCurveToPoint:CGPointMake(width -11.04, height - 4.04) controlPoint1:CGPointMake(width -4.07, height+0.43) controlPoint2:CGPointMake(width -8.16, height - 1.06)];
-            [bezierPath addCurveToPoint:CGPointMake(width - 22, height) controlPoint1:CGPointMake(width -16, height) controlPoint2:CGPointMake(width -19, height)];
-            [bezierPath closePath];
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft) cornerRadii:CGSizeMake(10.0, 10.0)];
             
-            CAShapeLayer *incomingMessageLayer = [CAShapeLayer new];
-            incomingMessageLayer.path = bezierPath.CGPath;
-            _imageHolder.layer.mask = incomingMessageLayer;
+            CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+            maskLayer.path  = maskPath.CGPath;
+            _imageHolder.layer.mask = maskLayer;
+            
+            
+            if ([message readAt]) {
+                [_readReceipts setImage:[UIImage imageNamed:@"round_done_all_black_18pt"]];
+            }else if ([message deliveredAt]){
+                [_readReceipts setImage:[UIImage imageNamed:@"round_done_all_black_18pt"]];
+                [_readReceipts setTintColor:[UIColor lightGrayColor]];
+            }else {
+                [_readReceipts setImage:[UIImage imageNamed:@"round_done_black_18pt"]];
+                [_readReceipts setTintColor:[UIColor lightGrayColor]];
+            }
+            
         }
             break;
         case MessageBubbleViewButtonTailDirectionLeft:
         {
             
-            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]-[_timeLbl]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_timeLbl)];
+            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_imageHolder(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+            
+            //Bottom
+            NSLayoutConstraint *bottom1 =[NSLayoutConstraint
+                                          constraintWithItem:_timeLbl
+                                          attribute:NSLayoutAttributeBottom
+                                          relatedBy:NSLayoutRelationEqual
+                                          toItem:self.contentView
+                                          attribute:NSLayoutAttributeBottom
+                                          multiplier:1.0f
+                                          constant:-paddingY*3];
             
             [self.contentView addConstraints:subViewH1];
             [self.contentView addConstraints:subViewV1];
+            [self.contentView addConstraint:bottom1];
             
-            UIBezierPath *bezierPath = [UIBezierPath new];
-            [bezierPath moveToPoint:CGPointMake(22, height)];
-            [bezierPath addLineToPoint:CGPointMake(width-17, height)];
-            [bezierPath addCurveToPoint:CGPointMake(width,height -17 ) controlPoint1:CGPointMake(width - 7.61, height) controlPoint2:CGPointMake(width, height-7.61)];
-            [bezierPath addLineToPoint:CGPointMake(width, 17)];
-            [bezierPath addCurveToPoint:CGPointMake(width-17, 0) controlPoint1:CGPointMake(width, 7.61) controlPoint2:CGPointMake(width-7.61, 0)];
-            [bezierPath addLineToPoint:CGPointMake(21, 0)];
-            [bezierPath addCurveToPoint:CGPointMake(4, 17) controlPoint1:CGPointMake(11.61, 0) controlPoint2:CGPointMake(4, 7.61)];
-            [bezierPath addLineToPoint:CGPointMake(4, height - 11)];
-            [bezierPath addCurveToPoint:CGPointMake(0, height) controlPoint1:CGPointMake(4, height - 1) controlPoint2:CGPointMake(0, height)];
-            [bezierPath addLineToPoint:CGPointMake(-0.05, height - 0.01)];
-            [bezierPath addCurveToPoint:CGPointMake(11.04, height - 4.04) controlPoint1:CGPointMake(4.07, height+0.43) controlPoint2:CGPointMake(8.16, height - 1.06)];
-            [bezierPath addCurveToPoint:CGPointMake(22, height) controlPoint1:CGPointMake(16, height) controlPoint2:CGPointMake(19, height)];
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10.0, 10.0)];
             
-            [bezierPath closePath];
+            CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+            maskLayer.path  = maskPath.CGPath;
+            _imageHolder.layer.mask = maskLayer;
             
-            CAShapeLayer *incomingMessageLayer = [CAShapeLayer new];
-            incomingMessageLayer.path = bezierPath.CGPath;
-            _imageHolder.layer.mask = incomingMessageLayer;
+            
+            if ([message receiverType] == ReceiverTypeGroup)
+            {
+                
+                [self.contentView addSubview:self.senderNameLbl];
+                [_senderNameLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
+                
+                [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderNameLbl attribute:(NSLayoutAttributeLeading) relatedBy:(NSLayoutRelationEqual) toItem:self.contentView attribute:(NSLayoutAttributeLeading) multiplier:1.0f constant:paddingX*2]];
+                [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_senderNameLbl][_imageHolder(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_senderNameLbl)]];
+            }
         }
         default:
             break;
@@ -127,6 +162,7 @@
             }
         }
     });
+    _timeLbl.text       = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
 }
 -(UIImageView *)imageHolder{
     if (!_imageHolder) {
@@ -142,47 +178,76 @@
     }
     return _imageHolder;
 }
+-(UILabel*)senderNameLbl {
+    
+    if (!_senderNameLbl) {
+        _senderNameLbl = [UILabel new];
+        _senderNameLbl.numberOfLines = 1;
+        _senderNameLbl.lineBreakMode = NSLineBreakByClipping;
+        [_senderNameLbl setFont:[UIFont boldSystemFontOfSize:11]];
+        [_senderNameLbl setTextColor:[UIColor lightGrayColor]];
+    }
+    return _senderNameLbl;
+}
+-(UILabel*)timeLbl {
+    
+    if (!_timeLbl) {
+        _timeLbl = [UILabel new];
+        [_timeLbl setFont:[UIFont systemFontOfSize:11]];
+         _timeLbl.textColor      = [UIColor lightGrayColor];
+    }
+    return _timeLbl;
+}
+-(UIImageView *)readReceipts{
+    
+    if (!_readReceipts) {
+        _readReceipts = [UIImageView new];
+        [_readReceipts setImage:[UIImage imageNamed:@"round_schedule_black_18pt"]];
+        [_readReceipts setImage:[[_readReceipts image] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+    }
+    return _readReceipts;
+}
 - (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:)]) {
         [_delegate didSelectMediaAtIndexPath:self.tag];
     }
 }
--(void)updateConstraints{
-    [super updateConstraints];
-    
-    
-    width = self.frame.size.width *0.66;
-    height = width/0.75 + paddingY*2;
-    
-    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",[NSString stringWithFormat:@"%f",height],@"height",[NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
-    
-    switch (taildirection) {
-        case MessageBubbleViewButtonTailDirectionRight:
-        {
-            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_imageHolder(width)]-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            
-            [self.contentView addConstraints:subViewH1];
-            [self.contentView addConstraints:subViewV1];
-        }
-            break;
-        case MessageBubbleViewButtonTailDirectionLeft:
-        {
-            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            
-            [self.contentView addConstraints:subViewH1];
-            [self.contentView addConstraints:subViewV1];
-            
-        }
-            break;
-        default:
-            break;
-    }
-    
-    layer.frame = _imageHolder.frame;
-}
+//-(void)updateConstraints{
+//    [super updateConstraints];
+//
+//
+//    width = self.frame.size.width *0.66;
+//    height = width/0.75 + paddingY*2;
+//
+//    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",[NSString stringWithFormat:@"%f",height],@"height",[NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
+//
+//    switch (taildirection) {
+//        case MessageBubbleViewButtonTailDirectionRight:
+//        {
+//            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_imageHolder(width)]-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+//            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+//
+//            [self.contentView addConstraints:subViewH1];
+//            [self.contentView addConstraints:subViewV1];
+//        }
+//            break;
+//        case MessageBubbleViewButtonTailDirectionLeft:
+//        {
+//            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+//            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
+//
+//            [self.contentView addConstraints:subViewH1];
+//            [self.contentView addConstraints:subViewV1];
+//
+//        }
+//            break;
+//        default:
+//            break;
+//    }
+//
+//    layer.frame = _imageHolder.frame;
+//}
 -(UIImage *)loadThumbNail:(NSURL *)urlVideo
 {
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:urlVideo options:nil];

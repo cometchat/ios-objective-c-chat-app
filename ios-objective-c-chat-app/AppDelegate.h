@@ -12,6 +12,7 @@
 @protocol MessageDelegate <NSObject>
 @required - (void)applicationdidReceiveNewMessage:(BaseMessage *)message;
 @required - (void)applicationDidReceivedisTypingEvent:(TypingIndicator *)typingIndicator isComposing:(BOOL)isComposing;
+@required - (void)applicationDidReceivedReadAndDeliveryReceipts:(MessageReceipt *)receipts;
 @end
 @protocol UserEventDelegate <NSObject>
 -(void)applicationDidReceiveUserEvent:(User*)user;
@@ -22,6 +23,6 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, weak) id<MessageDelegate> messagedelegate;
 @property (nonatomic, weak) id<UserEventDelegate> usereventdelegate;
-
+- (UIView*) topMostView;
 @end
 
