@@ -22,6 +22,13 @@
     
     [[UITabBar appearance] setTintColor:[hexToRgb colorWithHexString:@"#2636BE"]];
     [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBadge:) name:@"com.inscripts.updateBadge" object:nil];
+}
+-(void)setBadge:(id)sender
+{
+    NSString *badgeValue = [NSString stringWithFormat:@"%ld",[[[self.tabBar.items objectAtIndex:0] badgeValue] integerValue] + 1 ];
+    [[self.tabBar.items objectAtIndex:0]setBadgeValue:badgeValue];
 }
 
 @end
+

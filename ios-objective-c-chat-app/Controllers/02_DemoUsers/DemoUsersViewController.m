@@ -110,6 +110,7 @@
     
     [cell.imageView setClipsToBounds:YES];
     [cell.imageView.layer setCornerRadius:cell.imageView.frame.size.height/2];
+    
     [cell setBackgroundColor:[UIColor clearColor]];
     return cell;
 }

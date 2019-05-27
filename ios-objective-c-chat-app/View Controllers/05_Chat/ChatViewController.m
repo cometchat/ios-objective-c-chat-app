@@ -143,32 +143,20 @@ static int textFiledHeight;
 }
 - (void)actionCallAudio
 {
-    Call *outgoingcall = [[Call alloc]initWithReceiverId:[_chatEntity receiverId] callType:CallTypeAudio receiverType:[_chatEntity receiverType]];
-    
-    [CometChat initiateCallWithCall:outgoingcall onSuccess:^(Call * _Nullable outgoing_call) {
-        
-        [[CallManager sharedInstance] reportOutGoingCall:outgoing_call forEntity:[self->_chatEntity entity]];
-        
-    } onError:^(CometChatException * _Nullable error) {
-        
-        NSLog(@"%@",[error errorDescription]);
-    }];
+    CallViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CallViewController"];
+    [controller setEntity:appEntity];
+    [controller setCallType:CallTypeAudio];
+    [self presentViewController:controller animated:YES completion:nil];
     
 }
 
 - (void)actionCallVideo
 {
-    Call *outgoingcall = [[Call alloc]initWithReceiverId:[_chatEntity receiverId] callType:CallTypeVideo receiverType:[_chatEntity receiverType]];
     
-    [CometChat initiateCallWithCall:outgoingcall onSuccess:^(Call * _Nullable outgoing_call) {
-        
-        // show UIViewController Call screen , so the user can cancel the ongoin call //
-        [[CallManager sharedInstance] reportOutGoingCall:outgoingcall forEntity:[self->_chatEntity entity]];
-        
-    } onError:^(CometChatException * _Nullable error) {
-        
-        NSLog(@"%@",[error errorDescription]);
-    }];
+    CallViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CallViewController"];
+    [controller setEntity:appEntity];
+    [controller setCallType:CallTypeVideo];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (AppDelegate *)delegate {
@@ -198,11 +186,11 @@ static int textFiledHeight;
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-//    UIBarButtonItem *buttonCallAudio = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callaudio"]
-//                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
-//    UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
-//                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
-//    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
+    UIBarButtonItem *buttonCallAudio = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callaudio"]
+                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallAudio)];
+    UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
+                                                                        style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
+    self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
     
     if ([_chatEntity receiverType] == ReceiverTypeUser)
     {
@@ -1075,7 +1063,7 @@ static int textFiledHeight;
 -(void)showInfo
 {
     
-    InfoPageViewController *infoPage = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+    InfoPageViewController *infoPage = [InfoPageViewController new];
     infoPage.hidesBottomBarWhenPushed = YES;
     infoPage.appEntity = [_chatEntity entity];
     [self.navigationController pushViewController:infoPage animated:YES];

@@ -21,6 +21,7 @@
 
 @implementation FilesTableViewCell
 {
+    HexToRGBConvertor *hexToRGB;
     CGFloat width , height;
     MessageBubbleViewButtonTailDirection taildirection;
 }
@@ -37,6 +38,8 @@
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {
+    
+    hexToRGB = [HexToRGBConvertor new];
     width = self.frame.size.width *0.40;
     height = width*0.40;
     
@@ -88,7 +91,7 @@
             [self.contentView addConstraint:bottom1];
             [self.contentView addConstraint:bottom2];
             [self.contentView addConstraint:bottom3];
-            [_bubble setBackgroundColor:[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1]];
+            [_bubble setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
             
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft) cornerRadii:CGSizeMake(10.0, 10.0)];
             

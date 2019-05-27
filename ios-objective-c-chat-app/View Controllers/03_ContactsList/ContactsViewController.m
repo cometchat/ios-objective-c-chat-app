@@ -152,7 +152,7 @@
     }
     self.navigationItem.title = NSLocalizedString(@"Contacts", @"");
     
-    UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"user_details"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
+    UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"outline_more_vert_black_24pt"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
     [user_details setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[user_details]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
@@ -163,7 +163,7 @@
 {
     if (LOGGED_IN_USER) {
         __weak typeof(self) weakSelf = self;
-        InfoPageViewController *infoPage = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+        InfoPageViewController *infoPage = [InfoPageViewController new];
         infoPage.hidesBottomBarWhenPushed = YES;
         infoPage.appEntity = (User *)LOGGED_IN_USER;
         [weakSelf.navigationController pushViewController:infoPage animated:YES];

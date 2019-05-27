@@ -8,43 +8,8 @@
 
 #import "InfoPageViewController.h"
 
-@interface Entity : NSObject
-
--(id) initIMessageWithEntity:(AppEntity *)appEntity;
-@property (nonatomic) ReceiverType receiverType;
-@property (nonatomic ,retain) User *entityUser;
-@property (nonatomic ,retain) Group *entityGroup;
-@end
-
-@implementation Entity
-
--(id) initIMessageWithEntity:(AppEntity *)appEntity
-{
-    self = [super init];
-    if(self)
-    {
-        
-        if ([appEntity isKindOfClass:User.class]) {
-            
-            self.receiverType = ReceiverTypeUser;
-            self.entityUser = (User *)appEntity;
-            
-        } else if ([appEntity isKindOfClass:Group.class]){
-            
-            self.receiverType = ReceiverTypeGroup;
-            self.entityGroup = (Group *)appEntity;
-        }
-    }
-    
-    return self;
-}
-
-@end
-
 @interface InfoPageViewController ()<MFMailComposeViewControllerDelegate>
-@property (strong, nonatomic) Entity *_chatEntity;
-@property (nonatomic ,retain) UserInfoPage *userinfoPage;
-@property (nonatomic ,retain) GroupInfoPage *groupinfoPage;
+@property (nonatomic ,retain) InfoPage *userinfoPage;
 
 @end
 
@@ -52,36 +17,21 @@
 
 - (void)viewDidLoad {
     
-    
-    __chatEntity = [[Entity alloc]initIMessageWithEntity:_appEntity];
     [self viewWillSetNavigationBar];
     
-    if ([__chatEntity receiverType] == ReceiverTypeUser) {
-        
-        self.userinfoPage = [[UserInfoPage alloc]init];
-        [self.userinfoPage setUser:[__chatEntity entityUser]];
-        self.userinfoPage.view.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [self addChildViewController:self.userinfoPage];
-        
-        [self addSubview:self.userinfoPage.view toView:self.view];
-        
-        [self.userinfoPage didMoveToParentViewController:self];
-        
-    } else if ([__chatEntity receiverType] == ReceiverTypeGroup){
-        
-        self.groupinfoPage = [[GroupInfoPage alloc]init];
-        [self.groupinfoPage setGroup:[__chatEntity entityGroup]];
-        self.groupinfoPage.view.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [self addChildViewController:self.groupinfoPage];
-        [self addSubview:self.groupinfoPage.view toView:self.view];
-        [self.groupinfoPage didMoveToParentViewController:self];
-        
-    }
+    self.userinfoPage = [[InfoPage alloc]init];
+    [self.userinfoPage setEntity:_appEntity];
+    self.userinfoPage.view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addChildViewController:self.userinfoPage];
+    [self addSubview:self.userinfoPage.view toView:self.view];
+    
+    [self.userinfoPage didMoveToParentViewController:self];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    
     [super viewDidLoad];
     
 }
+
 - (void)addSubview:(UIView *)subView toView:(UIView*)parentView {
     [parentView addSubview:subView];
     
@@ -111,24 +61,24 @@
     [self.navigationController.navigationBar setTranslucent:NO];
     
 }
--(void)sendEmail:(id)sender
-{
-    
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
-        mail.mailComposeDelegate = self;
-        
-        if ([__chatEntity receiverType] == ReceiverTypeUser) {
-            if ([__chatEntity entityUser].email) {
-                [mail setToRecipients:@[[__chatEntity entityUser].email]];
-            }
-        }
-        [self presentViewController:mail animated:YES completion:NULL];
-    } else {
-        
-        [self showAlertForTitle:@"" Message:@"We could not find an Email client on your device" ButtonTitle:@"OK"];
-    }
-}
+//-(void)sendEmail:(id)sender
+//{
+//    
+//    if ([MFMailComposeViewController canSendMail]) {
+//        MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
+//        mail.mailComposeDelegate = self;
+//        
+//        if ([__chatEntity receiverType] == ReceiverTypeUser) {
+//            if ([__chatEntity entityUser].email) {
+//                [mail setToRecipients:@[[__chatEntity entityUser].email]];
+//            }
+//        }
+//        [self presentViewController:mail animated:YES completion:NULL];
+//    } else {
+//        
+//        [self showAlertForTitle:@"" Message:@"We could not find an Email client on your device" ButtonTitle:@"OK"];
+//    }
+//}
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 - (void)mailComposeController:(MFMailComposeViewController*)controller
           didFinishWithResult:(MFMailComposeResult)result

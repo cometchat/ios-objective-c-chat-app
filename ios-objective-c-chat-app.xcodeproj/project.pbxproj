@@ -14,8 +14,7 @@
 		E12DAAA02227D2B000A5E238 /* UITableView+scrollToBottom.m in Sources */ = {isa = PBXBuildFile; fileRef = E12DAA9E2227D2B000A5E238 /* UITableView+scrollToBottom.m */; };
 		E1324415224B368900D7B982 /* EntityDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1324414224B368900D7B982 /* EntityDetailsTableViewCell.m */; };
 		E1324418224B82E400D7B982 /* EntityOtherDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1324417224B82E300D7B982 /* EntityOtherDetailsTableViewCell.m */; };
-		E132441B224B970B00D7B982 /* UserInfoPage.m in Sources */ = {isa = PBXBuildFile; fileRef = E132441A224B970B00D7B982 /* UserInfoPage.m */; };
-		E132441E224B971E00D7B982 /* GroupInfoPage.m in Sources */ = {isa = PBXBuildFile; fileRef = E132441D224B971E00D7B982 /* GroupInfoPage.m */; };
+		E132441B224B970B00D7B982 /* InfoPage.m in Sources */ = {isa = PBXBuildFile; fileRef = E132441A224B970B00D7B982 /* InfoPage.m */; };
 		E132E384221D2DFB00D2D07F /* HexToRGBConvertor.m in Sources */ = {isa = PBXBuildFile; fileRef = E132E383221D2DFB00D2D07F /* HexToRGBConvertor.m */; };
 		E132E388221D33C300D2D07F /* UIColor+SystemColor.m in Sources */ = {isa = PBXBuildFile; fileRef = E132E387221D33C300D2D07F /* UIColor+SystemColor.m */; };
 		E14390092226814700627EA5 /* Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = E14390082226814700627EA5 /* Avatar.m */; };
@@ -33,10 +32,14 @@
 		E155D71422817C5200047746 /* CometChatPro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70722817C3200047746 /* CometChatPro.framework */; };
 		E155D71522817C5200047746 /* CometChatPro.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70722817C3200047746 /* CometChatPro.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E15D4F4422647518001E4FC4 /* ActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */; };
+		E162E8BE229BB16B00EB1349 /* MembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E162E8BD229BB16B00EB1349 /* MembersViewController.m */; };
 		E172D8002246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D7FF2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m */; };
 		E172D803224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D802224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.m */; };
 		E172D806224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D805224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m */; };
 		E172D80922460A190013D05D /* AppDelegate+CometChatProGroupEventsDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D80822460A190013D05D /* AppDelegate+CometChatProGroupEventsDelegates.m */; };
+		E180E617228A924800AE552C /* CallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E180E616228A924800AE552C /* CallViewController.m */; };
+		E180E61A228A9AC000AE552C /* call_ringback.wav in Resources */ = {isa = PBXBuildFile; fileRef = E180E619228A9AC000AE552C /* call_ringback.wav */; };
+		E180E61C228A9AC700AE552C /* call_incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = E180E61B228A9AC700AE552C /* call_incoming.wav */; };
 		E18992AA226072D1009C2EA3 /* FilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E18992A9226072D1009C2EA3 /* FilesTableViewCell.m */; };
 		E18992AD22608C61009C2EA3 /* AudioTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E18992AC22608C61009C2EA3 /* AudioTableViewCell.m */; };
 		E18A1D20223F962600662831 /* Camera.m in Sources */ = {isa = PBXBuildFile; fileRef = E18A1D1F223F962600662831 /* Camera.m */; };
@@ -105,10 +108,8 @@
 		E1324414224B368900D7B982 /* EntityDetailsTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntityDetailsTableViewCell.m; sourceTree = "<group>"; };
 		E1324416224B82E300D7B982 /* EntityOtherDetailsTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntityOtherDetailsTableViewCell.h; sourceTree = "<group>"; };
 		E1324417224B82E300D7B982 /* EntityOtherDetailsTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntityOtherDetailsTableViewCell.m; sourceTree = "<group>"; };
-		E1324419224B970B00D7B982 /* UserInfoPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfoPage.h; sourceTree = "<group>"; };
-		E132441A224B970B00D7B982 /* UserInfoPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfoPage.m; sourceTree = "<group>"; };
-		E132441C224B971E00D7B982 /* GroupInfoPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupInfoPage.h; sourceTree = "<group>"; };
-		E132441D224B971E00D7B982 /* GroupInfoPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupInfoPage.m; sourceTree = "<group>"; };
+		E1324419224B970B00D7B982 /* InfoPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoPage.h; sourceTree = "<group>"; };
+		E132441A224B970B00D7B982 /* InfoPage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoPage.m; sourceTree = "<group>"; };
 		E132E382221D2DFB00D2D07F /* HexToRGBConvertor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexToRGBConvertor.h; sourceTree = "<group>"; };
 		E132E383221D2DFB00D2D07F /* HexToRGBConvertor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HexToRGBConvertor.m; sourceTree = "<group>"; };
 		E132E386221D33C300D2D07F /* UIColor+SystemColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+SystemColor.h"; sourceTree = "<group>"; };
@@ -127,6 +128,8 @@
 		E155D70D22817C3E00047746 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebRTC.framework; sourceTree = "<group>"; };
 		E15D4F4222647518001E4FC4 /* ActionTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionTableViewCell.h; sourceTree = "<group>"; };
 		E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActionTableViewCell.m; sourceTree = "<group>"; };
+		E162E8BC229BB16B00EB1349 /* MembersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MembersViewController.h; sourceTree = "<group>"; };
+		E162E8BD229BB16B00EB1349 /* MembersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MembersViewController.m; sourceTree = "<group>"; };
 		E172D7FE2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CometChatProMesssageDelegates.h"; sourceTree = "<group>"; };
 		E172D7FF2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+CometChatProMesssageDelegates.m"; sourceTree = "<group>"; };
 		E172D801224609DD0013D05D /* AppDelegate+CometChatProCallDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CometChatProCallDelegates.h"; sourceTree = "<group>"; };
@@ -135,6 +138,10 @@
 		E172D805224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+CometChatProUserEventsDelegates.m"; sourceTree = "<group>"; };
 		E172D80722460A190013D05D /* AppDelegate+CometChatProGroupEventsDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+CometChatProGroupEventsDelegates.h"; sourceTree = "<group>"; };
 		E172D80822460A190013D05D /* AppDelegate+CometChatProGroupEventsDelegates.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+CometChatProGroupEventsDelegates.m"; sourceTree = "<group>"; };
+		E180E615228A924800AE552C /* CallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallViewController.h; sourceTree = "<group>"; };
+		E180E616228A924800AE552C /* CallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CallViewController.m; sourceTree = "<group>"; };
+		E180E619228A9AC000AE552C /* call_ringback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = call_ringback.wav; sourceTree = "<group>"; };
+		E180E61B228A9AC700AE552C /* call_incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = call_incoming.wav; sourceTree = "<group>"; };
 		E18992A8226072D1009C2EA3 /* FilesTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilesTableViewCell.h; sourceTree = "<group>"; };
 		E18992A9226072D1009C2EA3 /* FilesTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilesTableViewCell.m; sourceTree = "<group>"; };
 		E18992AB22608C61009C2EA3 /* AudioTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioTableViewCell.h; sourceTree = "<group>"; };
@@ -292,6 +299,24 @@
 			path = CometChatProDelegates;
 			sourceTree = "<group>";
 		};
+		E180E614228A921000AE552C /* 08_Calling */ = {
+			isa = PBXGroup;
+			children = (
+				E180E615228A924800AE552C /* CallViewController.h */,
+				E180E616228A924800AE552C /* CallViewController.m */,
+			);
+			path = 08_Calling;
+			sourceTree = "<group>";
+		};
+		E180E618228A9A9800AE552C /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				E180E61B228A9AC700AE552C /* call_incoming.wav */,
+				E180E619228A9AC000AE552C /* call_ringback.wav */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		E18A1D10223F680000662831 /* ActivityIndicatorView */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,14 +395,14 @@
 			children = (
 				E195F1A6224910B300763BCB /* InfoPageViewController.h */,
 				E195F1A7224910B300763BCB /* InfoPageViewController.m */,
+				E1324419224B970B00D7B982 /* InfoPage.h */,
+				E132441A224B970B00D7B982 /* InfoPage.m */,
 				E1324413224B368900D7B982 /* EntityDetailsTableViewCell.h */,
 				E1324414224B368900D7B982 /* EntityDetailsTableViewCell.m */,
 				E1324416224B82E300D7B982 /* EntityOtherDetailsTableViewCell.h */,
 				E1324417224B82E300D7B982 /* EntityOtherDetailsTableViewCell.m */,
-				E1324419224B970B00D7B982 /* UserInfoPage.h */,
-				E132441A224B970B00D7B982 /* UserInfoPage.m */,
-				E132441C224B971E00D7B982 /* GroupInfoPage.h */,
-				E132441D224B971E00D7B982 /* GroupInfoPage.m */,
+				E162E8BC229BB16B00EB1349 /* MembersViewController.h */,
+				E162E8BD229BB16B00EB1349 /* MembersViewController.m */,
 			);
 			path = 07_InfoPage;
 			sourceTree = "<group>";
@@ -402,6 +427,7 @@
 		E1A1C45F221AA34100F7076B /* ios-objective-c-chat-app */ = {
 			isa = PBXGroup;
 			children = (
+				E180E618228A9A9800AE552C /* Resource */,
 				E1BCE7DB227B134100958256 /* Vendors */,
 				E1B761912237BFED001EF19B /* ios-objective-c-chat-app.entitlements */,
 				E1A4A6CB223F606F00D475B6 /* Views */,
@@ -528,6 +554,7 @@
 				E1A4A6CF223F618800D475B6 /* 05_Chat */,
 				E1A4A6CE223F614100D475B6 /* 06_CreateGroup */,
 				E195F1A52249107400763BCB /* 07_InfoPage */,
+				E180E614228A921000AE552C /* 08_Calling */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -670,6 +697,7 @@
 				E1A1C45A221AA34100F7076B /* Frameworks */,
 				E1A1C45B221AA34100F7076B /* Resources */,
 				E1BCE7E0227B13B800958256 /* Embed Frameworks */,
+				E19E342122942C08002AEB54 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -728,8 +756,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1A1C46D221AA34100F7076B /* LaunchScreen.storyboard in Resources */,
+				E180E61A228A9AC000AE552C /* call_ringback.wav in Resources */,
 				E145B7FF2262085F007E9641 /* NSDate+RelativeTime.bundle in Resources */,
 				E18AB05F2244C4C1007462F1 /* ringtone.caf in Resources */,
+				E180E61C228A9AC700AE552C /* call_incoming.wav in Resources */,
 				E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */,
 				E1A1C46A221AA34100F7076B /* Assets.xcassets in Resources */,
 				E1A1C468221AA34100F7076B /* Main.storyboard in Resources */,
@@ -738,6 +768,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E19E342122942C08002AEB54 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E1A1C459221AA34100F7076B /* Sources */ = {
@@ -756,9 +806,9 @@
 				E18D5CF722798AF70019A4A2 /* AppSettings.m in Sources */,
 				E1BD24BC22587CB2008BCA2D /* TextTableViewCell.m in Sources */,
 				E1A1C462221AA34100F7076B /* AppDelegate.m in Sources */,
+				E162E8BE229BB16B00EB1349 /* MembersViewController.m in Sources */,
 				E1926F24221E519000217B92 /* AppTheme.m in Sources */,
 				E132E388221D33C300D2D07F /* UIColor+SystemColor.m in Sources */,
-				E132441E224B971E00D7B982 /* GroupInfoPage.m in Sources */,
 				E1324418224B82E400D7B982 /* EntityOtherDetailsTableViewCell.m in Sources */,
 				E172D806224609FA0013D05D /* AppDelegate+CometChatProUserEventsDelegates.m in Sources */,
 				E1324415224B368900D7B982 /* EntityDetailsTableViewCell.m in Sources */,
@@ -785,7 +835,8 @@
 				E1B6B56C221EBA3600DFC404 /* NSString+sentAtToTime.m in Sources */,
 				E145B80222620D37007E9641 /* NSDate+NVTimeAgo.m in Sources */,
 				E18A1D20223F962600662831 /* Camera.m in Sources */,
-				E132441B224B970B00D7B982 /* UserInfoPage.m in Sources */,
+				E132441B224B970B00D7B982 /* InfoPage.m in Sources */,
+				E180E617228A924800AE552C /* CallViewController.m in Sources */,
 				E172D8002246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m in Sources */,
 				E1B2D185223BD3B40013D422 /* DemoUsersViewController.m in Sources */,
 				E1A2F2B6221C366F00334CE5 /* ChatViewController.m in Sources */,

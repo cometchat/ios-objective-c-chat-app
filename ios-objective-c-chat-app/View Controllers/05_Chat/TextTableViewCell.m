@@ -20,7 +20,7 @@
 
 @implementation TextTableViewCell
 {
-    
+    HexToRGBConvertor *hexToRGB;
     CGFloat width , height;
 }
 +(NSString*)reuseIdentifier{
@@ -29,7 +29,7 @@
 
 -(void)bind:(TextMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection
 {
-    
+    hexToRGB = [HexToRGBConvertor new];
     width = [[message text] getSize].width + 24.0f;
     height = [[message text] getSize].height + paddingY * 2;
     
@@ -89,7 +89,7 @@
             [self.contentView addConstraint:bottom2];
             [self.contentView addConstraint:bottom3];
             
-            [_bubble setBackgroundColor:[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1]];
+            [_bubble setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft) cornerRadii:CGSizeMake(10.0, 10.0)];
             
             CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];

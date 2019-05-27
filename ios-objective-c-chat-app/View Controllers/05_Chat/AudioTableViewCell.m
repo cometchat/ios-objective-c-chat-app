@@ -18,6 +18,7 @@
 @end
 @implementation AudioTableViewCell
 {
+     HexToRGBConvertor *hexToRGB;
     CGFloat width , height;
     MessageBubbleViewButtonTailDirection taildirection;
 }
@@ -39,6 +40,7 @@
 {
     width = self.frame.size.width *0.40;
     height = width*0.40;
+    hexToRGB = [HexToRGBConvertor new];
     
     [self.contentView addSubview:self.bubble];
     [_bubble setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -88,7 +90,7 @@
             [self.contentView addConstraint:bottom1];
             [self.contentView addConstraint:bottom2];
             [self.contentView addConstraint:bottom3];
-            [_bubble setBackgroundColor:[UIColor colorWithRed:0.09 green:0.54 blue:1 alpha:1]];
+            [_bubble setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
             
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft) cornerRadii:CGSizeMake(10.0, 10.0)];
             

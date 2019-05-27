@@ -39,14 +39,14 @@
         [_titleLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_statusLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
         
-        NSArray *wrapperH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_wrapper]-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_wrapper)];
-        NSArray *wrapperV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_wrapper]-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_wrapper)];
+        NSArray *wrapperH = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_wrapper]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_wrapper)];
+        NSArray *wrapperV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(80)-[_wrapper]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_wrapper)];
         
         [self.contentView addConstraints:wrapperH];
         [self.contentView addConstraints:wrapperV];
         
         NSDictionary *views = NSDictionaryOfVariableBindings(_icon ,_titleLbl , _statusLbl);
-        NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",(self.frame.size.width*25/100) - (8.0f*2)],@"imageWidth", nil];
+        NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",(self.frame.size.width*50/100) - (8.0f*2)],@"imageWidth", nil];
         
         [self.wrapper addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:(NSLayoutAttributeCenterX) relatedBy:(NSLayoutRelationEqual) toItem:self.wrapper attribute:(NSLayoutAttributeCenterX) multiplier:1 constant:0]];
 
@@ -54,21 +54,24 @@
         NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_icon(imageWidth)]" options:0 metrics:metrics views:views];
         NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLbl]-|" options:0 metrics:metrics views:views];
         NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLbl]-|" options:0 metrics:metrics views:views];
-        NSArray *subViewV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_icon(imageWidth)]-[_titleLbl]-[_statusLbl]" options:0 metrics:metrics views:views];
+        NSArray *subViewV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(-60)-[_icon(imageWidth)]-[_titleLbl]-[_statusLbl]" options:0 metrics:metrics views:views];
         
         [self.wrapper addConstraints:subViewH1];
         [self.wrapper addConstraints:subViewH2];
         [self.wrapper addConstraints:subViewH3];
         [self.wrapper addConstraints:subViewV];
     }
+    
+    HexToRGBConvertor *hexToRGB = [HexToRGBConvertor new];
+    [self.contentView setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+    
     return self;
 }
 -(UIView *)wrapper {
     
     if (!_wrapper) {
-        
         _wrapper = [UIView new];
-        [_wrapper setBackgroundColor:[UIColor clearColor]];
+        [_wrapper setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
     }
     return _wrapper;
 }
@@ -105,14 +108,14 @@
     [super updateConstraints];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_icon ,_titleLbl , _statusLbl);
-    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",(self.frame.size.width*25/100) - (8.0f*2)],@"imageWidth", nil];
+    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",(self.frame.size.width*50/100) - (8.0f*2)],@"imageWidth", nil];
     
     [self.wrapper addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:(NSLayoutAttributeCenterX) relatedBy:(NSLayoutRelationEqual) toItem:self.wrapper attribute:(NSLayoutAttributeCenterX) multiplier:1 constant:0]];
     
     NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_icon(imageWidth)]" options:0 metrics:metrics views:views];
     NSArray *subViewH2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLbl]-|" options:0 metrics:metrics views:views];
     NSArray *subViewH3 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLbl]-|" options:0 metrics:metrics views:views];
-    NSArray *subViewV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_icon(imageWidth)]-[_titleLbl]-[_statusLbl]" options:0 metrics:metrics views:views];
+    NSArray *subViewV = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(-60)-[_icon(imageWidth)]-[_titleLbl]-[_statusLbl]" options:0 metrics:metrics views:views];
     
     [self.wrapper addConstraints:subViewH1];
     [self.wrapper addConstraints:subViewH2];

@@ -17,6 +17,7 @@
     if (self.messagedelegate && [self.messagedelegate respondsToSelector:@selector(applicationdidReceiveNewMessage:)]) {
         [self.messagedelegate applicationdidReceiveNewMessage:mediaMessage];
     }
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"com.inscripts.updateBadge" object:nil userInfo:nil];
 }
 
 - (void)onTextMessageReceivedWithTextMessage:(TextMessage * _Nullable)textMessage error:(CometChatException * _Nullable)error {
@@ -25,7 +26,9 @@
         
         [self.messagedelegate applicationdidReceiveNewMessage:textMessage];
     }
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"com.inscripts.updateBadge" object:nil userInfo:nil];
 }
+
 
 -(void)onTypingStarted:(TypingIndicator *)typingDetails{
     
