@@ -62,6 +62,10 @@
         _aImageView.clipsToBounds = YES;
         [_aImageView.layer setBorderColor:[[UIColor grayColor] CGColor]];
         [_aImageView.layer setBorderWidth:1.0f];
+        
+        HexToRGBConvertor *hexToRGB = [HexToRGBConvertor new];
+        [_aImageView setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+        
     }
     return _aImageView;
 }

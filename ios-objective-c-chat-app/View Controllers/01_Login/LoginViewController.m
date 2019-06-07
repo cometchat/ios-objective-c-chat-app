@@ -16,7 +16,7 @@
 @property(strong ,nonatomic) UIButton           *loginButton;
 @property(strong ,nonatomic) UIImageView        *logoImage;
 @property(nonatomic ,strong) UILabel            *tryADemo;
-@property(nonatomic ,strong)   ActivityIndicatorView   *activityIndicator;
+@property(nonatomic ,strong) ActivityIndicatorView   *activityIndicator;
 @end
 
 @implementation LoginViewController
@@ -28,7 +28,7 @@
 {
     [super viewDidLoad];
     
-    demoUsers = [[DemoUsersViewController alloc] init];
+    demoUsers = [DemoUsersViewController new];
     hexToRGB = [HexToRGBConvertor new];
     demoUsers.delegate = self;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -39,10 +39,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:)name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:)name:UIKeyboardWillHideNotification object:nil];
     [self viewWillsetupSubviews];
-}
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
 }
 
 #pragma mark  - CometChatPro Login
@@ -134,10 +130,6 @@
     [self login:self.loginButton];
     return YES;
 }
--(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    
-    return YES;
-}
 
 #pragma mark  - Getters
 
@@ -213,8 +205,7 @@
     }
     return _subViewHolder;
 }
--(UIView *)imageHolder
-{
+-(UIView *)imageHolder {
     if (!_imageHolder) {
         _imageHolder = [UIView new];
     }
@@ -395,17 +386,21 @@
 }
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     
+     __weak __typeof__(self) weakSelf = self;
+    
     [UIView animateWithDuration:0.25 animations:^{
         
-        [self.contentView removeConstraints:self.contentView.constraints];
-        [self.subViewHolder removeConstraints:self.subViewHolder.constraints];
-        [self.imageHolder removeConstraints:self.imageHolder.constraints];
-        [self addConstraintsforSize:size];
+        [weakSelf.contentView removeConstraints:weakSelf.contentView.constraints];
+        [weakSelf.subViewHolder removeConstraints:weakSelf.subViewHolder.constraints];
+        [weakSelf.imageHolder removeConstraints:weakSelf.imageHolder.constraints];
+        [weakSelf addConstraintsforSize:size];
     }];
 }
 
 -(void)dealloc
 {
     NSLog(@"dealloc %@", self);
+    [[NSNotificationCenter defaultCenter] removeObserver:UIKeyboardDidShowNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIKeyboardWillHideNotification];
 }
 @end

@@ -11,7 +11,7 @@
 
 @interface ContactsViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate ,ResultViewDelegate ,UserEventDelegate>
 @property (nonatomic, strong) ResultsTableController *resultTableViewController;
-@property (nonatomic) BOOL isMoreDataLoading;
+@property (nonatomic) BOOL moreLoading;
 @property (nonatomic ,strong) UIView *loadingMoreView;
 @property (nonatomic ,strong) ActivityIndicatorView *footerLoader;
 @property (nonatomic ,strong) ActivityIndicatorView *backgroundLoader;
@@ -25,10 +25,7 @@
 @synthesize contactListArray,userRequest;
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSInteger limit = 30 ;
-    
-    userRequest = [[[UsersRequestBuilder alloc]initWithLimit:limit] build];
+ 
     _resultTableViewController = [ResultsTableController new];
     hexToRGB = [HexToRGBConvertor new];
     [self.view setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
@@ -39,9 +36,8 @@
     [self setUpActivityIndicatorView];
     [self configureTable:UITableViewStylePlain];
     [self configureFooterView];
-    self.contactListArray = [NSMutableArray new];
-    [self fetchNext];
     LOGGED_IN_USER = [CometChat getLoggedInUser];
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     
@@ -49,6 +45,14 @@
     //    [self initializeSearchController];
     [self viewWillSetupNavigationBar];
     [self delegate].usereventdelegate = self;
+}
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    NSInteger limit = 30 ;
+    userRequest = [[[[UsersRequestBuilder alloc]initWithLimit:limit] hideBlockedUsers:YES]build];
+    self.contactListArray = [NSMutableArray new];
+    [self fetchNext];
+    
 }
 - (AppDelegate *)delegate {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -119,6 +123,8 @@
 -(void)fetchUsers
 {
     
+    _moreLoading = YES ;
+    
     [userRequest fetchNextOnSuccess:^(NSArray<User *> * contacts) {
         
         if ([contacts count] != 0) {
@@ -131,14 +137,15 @@
     } onError:^(CometChatException * error) {
         
         [self refreshContactsList];
-        NSLog(@"Error %@",[error errorDescription]);
+        [Alert showAlertForError:error in:self];
+        
     }];
 }
 -(void)refreshContactsList
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self._tableView reloadData];
-        self.isMoreDataLoading = NO;
+        self.moreLoading = NO;
         [self.footerLoader stopAnimating];
         [self.backgroundLoader stopAnimating];
         [self.loadingMoreView setHidden:YES];
@@ -161,13 +168,11 @@
 }
 -(void)showUserDetails
 {
-    if (LOGGED_IN_USER) {
-        __weak typeof(self) weakSelf = self;
-        InfoPageViewController *infoPage = [InfoPageViewController new];
-        infoPage.hidesBottomBarWhenPushed = YES;
-        infoPage.appEntity = (User *)LOGGED_IN_USER;
-        [weakSelf.navigationController pushViewController:infoPage animated:YES];
-    }
+    
+    __weak typeof(self) weakSelf = self;
+    MoreViewController *morePage = [self.storyboard instantiateViewControllerWithIdentifier:@"MoreViewController"];
+    morePage.hidesBottomBarWhenPushed = YES;
+    [weakSelf.navigationController pushViewController:morePage animated:YES];
 }
 #pragma mark - UITableViewDataSource
 
@@ -190,7 +195,15 @@
     [cell bind:[contactListArray objectAtIndex:[indexPath row]] withIndexPath:indexPath];
     return cell;
 }
-
+-(NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewRowAction * blockUser = [UITableViewRowAction rowActionWithStyle:(UITableViewRowActionStyleDefault) title:@"Block" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        
+        [self blockUser:(User*)[self->contactListArray objectAtIndex:[indexPath row]]];
+    }];
+    
+    return @[blockUser];
+}
 
 #pragma mark - UITableViewDelegate
 
@@ -252,45 +265,61 @@
     
     [self PushToNext:appEntity];
 }
+
+
+/**
+ 
+ Update User Online Offline Status
+
+ @param user for which status to be update
+ */
 -(void)applicationDidReceiveUserEvent:(User *)user{
-    
-    NSMutableArray *listArray = [NSMutableArray arrayWithArray:contactListArray];
     
     for (User *object in contactListArray) {
         
         if ([[user uid]isEqualToString:[object uid]]) {
             
-            NSInteger index = [listArray indexOfObject:object];
-            
-            [listArray removeObjectAtIndex:index];
-            
-            [listArray insertObject:user atIndex:index];
-            
-            NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:[listArray indexOfObject:user] inSection:0];
-            
+            [__tableView beginUpdates];
+            [contactListArray replaceObjectAtIndex:[contactListArray indexOfObject:object] withObject:user];
+            NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:[contactListArray indexOfObject:user] inSection:0];
             NSArray* rowsToReload = [NSArray arrayWithObjects:rowToReload, nil];
-            
-            if (listArray.count > 0) {
-                
-                [__tableView beginUpdates];
-                contactListArray = [NSMutableArray arrayWithArray:listArray];
-                [__tableView reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
-                [__tableView endUpdates];
-            }
+            [__tableView reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
+            [__tableView endUpdates];
+            break;
         }
     }
 }
+-(void)blockUser:(User *)user
+{
+    
+    [CometChatProRequests block:user in:self onSuccess:^(bool isBlocked) {
+        
+        if (isBlocked) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [__tableView beginUpdates];
+                NSIndexPath* rowToDelete = [NSIndexPath indexPathForRow:[self->contactListArray indexOfObject:user] inSection:0];
+                NSArray* rowsToReload = [NSArray arrayWithObjects:rowToDelete, nil];
+                [self->__tableView deleteRowsAtIndexPaths:rowsToReload withRowAnimation:(UITableViewRowAnimationFade)];
+                [self->contactListArray removeObject:user];
+                [self->__tableView endUpdates];
+                
+            });
+        }
+        
+    }];
+}
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    if(!_isMoreDataLoading){
+    if(!_moreLoading){
         
         int scrollViewContentHeight = __tableView.contentSize.height;
         int scrollOffsetThreshold = scrollViewContentHeight - __tableView.bounds.size.height;
         
         if(scrollView.contentOffset.y > scrollOffsetThreshold && __tableView.isDragging) {
             
-            _isMoreDataLoading = YES;
-            
+            _moreLoading = YES;
             CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
             _loadingMoreView.frame = frame;
             [_footerLoader startAnimating];

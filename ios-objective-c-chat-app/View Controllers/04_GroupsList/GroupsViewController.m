@@ -25,9 +25,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSInteger limit = 30 ;
+    
     _selectedScope = 0 ;
-    groupRequest = [[[GroupsRequestBuilder alloc]initWithLimit:limit] build];
+    
     _resultTableViewController = [ResultsTableController new];
     hexToRGB = [HexToRGBConvertor new];
     [self.view setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
@@ -36,13 +36,12 @@
     
     self.joinedgroupListArray = [NSMutableArray new];
     self.unjoinedgroupListArray = [NSMutableArray new];
-   
+    
     [self setUpActivityIndicatorView];
     [self configureTable:UITableViewStylePlain];
     [self viewWillSetNavigationBar];
-//    [self initializeSearchController];
+    //    [self initializeSearchController];
     [self configureFooterView];
-    [self fetchNext];
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -59,6 +58,16 @@
     __tableView.backgroundView = _backGroundActivityIndicatorView;
     [__tableView.layer setCornerRadius:10.0f];
     [_backGroundActivityIndicatorView startAnimating];
+}
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    NSInteger limit = 30 ;
+    groupRequest = [[[GroupsRequestBuilder alloc]initWithLimit:limit] build];
+    _joinedgroupListArray = [NSMutableArray new];
+    _unjoinedgroupListArray = [NSMutableArray new];
+    
+    [self fetchNext];
 }
 //- (void)initializeSearchController {
 //
@@ -106,6 +115,8 @@
         if (groups) {
             for (Group *object in groups) {
                 
+                NSLog(@"%@",[object stringValue]);
+                
                 if ([object hasJoined]) {
                     [_joinedgroupListArray addObject:object];
                 } else {
@@ -123,13 +134,13 @@
         
     } onError:^(CometChatException * error) {
         
-        NSLog(@"Error %@",[error errorDescription]);
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             _isMoreDataLoading = NO;
             [_footerActivityIndicatorView stopAnimating];
             [_backGroundActivityIndicatorView stopAnimating];
             [_loadingMoreView setHidden:YES];
+            
+            [Alert showAlertForError:error in:self];
         });
     }];
 }
@@ -313,7 +324,7 @@
         case 0:
             return @[leave_group];
             break;
-            case 1:
+        case 1:
             return @[join_group];
             break;
         default:
@@ -390,14 +401,14 @@
         }
         
     } onError:^(CometChatException * error) {
-        NSLog(@"Error %@",[error errorDescription]);
+        
+        [Alert showAlertForError:error in:self];
+        
     }];
 }
 
 
 -(void)checkGroupAvailablity:(Group *)group{
-    
-    NSLog(@"GROUP %@",[group stringValue]);
     
     __block NSString *Password = nil;
     
@@ -447,31 +458,22 @@
 
 -(void)joinGroup:(Group *)group WithPassword:(NSString*)password{
     
-    [CometChat joinGroupWithGUID:[group guid] groupType:[group groupType] password:password onSuccess:^(Group * groupJoined) {
+    [CometChatProRequests joinGroup:group withPassword:password in:self onSuccess:^(Group * _Nonnull groupJoined) {
         
-        [self showNextWithGroup:group];
-        
-    } onError:^(CometChatException * error) {
-        
-        NSLog(@"Error %@",[error errorDescription]);
+        [self showNextWithGroup:groupJoined];
         
     }];
-    
     
 }
 -(void)leaveGroup:(Group *)group {
     
-    [CometChat leaveGroupWithGUID:[group guid] onSuccess:^(NSString * isSuccess) {
+    [CometChatProRequests leaveGroup:group in:self onSuccess:^(bool left) {
         
-        NSLog(@"LEFT");
-        [self reloadTableData];
-        
-    } onError:^(CometChatException * error) {
-        
-        NSLog(@"Error %@",[error errorDescription]);
+        if (left) {
+            [self reloadTableData];
+        }
         
     }];
-    
 }
 #pragma mark - UISearchResultsUpdating
 

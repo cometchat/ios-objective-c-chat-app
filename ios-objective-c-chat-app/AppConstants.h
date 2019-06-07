@@ -12,11 +12,9 @@
 #import <CometChatPro/CometChatPro-Swift.h>
 #import "ListTableViewController.h"
 #import "ChatViewController.h"
-#import "UIColor+SystemColor.h"
 #import "TabBarViewController.h"
-#import "UIColor+SystemColor.h"
+//#import "UIColor+SystemColor.h"
 #import "CreateGroupViewController.h"
-#import "AppTheme.h"
 #import "HexToRGBConvertor.h"
 #import "MessageBubbleView.h"
 #import "NSString+TextToSize.h"
@@ -29,7 +27,7 @@
 #import "ResultsTableController.h"
 #import "View Controllers/01_Login/LoginViewController.h"
 #import "View Controllers/02_TabBar/TabBarViewController.h"
-#import "Manager/CometChatProRequests/CometChatProRequests.h"
+#import "CometChatProRequests/CometChatProRequests.h"
 #import "AudioVisualizer.h"
 #import "AudioVisualizerView.h"			
 #import "DemoUsersViewController.h"
@@ -45,6 +43,9 @@
 #import "AppSettings.h"
 #import "CallViewController.h"
 #import "MembersViewController.h"
+#import "MoreViewController.h"
+#import "Alert.h"
+
 
 #endif /* AppConstants_h */
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +65,7 @@
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #define        SYSTEM_VERSION                                [[UIDevice currentDevice] systemVersion]
-#define        SYSTEM_VERSION_EQUAL_TO(v)                    ([SYSTEM_VERSION compare:v options:NSNumericSearch] == NSOrderedSame)
+#define        SYSTEM_VERSION_EQUAL_TO(v)                    1
 #define        SYSTEM_VERSION_GREATER_THAN(v)                ([SYSTEM_VERSION compare:v options:NSNumericSearch] == NSOrderedDescending)
 #define        SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)    ([SYSTEM_VERSION compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define        SYSTEM_VERSION_LESS_THAN(v)                    ([SYSTEM_VERSION compare:v options:NSNumericSearch] == NSOrderedAscending)

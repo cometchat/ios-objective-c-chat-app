@@ -296,16 +296,28 @@
     NSString *groupName = [_selectgroupName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *guid = [NSString stringWithFormat:@"%@_%u",groupName,arc4random_uniform(99)];
     
-        Group *newGroup = [[Group alloc]initWithGuid:guid name:groupName groupType:self.group_type password:password];
+    Group *groupToBeCreated;
+    NSDictionary *metadata = [NSDictionary dictionaryWithObjectsAndKeys:@"dummyValue",@"dummyKey", nil];
     
-        [CometChat createGroupWithGroup:newGroup onSuccess:^(Group * _Nonnull created_group) {
+    if (![self.selectgroupDesc.text isEqualToString:@""]) {
+        
+        groupToBeCreated = [[Group alloc]initWithGuid:guid name:groupName groupType:self.group_type password:password icon:@"https://cdn0.iconfinder.com/data/icons/social-circle-3/72/Codepen-512.png" description:self.selectgroupDesc.text];
+        
+    }else
+    {
+        groupToBeCreated =  [[Group alloc]initWithGuid:guid name:groupName groupType:self.group_type password:password];
+    }
+    [groupToBeCreated setMetadata:metadata];
     
-            NSLog(@"%@",[created_group stringValue]);
-            [self showNextWithGroup:created_group];
-    
-        } onError:^(CometChatException * _Nullable error) {
-            NSLog(@"%@",[error errorDescription]);
-        }];
+    [CometChat createGroupWithGroup:groupToBeCreated onSuccess:^(Group * _Nonnull created_group) {
+        
+        [self showNextWithGroup:created_group];
+        
+    } onError:^(CometChatException * _Nullable error) {
+        
+        [Alert showAlertForError:error in:self];
+        
+    }];
 }
 -(void)shakeAnimation:(UIView *)aView
 {

@@ -196,7 +196,6 @@ static int textFiledHeight;
     {
         UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[[_chatEntity lastActiveAt] sentAtToTime]];
         [self.navigationItem setTitleView:new];
-        // set up naviagtion bar with typing indicator and title "USER"
     }
     else
     {
@@ -239,7 +238,10 @@ static int textFiledHeight;
             [messsagesArray addObjectsFromArray:messages];
             
             for (BaseMessage *object in messages) {
-                [CometChat markMessageAsReadWithMessage:object];
+                
+                if ([object readByMeAt] == 0) {
+                    [CometChat markMessageAsReadWithMessage:object];
+                }
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{

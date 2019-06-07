@@ -243,6 +243,8 @@
                         
                         otherCell.alabel.text = [dataSource objectAtIndex:indexPath.row][0];
                         otherCell.aImageView.image = [UIImage imageNamed:[dataSource objectAtIndex:indexPath.row][1]];
+                        [otherCell.aImageView setImage:[[otherCell.aImageView image] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+                        [otherCell.aImageView setTintColor:[UIColor whiteColor]];
                         return otherCell;
                     }
                         break;
@@ -252,6 +254,8 @@
                         
                         otherCell.alabel.text = [dataSource objectAtIndex:indexPath.row][0];
                         otherCell.aImageView.image = [UIImage imageNamed:[dataSource objectAtIndex:indexPath.row][1]];
+                        [otherCell.aImageView setImage:[[otherCell.aImageView image] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+                        [otherCell.aImageView setTintColor:[UIColor whiteColor]];
                          return otherCell;
                     }
                         break;
@@ -261,6 +265,8 @@
                         
                         otherCell.alabel.text = [dataSource objectAtIndex:indexPath.row][0];
                         otherCell.aImageView.image = [UIImage imageNamed:[dataSource objectAtIndex:indexPath.row][1]];
+                        [otherCell.aImageView setImage:[[otherCell.aImageView image] imageWithRenderingMode:(UIImageRenderingModeAlwaysTemplate)]];
+                        [otherCell.aImageView setTintColor:[UIColor whiteColor]];
                         return otherCell;
                     }
                         break;
@@ -435,7 +441,7 @@
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     MembersViewController *controller = [sb instantiateViewControllerWithIdentifier:@"MembersViewController"];
     [controller setGroup:group];
-    [controller setIsLoadBanned:NO];
+    [controller setIsLoadActive:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 -(void)viewBlockedMembersFor:(Group *)group

@@ -80,6 +80,9 @@
     if (!_icon) {
         _icon = [UIImageView new];
         [_icon setClipsToBounds:YES];
+        _icon.clipsToBounds = YES;
+        [_icon.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+        [_icon.layer setBorderWidth:3.0f];
     }
     return _icon;
 }

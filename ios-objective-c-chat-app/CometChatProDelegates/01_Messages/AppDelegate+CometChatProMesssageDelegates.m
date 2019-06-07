@@ -26,7 +26,7 @@
         
         [self.messagedelegate applicationdidReceiveNewMessage:textMessage];
     }
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"com.inscripts.updateBadge" object:nil userInfo:nil];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:@"com.inscripts.updateBadge" object:nil userInfo:nil];
 }
 
 

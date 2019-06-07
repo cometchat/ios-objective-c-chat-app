@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LoginViewController : UIViewController<UITextFieldDelegate,DemoUserDelegate,UIPopoverPresentationControllerDelegate>
+@interface LoginViewController : UIViewController<UITextFieldDelegate,DemoUserDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 @end

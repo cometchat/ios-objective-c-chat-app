@@ -184,6 +184,7 @@
         self.nameLabel.text = [group name];
         letter = [NSString stringWithFormat:@"%@",[group name]];
         link = [NSString stringWithFormat:@"%@",[group icon]];
+        self.detailsLabel.text = [group groupDescription];
     }
     Avatar *avatar = [[Avatar alloc]initWithRect:CGRectMake(0.0f, 0.0f, 30.0f, 30.0f) fullName:letter];
     [avatar setBackgroundColor:[UIColor grayColor]];
