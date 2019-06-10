@@ -50,8 +50,8 @@
 #endif /* AppConstants_h */
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define API_KEY             "your_api_key"
-#define APP_ID              "your_app_id"
+#define API_KEY             "ecd14a2a1adb51cbb8d9e4b9b6d3a71d3f493007"
+#define APP_ID              "40784a9b99b289"
 
 #define IS_LOGGED_IN        "isLoggedin"
 #define LOGGED_IN_USER_ID   "logged_in_user_id"

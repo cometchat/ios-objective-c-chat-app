@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE51AF2C70A3682AF7648FFF /* libPods-ios-objective-c-chat-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */; };
 		E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1067B37226DF9DC00A3237F /* Localizable.strings */; };
 		E106C7BB223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E106C7BA223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m */; };
 		E11A032622A1234A00C97D4C /* Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = E11A032522A1234A00C97D4C /* Alert.m */; };
@@ -23,15 +24,6 @@
 		E145B7FF2262085F007E9641 /* NSDate+RelativeTime.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E145B7FE2262085F007E9641 /* NSDate+RelativeTime.bundle */; };
 		E145B80222620D37007E9641 /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = E145B80122620D37007E9641 /* NSDate+NVTimeAgo.m */; };
 		E1500767223927330016DC32 /* AudioVisualizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1500766223927330016DC32 /* AudioVisualizerView.m */; };
-		E155D70822817C3200047746 /* CometChatPro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70722817C3200047746 /* CometChatPro.framework */; };
-		E155D70E22817C3F00047746 /* JitsiMeet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70C22817C3E00047746 /* JitsiMeet.framework */; };
-		E155D70F22817C3F00047746 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70D22817C3E00047746 /* WebRTC.framework */; };
-		E155D71022817C5100047746 /* JitsiMeet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70C22817C3E00047746 /* JitsiMeet.framework */; };
-		E155D71122817C5100047746 /* JitsiMeet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70C22817C3E00047746 /* JitsiMeet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E155D71222817C5100047746 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70D22817C3E00047746 /* WebRTC.framework */; };
-		E155D71322817C5100047746 /* WebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70D22817C3E00047746 /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E155D71422817C5200047746 /* CometChatPro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70722817C3200047746 /* CometChatPro.framework */; };
-		E155D71522817C5200047746 /* CometChatPro.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E155D70722817C3200047746 /* CometChatPro.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E15D4F4422647518001E4FC4 /* ActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */; };
 		E162E8BE229BB16B00EB1349 /* MembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E162E8BD229BB16B00EB1349 /* MembersViewController.m */; };
 		E172D8002246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m in Sources */ = {isa = PBXBuildFile; fileRef = E172D7FF2246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m */; };
@@ -82,9 +74,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E155D71122817C5100047746 /* JitsiMeet.framework in Embed Frameworks */,
-				E155D71322817C5100047746 /* WebRTC.framework in Embed Frameworks */,
-				E155D71522817C5200047746 /* CometChatPro.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +81,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.debug.xcconfig"; sourceTree = "<group>"; };
+		721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.release.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.release.xcconfig"; sourceTree = "<group>"; };
+		9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ios-objective-c-chat-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1067B31226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
 		E1067B32226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E1067B36226DF9DC00A3237F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -125,9 +117,6 @@
 		E145B80122620D37007E9641 /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		E1500765223927330016DC32 /* AudioVisualizerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioVisualizerView.h; sourceTree = "<group>"; };
 		E1500766223927330016DC32 /* AudioVisualizerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioVisualizerView.m; sourceTree = "<group>"; };
-		E155D70722817C3200047746 /* CometChatPro.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CometChatPro.framework; sourceTree = "<group>"; };
-		E155D70C22817C3E00047746 /* JitsiMeet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JitsiMeet.framework; sourceTree = "<group>"; };
-		E155D70D22817C3E00047746 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebRTC.framework; sourceTree = "<group>"; };
 		E15D4F4222647518001E4FC4 /* ActionTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionTableViewCell.h; sourceTree = "<group>"; };
 		E15D4F4322647518001E4FC4 /* ActionTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActionTableViewCell.m; sourceTree = "<group>"; };
 		E162E8BC229BB16B00EB1349 /* MembersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MembersViewController.h; sourceTree = "<group>"; };
@@ -213,18 +202,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E155D70E22817C3F00047746 /* JitsiMeet.framework in Frameworks */,
-				E155D71022817C5100047746 /* JitsiMeet.framework in Frameworks */,
-				E155D70822817C3200047746 /* CometChatPro.framework in Frameworks */,
-				E155D71222817C5100047746 /* WebRTC.framework in Frameworks */,
-				E155D70F22817C3F00047746 /* WebRTC.framework in Frameworks */,
-				E155D71422817C5200047746 /* CometChatPro.framework in Frameworks */,
+				BE51AF2C70A3682AF7648FFF /* libPods-ios-objective-c-chat-app.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5AF281F69A68E48AC15EA36D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */,
+				721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		D30119AF8955D02F38F4F96A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E11A032322A0FE5F00C97D4C /* 09_MembersList */ = {
 			isa = PBXGroup;
 			children = (
@@ -419,6 +420,8 @@
 				E1067B37226DF9DC00A3237F /* Localizable.strings */,
 				E1A1C45F221AA34100F7076B /* ios-objective-c-chat-app */,
 				E1A1C45E221AA34100F7076B /* Products */,
+				5AF281F69A68E48AC15EA36D /* Pods */,
+				D30119AF8955D02F38F4F96A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -434,7 +437,6 @@
 			isa = PBXGroup;
 			children = (
 				E180E618228A9A9800AE552C /* Resource */,
-				E1BCE7DB227B134100958256 /* Vendors */,
 				E1B761912237BFED001EF19B /* ios-objective-c-chat-app.entitlements */,
 				E1A4A6CB223F606F00D475B6 /* Views */,
 				E1A4A6C7223F604900D475B6 /* Controllers */,
@@ -673,16 +675,6 @@
 			path = Bubble;
 			sourceTree = "<group>";
 		};
-		E1BCE7DB227B134100958256 /* Vendors */ = {
-			isa = PBXGroup;
-			children = (
-				E155D70C22817C3E00047746 /* JitsiMeet.framework */,
-				E155D70D22817C3E00047746 /* WebRTC.framework */,
-				E155D70722817C3200047746 /* CometChatPro.framework */,
-			);
-			path = Vendors;
-			sourceTree = "<group>";
-		};
 		E1EDCCEE2239326900D0028E /* AudioVisualizer */ = {
 			isa = PBXGroup;
 			children = (
@@ -701,11 +693,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1A1C473221AA34100F7076B /* Build configuration list for PBXNativeTarget "ios-objective-c-chat-app" */;
 			buildPhases = (
+				058B875F9314B9D46625A933 /* [CP] Check Pods Manifest.lock */,
 				E1A1C459221AA34100F7076B /* Sources */,
 				E1A1C45A221AA34100F7076B /* Frameworks */,
 				E1A1C45B221AA34100F7076B /* Resources */,
 				E1BCE7E0227B13B800958256 /* Embed Frameworks */,
 				E19E342122942C08002AEB54 /* ShellScript */,
+				7E4D90DE93DC7AEC400EAE1E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -778,6 +772,54 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		058B875F9314B9D46625A933 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ios-objective-c-chat-app-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7E4D90DE93DC7AEC400EAE1E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app-frameworks.sh",
+				"${PODS_ROOT}/CometChatPro/CometChatPro.framework",
+				"${PODS_ROOT}/JitsiMeetSDK/Frameworks/JitsiMeet.framework",
+				"${PODS_ROOT}/JitsiMeetSDK/Frameworks/WebRTC.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CometChatPro.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JitsiMeet.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E19E342122942C08002AEB54 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -1002,6 +1044,7 @@
 		};
 		E1A1C474221AA34100F7076B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1033,6 +1076,7 @@
 		};
 		E1A1C475221AA34100F7076B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
