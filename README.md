@@ -39,7 +39,7 @@ CometChat iOS Demo app (built using **CometChat Pro**) is a fully functional mes
 
 # Installation
       
-   Simply clone the project from iOS-swift-chat-app repository. After cloning the repository navigate to project's folder and use below command to install the require pods.
+   Simply clone the project from iOS-objective-c-chat-app repository. After cloning the repository navigate to project's folder and use below command to install the require pods.
    
    ```
    $ pod install
