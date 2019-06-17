@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppConstants.h"
+#import "EntityTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

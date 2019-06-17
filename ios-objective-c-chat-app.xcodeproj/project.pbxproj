@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BE51AF2C70A3682AF7648FFF /* libPods-ios-objective-c-chat-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */; };
+		DB41D61A22AE852A009B6CCB /* EntityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB41D61822AE852A009B6CCB /* EntityTableViewCell.m */; };
+		DB41D61B22AE852A009B6CCB /* EntityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DB41D61922AE852A009B6CCB /* EntityTableViewCell.xib */; };
 		E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1067B37226DF9DC00A3237F /* Localizable.strings */; };
 		E106C7BB223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E106C7BA223CF8AE005E1A88 /* AppDelegate+CallManagerDelegate.m */; };
 		E11A032622A1234A00C97D4C /* Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = E11A032522A1234A00C97D4C /* Alert.m */; };
@@ -84,6 +86,9 @@
 		0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.debug.xcconfig"; sourceTree = "<group>"; };
 		721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.release.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.release.xcconfig"; sourceTree = "<group>"; };
 		9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ios-objective-c-chat-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB41D61722AE852A009B6CCB /* EntityTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntityTableViewCell.h; sourceTree = "<group>"; };
+		DB41D61822AE852A009B6CCB /* EntityTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntityTableViewCell.m; sourceTree = "<group>"; };
+		DB41D61922AE852A009B6CCB /* EntityTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EntityTableViewCell.xib; sourceTree = "<group>"; };
 		E1067B31226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
 		E1067B32226DF95300A3237F /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E1067B36226DF9DC00A3237F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -492,6 +497,9 @@
 				E1EA28AE221BC7390088054D /* EntityListTableViewCell.m */,
 				E11A032422A1234A00C97D4C /* Alert.h */,
 				E11A032522A1234A00C97D4C /* Alert.m */,
+				DB41D61722AE852A009B6CCB /* EntityTableViewCell.h */,
+				DB41D61822AE852A009B6CCB /* EntityTableViewCell.m */,
+				DB41D61922AE852A009B6CCB /* EntityTableViewCell.xib */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -759,6 +767,7 @@
 			files = (
 				E1A1C46D221AA34100F7076B /* LaunchScreen.storyboard in Resources */,
 				E180E61A228A9AC000AE552C /* call_ringback.wav in Resources */,
+				DB41D61B22AE852A009B6CCB /* EntityTableViewCell.xib in Resources */,
 				E145B7FF2262085F007E9641 /* NSDate+RelativeTime.bundle in Resources */,
 				E18AB05F2244C4C1007462F1 /* ringtone.caf in Resources */,
 				E180E61C228A9AC700AE552C /* call_incoming.wav in Resources */,
@@ -804,8 +813,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app-frameworks.sh",
 				"${PODS_ROOT}/CometChatPro/CometChatPro.framework",
-				"${PODS_ROOT}/JitsiMeetSDK/Frameworks/JitsiMeet.framework",
-				"${PODS_ROOT}/JitsiMeetSDK/Frameworks/WebRTC.framework",
+				"${PODS_ROOT}/CometChatPro/Vendors/JitsiMeet.framework",
+				"${PODS_ROOT}/CometChatPro/Vendors/WebRTC.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -887,6 +896,7 @@
 				E18A1D20223F962600662831 /* Camera.m in Sources */,
 				E132441B224B970B00D7B982 /* InfoPage.m in Sources */,
 				E180E617228A924800AE552C /* CallViewController.m in Sources */,
+				DB41D61A22AE852A009B6CCB /* EntityTableViewCell.m in Sources */,
 				E172D8002246096C0013D05D /* AppDelegate+CometChatProMesssageDelegates.m in Sources */,
 				E1B2D185223BD3B40013D422 /* DemoUsersViewController.m in Sources */,
 				E1A2F2B6221C366F00334CE5 /* ChatViewController.m in Sources */,
@@ -1058,12 +1068,16 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
 				);
-				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
+				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ios-objective-c-chat-app.inscripts";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1090,12 +1104,16 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
 				);
-				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
+				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ios-objective-c-chat-app.inscripts";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -3,7 +3,7 @@
 
 # Cocoapods
 
-1. Unable to open file (in target "ios-objective-c-chat-app" in project "ios-objective-c-chat-app") (in target 'ios-objective-c-chat-app')
+1. Unable to open file (in target "CometChatPro-swift-sampleApp" in project "CometChatPro-swift-sampleApp") (in target 'CometChatPro-swift-sampleApp')
 
 - This issue occurs somethings if the pods dosen't linked properly with project. Kindly, perform below steps to resolve the issue:
  ```
@@ -20,3 +20,9 @@
 - out-of-date source repos which you can update with `pod repo update` or with `pod install --repo-update`.
 
 
+# Swift Versions
+
+## Not able to find correct version for your Xcode? Using below links you can navigate to sample apps: 
+
+1. [Swift 5.0](https://github.com/cometchat-pro-samples/ios-swift-chat-app) 
+2. [Swift 4.2](https://github.com/cometchat-pro-samples/ios-swift-chat-app-swift-4.2)

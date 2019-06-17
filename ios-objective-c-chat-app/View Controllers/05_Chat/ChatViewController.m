@@ -1043,10 +1043,10 @@ static int textFiledHeight;
             {
                     
                 case ReceiptTypeDelivered:
-                    originalMessage.deliveredAt = [receipts timeStamp];
+                    originalMessage.deliveredToMeAt = [receipts timeStamp];
                     break;
                 case ReceiptTypeRead:
-                    originalMessage.readAt = [receipts timeStamp];
+                    originalMessage.readByMeAt = [receipts timeStamp];
                     break;
             }
             

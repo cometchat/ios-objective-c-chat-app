@@ -19,7 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param api_key `CometChat API KEY`
  @param aUser the user object containing all the information of the logged in user.
  @param aError error in while login
+
  */
+
+ typedef void(^unreadMessageCountResponse)(BOOL);
+
+
 +(void)loginWithUID:(NSString *)uid andAPIKey:(NSString *)api_key loggedinUser:(void(^)(User *user))aUser andError:(void(^)(CometChatException *error))aError;
 
 
@@ -95,6 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
  @param isKicked is Successfully kicked GroupMember
  */
 + (void)kick:(User*)user fromGroup:(Group *)group in:(id)target onSuccess:(void (^)(bool kicked))isKicked;
+
+
++(void)getUnreadCountForAllUsers:(NSString *)uid  onSuccess:(void(^)(NSDictionary *success))success andError:(void(^)(CometChatException *error))aError;
+
++(void)getUnreadCountForAllGroups:(NSString *)uid  onSuccess:(void(^)(NSDictionary *success))success andError:(void(^)(CometChatException *error))aError;
+
 @end
 
 NS_ASSUME_NONNULL_END

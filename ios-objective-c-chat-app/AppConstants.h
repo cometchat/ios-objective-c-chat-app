@@ -45,13 +45,14 @@
 #import "MembersViewController.h"
 #import "MoreViewController.h"
 #import "Alert.h"
+#import "EntityListTableViewCell.h"
 
 
 #endif /* AppConstants_h */
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define API_KEY             "ecd14a2a1adb51cbb8d9e4b9b6d3a71d3f493007"
-#define APP_ID              "40784a9b99b289"
+#define API_KEY             "ENTER API  KEY"
+#define APP_ID              "ENTER APP ID"
 
 #define IS_LOGGED_IN        "isLoggedin"
 #define LOGGED_IN_USER_ID   "logged_in_user_id"
@@ -81,7 +82,6 @@
 #define WIDTHOFPOPUPTRIANGLE    6.0f
 #define paddingX                8.0f
 #define paddingY                8.0f
-
 #define CELL_ANIMATION_HEIGHT   10.0f
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #define FONT_SIZE 14.0f

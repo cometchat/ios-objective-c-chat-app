@@ -48,7 +48,7 @@
 +(void)leaveGroup:(Group *)group in:(nonnull id)target onSuccess:(nonnull void (^)(bool))isLeft{
     
     
-    [CometChat leaveGroupWithGUID:[group guid] onSuccess:^(NSString * _Nonnull _isSuccess ) {
+    [CometChat leaveGroupWithGUID:[group guid] onSuccess:^(NSString * _Nonnull _isSuccess) {
         
         isLeft(YES);
         
@@ -134,5 +134,29 @@
         [Alert showAlertForError:error in:target];
         
     }];
+}
+
++(void)getUnreadCountForAllUsers:(NSString *)uid  onSuccess:(void(^)(NSDictionary *success))success andError:(void(^)(CometChatException *error))aError{
+    
+    
+    [CometChat getUnreadMessageCountForAllUsersWithHideMessagesFromBlockedUsers:false onSuccess:^(NSDictionary<NSString *,id> * _Nonnull response) {
+        
+        success(response);
+        
+    } onError:^(CometChatException * _Nullable error) {
+        
+        aError(error);
+    }];
+}
+
+
++(void)getUnreadCountForAllGroups:(NSString *)uid  onSuccess:(void(^)(NSDictionary *success))success andError:(void(^)(CometChatException *error))aError{
+    
+    [CometChat getUnreadMessageCountForAllGroupsWithHideMessagesFromBlockedUsers:false onSuccess:^(NSDictionary<NSString *,id> * _Nonnull response) {
+         success(response);
+    } onError:^(CometChatException * _Nullable error) {
+         aError(error);
+    }];
+
 }
 @end

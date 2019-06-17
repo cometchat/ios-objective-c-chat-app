@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1DD6E9899500821268CE29E15A10D8F6"
+               BlueprintIdentifier = "0E984415ACA7941821F662E3385F0494"
                BuildableName = "CometChatPro"
                BlueprintName = "CometChatPro"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -165,9 +165,9 @@
             
             _messageLbl.textColor   = [UIColor whiteColor];
             
-            if ([message readAt]) {
+            if ([message readByMeAt]) {
                 [_readReceipts setImage:[UIImage imageNamed:@"round_done_all_black_18pt"]];
-            }else if ([message deliveredAt]){
+            }else if ([message deliveredToMeAt]){
                 [_readReceipts setImage:[UIImage imageNamed:@"round_done_all_black_18pt"]];
                 [_readReceipts setTintColor:[UIColor lightGrayColor]];
             }else {

@@ -57,6 +57,8 @@
     __tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     __tableView.backgroundView = _backGroundActivityIndicatorView;
     [__tableView.layer setCornerRadius:10.0f];
+    UINib *nib = [UINib nibWithNibName:@"EntityTableViewCell" bundle:nil];
+    [__tableView registerNib:nib forCellReuseIdentifier:@"EntityCell"];
     [_backGroundActivityIndicatorView startAnimating];
 }
 -(void)viewDidAppear:(BOOL)animated{
@@ -69,26 +71,7 @@
     
     [self fetchNext];
 }
-//- (void)initializeSearchController {
-//
-//    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
-//    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
-//    self.definesPresentationContext = YES;
-//    [self.searchController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:NSLocalizedString(@"Participant", @""),NSLocalizedString(@"Blocked User", @""),nil]];
-//
-//    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
-//
-//    self.searchController.searchBar.tintColor = [UIColor whiteColor];
-//    self.searchController.obscuresBackgroundDuringPresentation = YES;
-//    self.searchController.searchResultsUpdater = self;
-//    self.searchController.searchBar.delegate = self;
-//
-//    if (@available(iOS 11.0, *)) {
-//        self.navigationItem.searchController = self.searchController;
-//    } else {
-//        self._tableView.tableHeaderView = self.searchController.searchBar;
-//    }
-//}
+
 -(void)configureFooterView
 {
     CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
@@ -205,10 +188,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    EntityListTableViewCell *cell = (EntityListTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[EntityListTableViewCell reuseIdentifier]];
+    EntityTableViewCell *cell = (EntityTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"EntityCell"];
     
-    if (cell == nil) {
-        cell = [[EntityListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
+    if(!cell){
+        cell = [[EntityTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EntityCell"];
     }
     
     Group *group;
@@ -283,7 +266,7 @@
     }
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewAutomaticDimension;
+    return 70.0f;;
 }
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section{
     

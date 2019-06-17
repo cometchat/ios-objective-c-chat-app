@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CABCEEAAD2399A951CA5BAEAE32ACF62"
+               BlueprintIdentifier = "23356FBB9C51419249A7C85360D2E056"
                BuildableName = "libPods-ios-objective-c-chat-app.a"
                BlueprintName = "Pods-ios-objective-c-chat-app"
                ReferencedContainer = "container:Pods.xcodeproj">

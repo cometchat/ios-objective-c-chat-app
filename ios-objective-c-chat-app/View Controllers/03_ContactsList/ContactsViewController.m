@@ -30,7 +30,6 @@
     hexToRGB = [HexToRGBConvertor new];
     [self.view setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
     [self.navigationController.navigationBar setBarTintColor:[hexToRGB colorWithHexString:@"#2636BE"]];
-    
     [_resultTableViewController setDelegate:self];
     
     [self setUpActivityIndicatorView];
@@ -48,8 +47,8 @@
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NSInteger limit = 30 ;
-    userRequest = [[[[UsersRequestBuilder alloc]initWithLimit:limit] hideBlockedUsers:YES]build];
+    NSInteger limit = 30;
+    userRequest = [[[UsersRequestBuilder alloc]initWithLimit:limit]build];
     self.contactListArray = [NSMutableArray new];
     [self fetchNext];
     
@@ -68,33 +67,13 @@
     [__tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     [__tableView setBackgroundView:[self backgroundLoader]];
     [__tableView.layer setCornerRadius:10.0f];
-    [__tableView registerClass:[EntityListTableViewCell class] forCellReuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
+    
+    UINib *nib = [UINib nibWithNibName:@"EntityTableViewCell" bundle:nil];
+    [__tableView registerNib:nib forCellReuseIdentifier:@"EntityCell"];
     [[self backgroundLoader] startAnimating];
     
 }
-//- (void)initializeSearchController {
-//
-//
-//    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
-//    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
-//    self.definesPresentationContext = YES;
-//
-//    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
-//
-//        self.searchController.searchBar.tintColor = [UIColor whiteColor];
-//    self.searchController.obscuresBackgroundDuringPresentation = YES;
-//
-//    self.searchController.searchResultsUpdater = self;
-//
-//
-//    self.searchController.searchBar.delegate = self;
-//
-//    if (@available(iOS 11.0, *)) {
-//        self.navigationItem.searchController = self.searchController;
-//    } else {
-//        self._tableView.tableHeaderView = self.searchController.searchBar;
-//    }
-//}
+
 -(void)configureFooterView
 {
     CGRect frame = CGRectMake(0.0f, __tableView.contentSize.height, __tableView.bounds.size.width, __tableView.estimatedRowHeight);
@@ -122,7 +101,6 @@
 }
 -(void)fetchUsers
 {
-    
     _moreLoading = YES ;
     
     [userRequest fetchNextOnSuccess:^(NSArray<User *> * contacts) {
@@ -164,7 +142,6 @@
     [self.navigationItem setRightBarButtonItems:@[user_details]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
-    
 }
 -(void)showUserDetails
 {
@@ -186,15 +163,17 @@
 }
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    EntityTableViewCell *cell = (EntityTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"EntityCell"];
     
-    EntityListTableViewCell *cell = (EntityListTableViewCell *) [tableView dequeueReusableCellWithIdentifier:[EntityListTableViewCell reuseIdentifier]];
-    
-    if (!cell) {
-        cell = [[EntityListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[EntityListTableViewCell reuseIdentifier]];
+    if(!cell){
+        cell = [[EntityTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EntityCell"];
     }
+ 
     [cell bind:[contactListArray objectAtIndex:[indexPath row]] withIndexPath:indexPath];
     return cell;
 }
+
 -(NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewRowAction * blockUser = [UITableViewRowAction rowActionWithStyle:(UITableViewRowActionStyleDefault) title:@"Block" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
@@ -212,13 +191,14 @@
     [self PushToNext:[contactListArray objectAtIndex:[indexPath row]]];
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewAutomaticDimension;
+    return 70.0f;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     
     return 0.0f;
 }
+
 -(void)PushToNext:(AppEntity *)user{
     
     ChatViewController *chatviewcontroller = [self.storyboard instantiateViewControllerWithIdentifier:@"ChatViewController"];
@@ -295,19 +275,15 @@
     [CometChatProRequests block:user in:self onSuccess:^(bool isBlocked) {
         
         if (isBlocked) {
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [__tableView beginUpdates];
+               [self->__tableView beginUpdates];
                 NSIndexPath* rowToDelete = [NSIndexPath indexPathForRow:[self->contactListArray indexOfObject:user] inSection:0];
-                NSArray* rowsToReload = [NSArray arrayWithObjects:rowToDelete, nil];
-                [self->__tableView deleteRowsAtIndexPaths:rowsToReload withRowAnimation:(UITableViewRowAnimationFade)];
-                [self->contactListArray removeObject:user];
+                EntityTableViewCell *cell = [self->__tableView cellForRowAtIndexPath:rowToDelete];
+                [cell.blockedView setHidden:NO];
                 [self->__tableView endUpdates];
                 
             });
         }
-        
     }];
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{

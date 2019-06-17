@@ -17,18 +17,43 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self setBadgeForContactsTab];
+    [self setBadgeForGroupsTab];
     hexToRgb = [HexToRGBConvertor new];
     
     [[UITabBar appearance] setTintColor:[hexToRgb colorWithHexString:@"#2636BE"]];
     [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBadge:) name:@"com.inscripts.updateBadge" object:nil];
 }
--(void)setBadge:(id)sender
-{
-    NSString *badgeValue = [NSString stringWithFormat:@"%ld",[[[self.tabBar.items objectAtIndex:0] badgeValue] integerValue] + 1 ];
-    [[self.tabBar.items objectAtIndex:0]setBadgeValue:badgeValue];
+
+-(void)setBadgeForContactsTab {
+    
+    [CometChatProRequests getUnreadCountForAllUsers:@"" onSuccess:^(NSDictionary * _Nonnull success) {
+        NSLog(@"getUnreadCountForAllUsers success: %@",success);
+    
+        NSString *badgeValue = [NSString stringWithFormat:@"%ld",success.count];
+         dispatch_async(dispatch_get_main_queue(), ^(){
+             [[self.tabBar.items objectAtIndex:0]setBadgeValue:badgeValue];
+         });
+    } andError:^(CometChatException * _Nonnull error) {
+        NSLog(@"error: %@",error.debugDescription);
+    }];
+   
 }
+
+-(void)setBadgeForGroupsTab {
+    
+    [CometChatProRequests getUnreadCountForAllGroups:@"" onSuccess:^(NSDictionary * _Nonnull success) {
+        NSLog(@"getUnreadCountForAllGroups success : %@",success);
+        NSString *badgeValue = [NSString stringWithFormat:@"%ld",success.count];
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[self.tabBar.items objectAtIndex:1]setBadgeValue:badgeValue];
+        });
+    } andError:^(CometChatException * _Nonnull error) {
+        NSLog(@"error: %@",error.debugDescription);
+    }];
+}
+
+
 
 @end
 

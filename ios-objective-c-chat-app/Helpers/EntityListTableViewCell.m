@@ -12,6 +12,8 @@
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *detailsLabel;
 @property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UIView *blockedView;
+@property (nonatomic, strong) UILabel *blockedLabel;
 
 @end
 
@@ -45,24 +47,29 @@
         [self.contentView addSubview:self.iconView];
         [self.contentView addSubview:self.nameLabel];
         [self.contentView addSubview:self.detailsLabel];
+        [self.contentView addSubview:self.blockedView];
+        [self.blockedView addSubview:self.blockedLabel];
         
         [_iconView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_nameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_detailsLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_blockedView setTranslatesAutoresizingMaskIntoConstraints:NO];
         
-        NSDictionary *views = NSDictionaryOfVariableBindings(_iconView,_nameLabel,_detailsLabel);
+        NSDictionary *views = NSDictionaryOfVariableBindings(_iconView,_nameLabel,_detailsLabel,_blockedView);
         
         NSArray *horizontalConstraints1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_iconView]-(16)-[_nameLabel]"  options:0 metrics:nil views:views];
         NSArray *horizontalConstraints2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_iconView]-(16)-[_detailsLabel]"  options:0 metrics:nil views:views];
         NSArray *verticalConstraints1   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_iconView]-|"  options:0 metrics:nil views:views];
         NSArray *verticalConstraints2   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_nameLabel]-[_detailsLabel]"  options:0 metrics:nil views:views];
         NSArray *verticalConstraints3   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_nameLabel]-[_detailsLabel]-|"  options:0 metrics:nil views:views];
+         NSArray *verticalConstraints4   = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_nameLabel]-[_detailsLabel]-|"  options:0 metrics:nil views:views];
         
         [self.contentView addConstraints:horizontalConstraints1];
         [self.contentView addConstraints:horizontalConstraints2];
         [self.contentView addConstraints:verticalConstraints1];
         [self.contentView addConstraints:verticalConstraints2];
         [self.contentView addConstraints:verticalConstraints3];
+        [self.contentView addConstraints:verticalConstraints4];
         
     }
     return self;
@@ -88,6 +95,25 @@
     }
     return _nameLabel;
 }
+
+-(UILabel *)blockedLabel
+{
+    if (!_blockedLabel) {
+        _blockedLabel = [UILabel new];
+        _blockedLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    }
+    return _blockedLabel;
+}
+
+-(UIView *)blockedView
+{
+    if (!_blockedView) {
+        _blockedView = [UIView new];
+        _blockedView.backgroundColor = [UIColor redColor];
+    }
+    return _blockedView;
+}
+
 -(UILabel *)detailsLabel
 {
     if (!_detailsLabel) {
@@ -105,7 +131,7 @@
     CGFloat nameWidth   = self.frame.size.width*70/100;
     CGFloat nameHeight  = (self.frame.size.height - (paddingY*2))/2;
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_iconView,_nameLabel,_detailsLabel);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_iconView,_nameLabel,_detailsLabel,_blockedView);
     
     NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",imageHeight],@"imageHeight",[NSString stringWithFormat:@"%f",nameWidth],@"nameWidth",[NSString stringWithFormat:@"%f",nameHeight],@"nameHeight", nil];
     
@@ -131,6 +157,7 @@
         User *person = (User *)entity;
         
         self.nameLabel.text = [person name];
+        self.blockedLabel.text = @"Blocked";
         switch ([person status]) {
                 
             case UserStatusOnline:
