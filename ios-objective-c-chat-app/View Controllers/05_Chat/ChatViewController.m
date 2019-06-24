@@ -98,11 +98,11 @@ static int textFiledHeight;
     
     if (_chatEntity.receiverType == ReceiverTypeUser)
     {
-        messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithUID:_chatEntity.receiverId]setWithLimit:limit] build];
+        messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithUid:_chatEntity.receiverId]setWithLimit:limit] build];
         
     } else if (_chatEntity.receiverType == ReceiverTypeGroup)
     {
-        messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithGUID:_chatEntity.receiverId]setWithLimit:limit]build];
+        messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithGuid:_chatEntity.receiverId]setWithLimit:limit]build];
     }
     messsagesArray = [NSMutableArray new];
     

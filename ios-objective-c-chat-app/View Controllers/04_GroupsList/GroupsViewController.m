@@ -40,7 +40,7 @@
     [self setUpActivityIndicatorView];
     [self configureTable:UITableViewStylePlain];
     [self viewWillSetNavigationBar];
-    //    [self initializeSearchController];
+    [self initializeSearchController];
     [self configureFooterView];
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -71,6 +71,40 @@
     
     [self fetchNext];
 }
+
+- (void)initializeSearchController {
+    
+    //instantiate a search results controller for presenting the search/filter results (will be presented on top of the parent table view)
+    
+    //instantiate a UISearchController - passing in the search results controller table
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
+    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
+    //this view controller can be covered by theUISearchController's view (i.e. search/filter table)
+    self.definesPresentationContext = YES;
+    
+    
+    //define the frame for the UISearchController's search bar and tint
+    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
+    
+    //    self.searchController.searchBar.tintColor = [UIColor whiteColor];
+    self.searchController.obscuresBackgroundDuringPresentation = YES;
+    
+    //this ViewController will be responsible for implementing UISearchResultsDialog protocol method(s) - so handling what happens when user types into the search bar
+    self.searchController.searchResultsUpdater = self;
+    
+    
+    //this ViewController will be responsisble for implementing UISearchBarDelegate protocol methods(s)
+    self.searchController.searchBar.delegate = self;
+    
+    //add the UISearchController's search bar to the header of this table
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+    } else {
+        // Fallback on earlier versions
+        self._tableView.tableHeaderView = self.searchController.searchBar;
+    }
+}
+
 
 -(void)configureFooterView
 {
@@ -462,7 +496,35 @@
 
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController{
     
-    [self filterUSingScope:_selectedScope ForSearchController:searchController];
+    NSString *searchText = searchController.searchBar.text;
+    if (![searchText isEqualToString:@""]) {
+        
+
+        groupRequest = [[[[GroupsRequestBuilder alloc]initWithLimit:20]setWithSearchKeyword:searchText]build];
+        [groupRequest fetchNextOnSuccess:^(NSArray<Group *> * _Nonnull groupList) {
+            
+            self->_filteredUsers = groupList;
+            
+        } onError:^(CometChatException * _Nullable error) {
+            
+            NSLog(@"error is: %@",error.debugDescription);
+        }];
+        
+        _filteredUsers = [_filteredUsers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(Group *group, NSDictionary *bindings){
+            
+            NSString *name = [group name];
+            
+            if([name rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound){
+                return  YES;
+            }
+            return NO;
+        }]];
+    }
+    if (_filteredUsers) {
+        
+        _resultTableViewController.SectionOneListItems  = _filteredUsers;
+        [_resultTableViewController.tableView reloadData];
+    }
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     
@@ -476,66 +538,19 @@
 }
 - (void)RowAtIndexPath:(nonnull AppEntity *)appEntity {
     
-    NSLog(@"Tapped");
+    if ([appEntity isKindOfClass:Group.class]) {
+        
+         Group *group = (Group *)appEntity;
+         [self showNextWithGroup:group];
+    }
+    
 }
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope{
     
     NSLog(@"selectedScope %ld",(long)selectedScope);
     _selectedScope = selectedScope;
 }
--(void)filterUSingScope:(NSInteger)selectedScope ForSearchController:(UISearchController *)searchController{
-    
-    
-    switch (selectedScope) {
-        case 0:
-        {
-            NSString *searchText = searchController.searchBar.text;
-            if (![searchText isEqualToString:@""]) {
-                
-                _filteredUsers = [_joinedgroupListArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(Group *group, NSDictionary *bindings){
-                    
-                    NSString *name = [group name];
-                    
-                    if([name rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound){
-                        return  YES;
-                    }
-                    return NO;
-                }]];
-            }
-            if (_filteredUsers) {
-                
-                _resultTableViewController.SectionOneListItems  = _filteredUsers;
-                [_resultTableViewController.tableView reloadData];
-            }
-        }
-            break;
-        case 1:
-        {
-            NSString *searchText = searchController.searchBar.text;
-            if (![searchText isEqualToString:@""]) {
-                
-                _filteredUsers = [_unjoinedgroupListArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(Group *group, NSDictionary *bindings){
-                    
-                    NSString *name = [group name];
-                    
-                    if([name rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound){
-                        return  YES;
-                    }
-                    return NO;
-                }]];
-            }
-            if (_filteredUsers) {
-                
-                _resultTableViewController.SectionOneListItems  = _filteredUsers;
-                [_resultTableViewController.tableView reloadData];
-            }
-        }
-            break;
-        default:
-            break;
-    }
-    
-}
+
 //FIXME: - fix scroll to bottom fetch next
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     

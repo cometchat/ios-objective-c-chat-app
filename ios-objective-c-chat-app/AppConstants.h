@@ -51,7 +51,7 @@
 #endif /* AppConstants_h */
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define API_KEY             "ENTER API  KEY"
+#define API_KEY             "ENTER API KEY"
 #define APP_ID              "ENTER APP ID"
 
 #define IS_LOGGED_IN        "isLoggedin"

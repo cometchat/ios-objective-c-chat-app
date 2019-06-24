@@ -41,13 +41,15 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-    //    [self initializeSearchController];
+    [self initializeSearchController];
     [self viewWillSetupNavigationBar];
     [self delegate].usereventdelegate = self;
 }
+
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NSInteger limit = 30;
+    NSInteger limit = 20;
     userRequest = [[[UsersRequestBuilder alloc]initWithLimit:limit]build];
     self.contactListArray = [NSMutableArray new];
     [self fetchNext];
@@ -72,6 +74,39 @@
     [__tableView registerNib:nib forCellReuseIdentifier:@"EntityCell"];
     [[self backgroundLoader] startAnimating];
     
+}
+
+- (void)initializeSearchController {
+    
+    //instantiate a search results controller for presenting the search/filter results (will be presented on top of the parent table view)
+    
+    //instantiate a UISearchController - passing in the search results controller table
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:_resultTableViewController];
+    [self.searchController.searchBar setBarStyle:UIBarStyleDefault];
+    //this view controller can be covered by theUISearchController's view (i.e. search/filter table)
+    self.definesPresentationContext = YES;
+    
+    
+    //define the frame for the UISearchController's search bar and tint
+    self.searchController.searchBar.frame = CGRectMake(self.searchController.searchBar.frame.origin.x, self.searchController.searchBar.frame.origin.y, self.searchController.searchBar.frame.size.width, 44.0);
+    
+    //    self.searchController.searchBar.tintColor = [UIColor whiteColor];
+    self.searchController.obscuresBackgroundDuringPresentation = YES;
+    
+    //this ViewController will be responsible for implementing UISearchResultsDialog protocol method(s) - so handling what happens when user types into the search bar
+    self.searchController.searchResultsUpdater = self;
+    
+    
+    //this ViewController will be responsisble for implementing UISearchBarDelegate protocol methods(s)
+    self.searchController.searchBar.delegate = self;
+    
+    //add the UISearchController's search bar to the header of this table
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+    } else {
+        // Fallback on earlier versions
+        self._tableView.tableHeaderView = self.searchController.searchBar;
+    }
 }
 
 -(void)configureFooterView
@@ -215,7 +250,18 @@
     NSString *searchText = searchController.searchBar.text;
     if (![searchText isEqualToString:@""]) {
         
-        _filteredUsers = [contactListArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(User *user, NSDictionary *bindings){
+        userRequest = [[[[UsersRequestBuilder alloc]initWithLimit:20]setWithSearchKeyword:searchText]build];
+        
+        [userRequest fetchNextOnSuccess:^(NSArray<User *> * _Nonnull users) {
+            
+            self->_filteredUsers = users;
+            
+        } onError:^(CometChatException * _Nullable error) {
+            
+            NSLog(@"Error: %@",error.debugDescription);
+        }];
+        
+        _filteredUsers = [_filteredUsers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(User *user, NSDictionary *bindings){
             
             NSString *name = [user name];
             
