@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AppMediaDelegate <NSObject>
--(void)didSelectMediaAtIndexPath:(NSInteger)tag;
+-(void)didSelectMediaAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage*)message;
 @end
 
 @interface MediaTableViewCell : UITableViewCell

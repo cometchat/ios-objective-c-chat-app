@@ -89,7 +89,7 @@
         _messageLabel.numberOfLines = 0;
         _messageLabel.lineBreakMode = NSLineBreakByClipping;
         _messageLabel.textColor = [UIColor blackColor];
-        _messageLabel.font = [UIFont systemFontOfSize:14.0f weight:(UIFontWeightSemibold)];
+        _messageLabel.font = [UIFont systemFontOfSize:12 weight:(UIFontWeightSemibold)];
         _messageLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _messageLabel;

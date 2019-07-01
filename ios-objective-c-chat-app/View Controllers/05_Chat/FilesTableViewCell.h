@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AppFileDelegate <NSObject>
--(void)didSelectFileAtIndexPath:(NSInteger)tag;
+-(void)didSelectFileAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage*)message;
 @end
 
 @interface FilesTableViewCell : UITableViewCell

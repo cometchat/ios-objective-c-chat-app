@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol AppAudioDelegate <NSObject>
--(void)didSelectAudioAtIndexPath:(NSInteger)tag;
+-(void)didSelectAudioAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage*)message;
 @end
 @interface AudioTableViewCell : UITableViewCell
 +(NSString*)reuseIdentifier;

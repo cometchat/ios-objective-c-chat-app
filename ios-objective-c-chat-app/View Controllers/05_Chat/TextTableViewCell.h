@@ -11,12 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
+@protocol AppTextDelegate <NSObject>
+-(void)didSelectTextAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(TextMessage*)message;
+@end
 @interface TextTableViewCell : UITableViewCell
 //
 +(NSString*)reuseIdentifier;
 -(void)bind:(TextMessage *)messsage withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection;
 //
+@property (nonatomic, weak) id<AppTextDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

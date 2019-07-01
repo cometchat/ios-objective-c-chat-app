@@ -443,7 +443,6 @@
 			children = (
 				E180E618228A9A9800AE552C /* Resource */,
 				E1B761912237BFED001EF19B /* ios-objective-c-chat-app.entitlements */,
-				E1A4A6CB223F606F00D475B6 /* Views */,
 				E1A4A6C7223F604900D475B6 /* Controllers */,
 				E1A4A6CA223F606700D475B6 /* View Controllers */,
 				E1A4A6C9223F605E00D475B6 /* Utilities */,
@@ -592,6 +591,7 @@
 			isa = PBXGroup;
 			children = (
 				E1A1C47F221AB7B700F7076B /* ContactsViewController.h */,
+				E1A4A6CB223F606F00D475B6 /* Views */,
 				E1A1C480221AB7B700F7076B /* ContactsViewController.m */,
 			);
 			path = 03_ContactsList;
@@ -1068,7 +1068,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
 				);
-				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1104,7 +1104,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
 				);
-				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (

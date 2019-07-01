@@ -17,6 +17,7 @@
 @property (nonatomic ,retain) UILabel      *fileSize;
 @property (nonatomic ,retain) UILabel *timeLbl;
 @property (nonatomic ,retain) UIImageView *readReceipts;
+@property (nonatomic ,retain) MediaMessage   *editMessage;
 @end
 
 @implementation FilesTableViewCell
@@ -38,7 +39,7 @@
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {
-    
+    _editMessage = message;
     hexToRGB = [HexToRGBConvertor new];
     width = self.frame.size.width *0.40;
     height = width*0.40;
@@ -174,9 +175,15 @@
     
     _fileImage.image    = [UIImage imageNamed:@"outline_description_black_36pt"];
     _timeLbl.text       = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
-    _fileName.text      = @"some file name";
-    _fileSize.text      = @"12MB";
     
+    if (message.deletedAt > 0.0) {
+        _fileName.text      = @" File ";
+        _fileSize.text      = @"⚠️ Deleted";
+    }else{
+        _fileName.text      = @"some file name";
+        _fileSize.text      = @"12MB";
+    }
+      
     switch (tailDirection) {
         case MessageBubbleViewButtonTailDirectionRight:
             
@@ -208,6 +215,11 @@
     if (!_bubble) {
         _bubble = [UIView new];
     }
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                               initWithTarget:self
+                                               action:@selector(handleDeleteAction:)];
+    longPress.minimumPressDuration = 1.0;
+    [_bubble addGestureRecognizer:longPress];
     return _bubble;
 }
 -(UILabel*)senderNameLbl {
@@ -266,9 +278,18 @@
 }
 - (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectFileAtIndexPath:)]) {
-        [_delegate didSelectFileAtIndexPath:self.tag];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectFileAtIndexPath:flag:message:)]) {
+        [_delegate didSelectFileAtIndexPath:self.tag flag:0 message:_editMessage];
     }
+    
 }
 
+- (void)handleDeleteAction:(UILongPressGestureRecognizer *)gesture {
+    if(UIGestureRecognizerStateBegan == gesture.state) {
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:flag:message:)]) {
+            [_delegate didSelectFileAtIndexPath:self.tag flag:1 message:_editMessage];
+        }
+    }
+}
 @end

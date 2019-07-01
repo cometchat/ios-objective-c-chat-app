@@ -15,6 +15,7 @@
 @property (nonatomic ,retain) UILabel      *fileSize;
 @property (nonatomic ,retain) UILabel *timeLbl;
 @property (nonatomic ,retain) UIImageView *readReceipts;
+@property (nonatomic ,retain) MediaMessage   *editMessage;
 @end
 @implementation AudioTableViewCell
 {
@@ -38,6 +39,7 @@
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath
 {
+    _editMessage = message;
     width = self.frame.size.width *0.40;
     height = width*0.40;
     hexToRGB = [HexToRGBConvertor new];
@@ -169,9 +171,13 @@
     [_bubble addConstraints:subViewV2];
     
     _timeLbl.text       = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
-    _fileName.text      = @"some file name"; //attchement.filename
-    _fileSize.text      = @"12MB"; // attechment.size
-    
+    if (message.deletedAt > 0.0) {
+        _fileName.text      = @"Audio File ";
+        _fileSize.text      = @"⚠️ Deleted";
+    }else{
+        _fileName.text      = @"some file name";
+        _fileSize.text      = @"12MB";
+    }
     switch (tailDirection) {
         case MessageBubbleViewButtonTailDirectionRight:
             
@@ -242,6 +248,11 @@
     if (!_bubble) {
         _bubble = [UIView new];
     }
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                               initWithTarget:self
+                                               action:@selector(handleDeleteAction:)];
+    longPress.minimumPressDuration = 1.0;
+    [_bubble addGestureRecognizer:longPress];
     return _bubble;
 }
 -(UILabel *)fileName
@@ -264,8 +275,17 @@
 }
 - (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectAudioAtIndexPath:)]) {
-        [_delegate didSelectAudioAtIndexPath:self.tag];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectAudioAtIndexPath:flag:message:)]) {
+        [_delegate didSelectAudioAtIndexPath:self.tag flag:0 message:_editMessage];
+    }
+}
+
+- (void)handleDeleteAction:(UILongPressGestureRecognizer *)gesture {
+    if(UIGestureRecognizerStateBegan == gesture.state) {
+        NSLog(@"print this");
+        if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectAudioAtIndexPath:flag:message:)]) {
+            [_delegate didSelectAudioAtIndexPath:self.tag flag:1 message:_editMessage];
+        }
     }
 }
 

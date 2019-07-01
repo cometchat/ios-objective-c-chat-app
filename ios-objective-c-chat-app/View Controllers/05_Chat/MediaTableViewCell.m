@@ -12,6 +12,7 @@
 @property (nonatomic ,retain) UILabel       *senderNameLbl;
 @property (nonatomic ,retain) UILabel       *timeLbl;
 @property (nonatomic ,retain) UIImageView   *readReceipts;
+@property (nonatomic ,retain) MediaMessage   *editMessage;
 @end
 
 @implementation MediaTableViewCell
@@ -24,6 +25,7 @@
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath {
     
+    _editMessage = message;
     width = self.frame.size.width *0.50;
     height = width/0.75;
     
@@ -135,7 +137,7 @@
         
         NSLog(@"[mediaMessage url] %@",[message url]);
         
-        if (message.messageType == MessageTypeVideo) {
+        if (message.messageType == MessageTypeVideo && message.deletedAt == 0.0)  {
             
             UIImage *image = [self loadThumbNail:[NSURL URLWithString:[message url]]];
             if (image) {
@@ -146,8 +148,29 @@
                     }
                 });
             }
+        }else if (message.messageType == MessageTypeVideo && message.deletedAt > 0.0){
             
-        }else if (message.messageType == MessageTypeImage){
+             UIImage *image = [UIImage imageNamed:@"deletedVideo"];
+            if (image) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.tag == indexPath.row) {
+                        self->_imageHolder.image = image;
+                        [self setNeedsLayout];
+                    }
+                });
+            }
+        }else if (message.messageType == MessageTypeImage && message.deletedAt > 0.0){
+            
+            UIImage *image = [UIImage imageNamed:@"deletedImage"];
+            if (image) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.tag == indexPath.row) {
+                        self->_imageHolder.image = image;
+                        [self setNeedsLayout];
+                    }
+                });
+            }
+        }else if (message.messageType == MessageTypeImage && message.deletedAt == 0.0){
             
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[message url]]];
             
@@ -174,7 +197,17 @@
         _imageHolder.image = [UIImage imageNamed:@"place_holder"];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImage:)];
         tap.numberOfTapsRequired = 1;
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                                   initWithTarget:self
+                                                   action:@selector(handleDeleteAction:)];
+        longPress.minimumPressDuration = 1.0;
+        [_imageHolder addGestureRecognizer:longPress];
+        
         [_imageHolder addGestureRecognizer:tap];
+        [_imageHolder addGestureRecognizer:tap];
+
+        
     }
     return _imageHolder;
 }
@@ -209,45 +242,29 @@
 }
 - (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:)]) {
-        [_delegate didSelectMediaAtIndexPath:self.tag];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:flag:message:)]) {
+        [_delegate didSelectMediaAtIndexPath:self.tag flag:0 message:_editMessage];
     }
 }
-//-(void)updateConstraints{
-//    [super updateConstraints];
-//
-//
-//    width = self.frame.size.width *0.66;
-//    height = width/0.75 + paddingY*2;
-//
-//    NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",[NSString stringWithFormat:@"%f",height],@"height",[NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
-//
-//    switch (taildirection) {
-//        case MessageBubbleViewButtonTailDirectionRight:
-//        {
-//            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_imageHolder(width)]-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-//            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-//
-//            [self.contentView addConstraints:subViewH1];
-//            [self.contentView addConstraints:subViewV1];
-//        }
-//            break;
-//        case MessageBubbleViewButtonTailDirectionLeft:
-//        {
-//            NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-//            NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(CELL_ANIMATION_HEIGHT)-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-//
-//            [self.contentView addConstraints:subViewH1];
-//            [self.contentView addConstraints:subViewV1];
-//
-//        }
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    layer.frame = _imageHolder.frame;
-//}
+
+- (void)handleDeleteAction:(UILongPressGestureRecognizer *)gesture {
+    if(UIGestureRecognizerStateBegan == gesture.state) {
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:flag:message:)]) {
+           [_delegate didSelectMediaAtIndexPath:self.tag flag:1 message:_editMessage];
+        }
+    }
+    
+    if(UIGestureRecognizerStateChanged == gesture.state) {
+        // Do repeated work here (repeats continuously) while finger is down
+    }
+    
+    if(UIGestureRecognizerStateEnded == gesture.state) {
+        // Do end work here when finger is lifted
+    }
+}
+
+
 -(UIImage *)loadThumbNail:(NSURL *)urlVideo
 {
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:urlVideo options:nil];

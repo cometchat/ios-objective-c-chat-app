@@ -15,6 +15,7 @@
 @property (nonatomic ,retain) UILabel       *messageLbl;
 @property (nonatomic ,retain) UILabel       *timeLbl;
 @property (nonatomic ,retain) UIImageView   *readReceipts;
+@property (nonatomic ,retain) TextMessage   *editMessage;
 
 @end
 
@@ -30,8 +31,15 @@
 -(void)bind:(TextMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection
 {
     hexToRGB = [HexToRGBConvertor new];
-    width = [[message text] getSize].width + 24.0f;
-    height = [[message text] getSize].height + paddingY * 2;
+    _editMessage = message;
+    if ([message deletedAt] > 0.0){
+        width = 180 + 24.0f;
+        height = 20 + paddingY * 2;
+    }else{
+        width = [[message text] getSize].width + 24.0f;
+        height = [[message text] getSize].height + paddingY * 2;
+    }
+    
     
     NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSString stringWithFormat:@"%f",width],@"width",
@@ -184,7 +192,12 @@
         default:
             break;
     }
-    _messageLbl.text    = [message text];
+    if(message.deletedAt > 0.0){
+        _messageLbl.text = @"⚠️ This message is deleted";
+    }else{
+         _messageLbl.text    = [message text];
+    }
+   
     _timeLbl.text       = [[NSString stringWithFormat:@"%ld",(long)[message sentAt]] sentAtToTime];
     
 }
@@ -234,7 +247,18 @@
     if (!_bubble) {
         _bubble = [UIView new];
     }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleEditDeleteAction:)];
+    tap.numberOfTapsRequired = 1;
+    [_bubble addGestureRecognizer:tap];
+
     return _bubble;
+}
+
+- (void)handleEditDeleteAction:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectTextAtIndexPath:flag:message:)]) {
+        [_delegate didSelectTextAtIndexPath:self.tag flag:0 message:_editMessage];
+    }
 }
 
 @end

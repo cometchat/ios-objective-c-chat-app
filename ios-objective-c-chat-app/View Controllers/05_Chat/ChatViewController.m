@@ -63,10 +63,12 @@
 @end
 
 static int textFiledHeight;
-@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate , AppMediaDelegate  ,AppFileDelegate , AppAudioDelegate >
+@interface ChatViewController ()<MessageDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIPopoverPresentationControllerDelegate,UIGestureRecognizerDelegate,QLPreviewControllerDataSource,UIDocumentPickerDelegate,AudioRecorderDelegate,AVAudioPlayerDelegate ,UserEventDelegate , AppMediaDelegate  ,AppFileDelegate , AppAudioDelegate, AppTextDelegate >
 @property(nonatomic , strong) AppDelegate *appDelegate;
 @property (nonatomic ,strong) ActivityIndicatorView *backgroundActivityIndicatorView;
 @property (nonatomic, strong) UILabel *placeholderLabel;
+@property (nonatomic ,retain) NSIndexPath *tableIndexPath;
+@property (nonatomic ,retain) TextMessage *editMessage;
 @end
 
 @implementation ChatViewController{
@@ -76,7 +78,6 @@ static int textFiledHeight;
     AudioVisualizer *_audioVisualizer;
     ChatEntity *_chatEntity;
     NSString *previewUrl;
-    
     double lowPassReslts;
     double lowPassReslts1;
     NSTimer *visualizerTimer;
@@ -84,6 +85,8 @@ static int textFiledHeight;
     AVAudioPlayer * avAudioPlayer;
     NSTextAttachment *userStatusTextAttachment;
     NSString *logged_in_user_uid;
+    BOOL editMessageFlag;
+    
 }
 @synthesize messsagesArray,messageRequest,appEntity;
 
@@ -234,19 +237,26 @@ static int textFiledHeight;
     
     [messageRequest fetchPreviousOnSuccess:^(NSArray<BaseMessage *> * messages) {
         
+        NSMutableArray<BaseMessage *> *messsages = [[NSMutableArray alloc]init];
+
         if (messages) {
-            [messsagesArray addObjectsFromArray:messages];
             
             for (BaseMessage *object in messages) {
-                
+
+                if ([object isKindOfClass:ActionMessage.class] && ([((ActionMessage *)object).message  isEqualToString:@"Message is edited."] || ([((ActionMessage *)object).message isEqualToString:@"Message is deleted."]))){
+                    [CometChat markMessageAsReadWithMessage:object];
+                }else{
+                    [messsages addObject:object];
+                }
                 if ([object readByMeAt] == 0) {
                     [CometChat markMessageAsReadWithMessage:object];
                 }
             }
+            self->messsagesArray = messsages;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [__tableView reloadData];
-            [_backgroundActivityIndicatorView stopAnimating];
+            [self->__tableView reloadData];
+            [self->_backgroundActivityIndicatorView stopAnimating];
             
         });
         
@@ -316,7 +326,7 @@ static int textFiledHeight;
         TextMessage *textMessage = (TextMessage *)message;
         
         TextTableViewCell *textcell = [[TextTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [TextTableViewCell reuseIdentifier]];
-        
+        textcell.delegate = self;
         if ([[textMessage senderUid] isEqualToString:logged_in_user_uid]) {
             
             [textcell bind:textMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight)];
@@ -326,7 +336,6 @@ static int textFiledHeight;
             [textcell bind:textMessage withTailDirection:(MessageBubbleViewButtonTailDirectionLeft)];
             return textcell;
         }
-        
     }else if ([message isKindOfClass:MediaMessage.class]){
         
         MediaMessage *mediaMessage = (MediaMessage *)message;
@@ -365,7 +374,7 @@ static int textFiledHeight;
         if (message.messageType == MessageTypeAudio) {
             
             AudioTableViewCell *audioCell = [[AudioTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[AudioTableViewCell reuseIdentifier]];
-            audioCell.delegate = self ;
+            audioCell.delegate = self;
             
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
                 [audioCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
@@ -428,9 +437,13 @@ static int textFiledHeight;
 -(BOOL)tableView:(UITableView *)tableView shouldSpringLoadRowAtIndexPath:(NSIndexPath *)indexPath withContext:(id<UISpringLoadedInteractionContext>)context API_AVAILABLE(ios(11.0)){
     return YES;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+   
     
+
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     BaseMessage *message = [messsagesArray objectAtIndex:[indexPath row]];
@@ -735,18 +748,29 @@ static int textFiledHeight;
 - (IBAction)sendBtnPressed:(UIButton *)sender {
     
     NSString *message = _sendMessageTextView.text;
-    if (![message isEqualToString:@""]) {
+    
+    if (editMessageFlag == YES){
         
-        message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [self editMessage:_editMessage.id message:[NSString stringWithFormat:@"%@ (Edited)",message]];
         [_sendMessageTextView setText:@""];
-        _sendMessageHeightConstraint.constant = textFiledHeight;
-        [_sendMessageTextView layoutIfNeeded];
-        [_sendMessageTextView setNeedsUpdateConstraints];
-        [_wrapperView layoutIfNeeded];
-        [_wrapperView setNeedsUpdateConstraints];
-        [_placeholderLabel setHidden:NO];
-        [self sendMessage:message];
+        editMessageFlag = NO;
+        _editMessage = nil;
+    }else{
+        if (![message isEqualToString:@""]) {
+            
+            message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [_sendMessageTextView setText:@""];
+            _sendMessageHeightConstraint.constant = textFiledHeight;
+            [_sendMessageTextView layoutIfNeeded];
+            [_sendMessageTextView setNeedsUpdateConstraints];
+            [_wrapperView layoutIfNeeded];
+            [_wrapperView setNeedsUpdateConstraints];
+            [_placeholderLabel setHidden:NO];
+            [self sendMessage:message];
+        }
     }
+    
+   
 }
 - (IBAction)attachmentBtnPressed:(UIButton *)sender {
     
@@ -967,6 +991,26 @@ static int textFiledHeight;
     
     message = nil;
 }
+
+
+-(void)editMessage:(NSInteger *)messageID message:(NSString*)originalMessage
+{
+    TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage messageType:MessageTypeText receiverType:[_chatEntity receiverType]];
+    [message setId: messageID];
+    
+    [CometChat editWithMessage:message onSuccess:^(BaseMessage * _Nonnull edit_message) {
+        
+        NSLog(@"sent message %@",edit_message);
+        
+    } onError:^(CometChatException * _Nonnull error) {
+        
+        NSLog(@"sent message error %@",error.errorDescription);
+    }];
+
+    message = nil;
+}
+
+
 - (void)applicationdidReceiveNewMessage:(BaseMessage *)message {
     
     if ([appEntity isKindOfClass:User.class]) {
@@ -1252,17 +1296,135 @@ static int textFiledHeight;
     }];
 }
 
-- (void)didSelectMediaAtIndexPath:(NSInteger)tag
-{
-    [self openMediaWithTag:tag];
+-(void)didSelectTextAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(TextMessage *)message{
+    
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        self->editMessageFlag = YES;
+        self->_editMessage = message;
+        self->_sendMessageTextView.text =  message.text;
+        [self->_placeholderLabel setHidden:YES];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
+            NSLog(@"Message Deleted Sucessfully");
+            MediaMessage *textMessage = (TextMessage *)((ActionMessage *)deletedMessage).actionOn;
+            
+                NSPredicate *findMessage = [NSPredicate predicateWithBlock: ^BOOL(BaseMessage* obj, NSDictionary *bind){
+                    return  obj.id == textMessage.id;
+                }];
+            
+            NSArray <BaseMessage *> *messages = [self->messsagesArray filteredArrayUsingPredicate: findMessage];
+            
+                    BaseMessage *original = [self->messsagesArray objectAtIndex:[self->messsagesArray indexOfObject:[messages objectAtIndex:0]]];
+                    [self->messsagesArray replaceObjectAtIndex:[self->messsagesArray indexOfObject:original] withObject:textMessage];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self->__tableView beginUpdates];
+                        NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                        [self->__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
+                        [self->__tableView endUpdates];
+                    });
+            
+          
+        } onError:^(CometChatException * _Nonnull error) {
+            
+            NSLog(@"Fail to delete Message: %@",error);
+        }];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+        }];
+    }]];
+    [self presentViewController:actionSheet animated:YES completion:nil];
+    
 }
 
-- (void)didSelectFileAtIndexPath:(NSInteger)tag
-{
-    [self openMediaWithTag:tag];
+-(void)didSelectMediaAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage *)message{
+    
+    tag = _tableIndexPath;
+    if(flag == 0){
+        [self openMediaWithTag:tag];
+    }else{
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+            [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
+                NSLog(@"Message Deleted Sucessfully");
+                MediaMessage *mediaMessage = (MediaMessage *)((ActionMessage *)deletedMessage).actionOn;
+                self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    [self->__tableView reloadRowsAtIndexPaths:_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
+                });
+            } onError:^(CometChatException * _Nonnull error) {
+               
+                 NSLog(@"Fail to delete Message: %@",error);
+            }];
+            
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+        [self presentViewController:actionSheet animated:YES completion:nil];
+    }
 }
+
+-(void)didSelectFileAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage *)message{
+    
+    tag = _tableIndexPath;
+    if(flag == 0){
+        [self openMediaWithTag:tag];
+    }else{
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+            [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
+                
+                NSLog(@"Message Deleted Sucessfully");
+                MediaMessage *mediaMessage = (MediaMessage *)((ActionMessage *)deletedMessage).actionOn;
+                
+                self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    [self->__tableView reloadRowsAtIndexPaths:_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
+                });
+            } onError:^(CometChatException * _Nonnull error) {
+                NSLog(@"Fail to delete Message: %@",error);
+            }];
+
+            [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+        [self presentViewController:actionSheet animated:YES completion:nil];
+    }
+}
+
 -(void)didSelectAudioAtIndexPath:(NSInteger)tag
 {
+    NSLog(@"Audio");
     [self openMediaWithTag:tag];
 }
 -(void)openMediaWithTag:(NSInteger)tag
@@ -1271,6 +1433,10 @@ static int textFiledHeight;
     previewUrl = [selctedMessage url];
     [self showMediaForIndexPath];
 }
+
+
+
+
 -(UIView *)naviagtionTitle:(NSString *)name WithStatus:(NSString *)status
 {
     
