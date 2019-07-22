@@ -197,13 +197,17 @@ static int textFiledHeight;
     
     if ([_chatEntity receiverType] == ReceiverTypeUser)
     {
-        UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[[_chatEntity lastActiveAt] sentAtToTime]];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[[self->_chatEntity lastActiveAt] sentAtToTime]];
         [self.navigationItem setTitleView:new];
+         });
     }
     else
     {
-        UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:nil];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             UIView *new = [self naviagtionTitle:[self->_chatEntity receiverName] WithStatus:nil];
         [self.navigationItem setTitleView:new];
+         });
     }
     
 }
@@ -214,14 +218,14 @@ static int textFiledHeight;
         
         if (messages) {
             NSIndexSet *set = [[NSIndexSet alloc]initWithIndexesInRange:NSMakeRange(0, [messages count])];
-            [messsagesArray insertObjects:messages atIndexes:set];
+            [self->messsagesArray insertObjects:messages atIndexes:set];
             for (BaseMessage *object in messages) {
                 [CometChat markMessageAsReadWithMessage:object];
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [__tableView reloadData];
-            [_refreshControl endRefreshing];
+            [self->__tableView reloadData];
+            [self->_refreshControl endRefreshing];
             
         });
         
@@ -229,7 +233,7 @@ static int textFiledHeight;
         
         NSLog(@"%@",[error errorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_refreshControl endRefreshing];
+            [self->_refreshControl endRefreshing];
         });
     }];
 }
@@ -264,7 +268,7 @@ static int textFiledHeight;
         
         NSLog(@"%@",[error errorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_backgroundActivityIndicatorView stopAnimating];
+            [self->_backgroundActivityIndicatorView stopAnimating];
         });
     }];
 }
@@ -900,14 +904,14 @@ static int textFiledHeight;
         
         [CometChat sendMediaMessageWithMessage:message onSuccess:^(MediaMessage * sent_message) {
             
-            [messsagesArray addObject:sent_message];
+            [self->messsagesArray addObject:sent_message];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                if ([messsagesArray count]) {
+                if ([self->messsagesArray count]) {
                     
-                    [__tableView reloadData];
-                    [__tableView scrollToBottom];
+                    [self->__tableView reloadData];
+                    [self->__tableView scrollToBottom];
                 }
             });
             
@@ -940,14 +944,14 @@ static int textFiledHeight;
         
         NSLog(@"asdad %@",[sent_message stringValue]);
         
-        [messsagesArray addObject:sent_message];
+        [self->messsagesArray addObject:sent_message];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([messsagesArray count]) {
+            if ([self->messsagesArray count]) {
                 
-                [__tableView reloadData];
-                [__tableView scrollToBottom];
+                [self->__tableView reloadData];
+                [self->__tableView scrollToBottom];
             }
         });
         
@@ -969,17 +973,17 @@ static int textFiledHeight;
         
         NSLog(@"sent message %@",[sent_message stringValue]);
         
-        [messsagesArray addObject:sent_message];
+        [self->messsagesArray addObject:sent_message];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([messsagesArray count]) {
+            if ([self->messsagesArray count]) {
                 
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
-                [__tableView endUpdates];
-                [__tableView scrollToBottom];
+                [self->__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [self->__tableView endUpdates];
+                [self->__tableView scrollToBottom];
             }
         });
         
@@ -1022,12 +1026,14 @@ static int textFiledHeight;
             
             if ([messsagesArray count]) {
                 
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
-                [__tableView endUpdates];
-                [__tableView scrollToBottom];
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                      [self->__tableView beginUpdates];
+                      NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                      [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
+                      [self->__tableView endUpdates];
+                      [self->__tableView scrollToBottom];
                 [CometChat markMessageAsReadWithMessage:message];
+                  });
             }
             
         }
@@ -1038,13 +1044,14 @@ static int textFiledHeight;
             
             [messsagesArray addObject:message];
             if ([messsagesArray count]) {
-                
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
-                [__tableView endUpdates];
-                [__tableView scrollToBottom];
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                      [self->__tableView beginUpdates];
+                      NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                      [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
+                      [self->__tableView endUpdates];
+                      [self->__tableView scrollToBottom];
                 [CometChat markMessageAsReadWithMessage:message];
+                  });
             }
         }
     }
@@ -1059,13 +1066,16 @@ static int textFiledHeight;
     
     if ([[[typingIndicator sender] uid] isEqualToString:[_chatEntity receiverId]]) {
         if (isComposing) {
-            UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Typing.."];
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 UIView *new = [self naviagtionTitle:[self->_chatEntity receiverName] WithStatus:@"Typing.."];
             [self.navigationItem setTitleView:new];
+             });
         } else {
-            
+             dispatch_async(dispatch_get_main_queue(), ^{
             NSString *lastActiveAt = [NSString stringWithFormat:@"%f",[[typingIndicator sender] lastActiveAt]];
-            UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:[lastActiveAt sentAtToTime]];
+                 UIView *new = [self naviagtionTitle:[self->_chatEntity receiverName] WithStatus:[lastActiveAt sentAtToTime]];
             [self.navigationItem setTitleView:new];
+             });
         }
     }
 }
@@ -1098,10 +1108,10 @@ static int textFiledHeight;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
-                [__tableView endUpdates];
+                [self->__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                [self->__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
+                [self->__tableView endUpdates];
             });
         }
     }
@@ -1214,19 +1224,20 @@ static int textFiledHeight;
     
     [CometChat sendMediaMessageWithMessage:audioMessage onSuccess:^(MediaMessage * sent_message) {
         
-        [messsagesArray addObject:sent_message];
+        [self->messsagesArray addObject:sent_message];
         
         NSLog(@"%@",[sent_message stringValue]);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([messsagesArray count]) {
+            if ([self->messsagesArray count]) {
                 
-                [__tableView beginUpdates];
-                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[messsagesArray count]-1 inSection:0]];
-                [__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
-                [__tableView endUpdates];
-                [__tableView scrollToBottom];
+                
+                [self->__tableView beginUpdates];
+                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
+                [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
+                [self->__tableView endUpdates];
+                [self->__tableView scrollToBottom];
             }
         });
         
@@ -1267,14 +1278,18 @@ static int textFiledHeight;
                 
             case UserStatusOnline:
             {
-                UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Online"];
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIView *new = [self naviagtionTitle:[self->_chatEntity receiverName] WithStatus:@"Online"];
                 [self.navigationItem setTitleView:new];
+                 });
             }
                 break;
             case UserStatusOffline:
             {
-                UIView *new = [self naviagtionTitle:[_chatEntity receiverName] WithStatus:@"Offline"];
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIView *new = [self naviagtionTitle:[self->_chatEntity receiverName] WithStatus:@"Offline"];
                 [self.navigationItem setTitleView:new];
+                 });
             }
                 break;
         }
@@ -1372,7 +1387,7 @@ static int textFiledHeight;
                 self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    [self->__tableView reloadRowsAtIndexPaths:_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
+                    [self->__tableView reloadRowsAtIndexPaths:self->_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
                 });
             } onError:^(CometChatException * _Nonnull error) {
                
@@ -1409,7 +1424,7 @@ static int textFiledHeight;
                 self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    [self->__tableView reloadRowsAtIndexPaths:_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
+                    [self->__tableView reloadRowsAtIndexPaths:self->_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
                 });
             } onError:^(CometChatException * _Nonnull error) {
                 NSLog(@"Fail to delete Message: %@",error);
@@ -1439,7 +1454,6 @@ static int textFiledHeight;
 
 -(UIView *)naviagtionTitle:(NSString *)name WithStatus:(NSString *)status
 {
-    
     
     UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, self.navigationController.navigationBar.frame.size.width - 44.0f, self.navigationController.navigationBar.frame.size.height )];
     
@@ -1475,6 +1489,7 @@ static int textFiledHeight;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showInfo)];
     [tap setNumberOfTapsRequired:1];
     [titleView addGestureRecognizer:tap];
+    
     
     return titleView;
 }

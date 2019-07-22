@@ -89,9 +89,9 @@
                              for (int i = 0; i < self.barsNumber; i++)
                              {
                                  int channelValue = arc4random_uniform(2); // random select channel 0 or channel 1
-                                 int wavePeak = arc4random_uniform([[waveFormArray objectAtIndex:i] intValue]);
+                                 int wavePeak = arc4random_uniform([[self->waveFormArray objectAtIndex:i] intValue]);
                                  
-                                 UIView *barView = (UIView *)[rectArray objectAtIndex:i];
+                                 UIView *barView = (UIView *)[self->rectArray objectAtIndex:i];
                                  
                                  CGRect barFrame = barView.frame;
                                  if (channelValue == 0)
@@ -103,7 +103,7 @@
                                      barFrame.size.height = self.frame.size.height - (1 / level1 * 13) + wavePeak;
                                  }
                                  
-                                 if (barFrame.size.height < 4 || barFrame.size.height > self.frame.size.height) barFrame.size.height = initialBarHeight + wavePeak;
+                                 if (barFrame.size.height < 4 || barFrame.size.height > self.frame.size.height) barFrame.size.height = self->initialBarHeight + wavePeak;
                                  barFrame.origin.y = self.frame.size.height - barFrame.size.height;
                                  barView.frame = barFrame;
                              }
@@ -121,9 +121,9 @@
                          animations:^{
                              for (int i = 0; i < self.barsNumber; i++)
                              {
-                                 UIView *barView = (UIView *)[rectArray objectAtIndex:i];
+                                 UIView *barView = (UIView *)[self->rectArray objectAtIndex:i];
                                  CGRect barFrame = barView.frame;
-                                 barFrame.size.height = initialBarHeight;
+                                 barFrame.size.height = self->initialBarHeight;
                                  barFrame.origin.y = self.frame.size.height - barFrame.size.height;
                                  barView.frame = barFrame;
                              }

@@ -305,13 +305,16 @@
         
         if ([[user uid]isEqualToString:[object uid]]) {
             
+             dispatch_async(dispatch_get_main_queue(), ^{
             [__tableView beginUpdates];
             [contactListArray replaceObjectAtIndex:[contactListArray indexOfObject:object] withObject:user];
             NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:[contactListArray indexOfObject:user] inSection:0];
             NSArray* rowsToReload = [NSArray arrayWithObjects:rowToReload, nil];
             [__tableView reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
             [__tableView endUpdates];
+            });
             break;
+             
         }
     }
 }

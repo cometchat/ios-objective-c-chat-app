@@ -257,19 +257,25 @@
         self.groupType = [NSString stringWithFormat:@"Private"];
         self.group_type = groupTypePublic;
         NSIndexSet *section = [NSIndexSet indexSetWithIndex:2];
-        [__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          dispatch_async(dispatch_get_main_queue(), ^{
+        [self->__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          });
     }];
     UIAlertAction *Public = [UIAlertAction actionWithTitle:@"Public" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         self.groupType = [NSString stringWithFormat:@"Public"];
         self.group_type = groupTypePrivate;
         NSIndexSet *section = [NSIndexSet indexSetWithIndex:2];
-        [__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          dispatch_async(dispatch_get_main_queue(), ^{
+        [self->__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          });
     }];
     UIAlertAction *Password = [UIAlertAction actionWithTitle:@"Password Protected" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         self.groupType = [NSString stringWithFormat:@"Password Protected"];
         self.group_type = groupTypePassword;
         NSIndexSet *section = [NSIndexSet indexSetWithIndex:2];
-        [__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          dispatch_async(dispatch_get_main_queue(), ^{
+        [self->__tableView reloadSections:section withRowAnimation:UITableViewRowAnimationAutomatic];
+          });
     }];
     
     [alert addAction:Private];

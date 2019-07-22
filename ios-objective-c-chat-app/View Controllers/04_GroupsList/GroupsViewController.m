@@ -135,27 +135,27 @@
                 NSLog(@"%@",[object stringValue]);
                 
                 if ([object hasJoined]) {
-                    [_joinedgroupListArray addObject:object];
+                    [self->_joinedgroupListArray addObject:object];
                 } else {
-                    [_unjoinedgroupListArray addObject:object];
+                    [self->_unjoinedgroupListArray addObject:object];
                 }
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                [__tableView reloadData];
-                _isMoreDataLoading = NO;
-                [_footerActivityIndicatorView stopAnimating];
-                [_loadingMoreView setHidden:YES];
-                [_backGroundActivityIndicatorView stopAnimating];
+                [self->__tableView reloadData];
+                self->_isMoreDataLoading = NO;
+                [self->_footerActivityIndicatorView stopAnimating];
+                [self->_loadingMoreView setHidden:YES];
+                [self->_backGroundActivityIndicatorView stopAnimating];
             });
         }
         
     } onError:^(CometChatException * error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            _isMoreDataLoading = NO;
-            [_footerActivityIndicatorView stopAnimating];
-            [_backGroundActivityIndicatorView stopAnimating];
-            [_loadingMoreView setHidden:YES];
+            self->_isMoreDataLoading = NO;
+            [self->_footerActivityIndicatorView stopAnimating];
+            [self->_backGroundActivityIndicatorView stopAnimating];
+            [self->_loadingMoreView setHidden:YES];
             
             [Alert showAlertForError:error in:self];
         });
@@ -407,13 +407,13 @@
             for (Group *object in groups) {
                 
                 if ([object hasJoined]) {
-                    [_joinedgroupListArray addObject:object];
+                    [self->_joinedgroupListArray addObject:object];
                 } else {
-                    [_unjoinedgroupListArray addObject:object];
+                    [self->_unjoinedgroupListArray addObject:object];
                 }
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                [__tableView reloadData];
+                [self->__tableView reloadData];
             });
         }
         

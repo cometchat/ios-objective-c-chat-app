@@ -351,6 +351,7 @@ typedef SWIFT_ENUM(NSInteger, MessageCategory, closed) {
   MessageCategoryMessage = 0,
   MessageCategoryAction = 1,
   MessageCategoryCall = 2,
+  MessageCategoryCustom = 3,
 };
 
 
@@ -684,6 +685,7 @@ SWIFT_PROTOCOL("_TtP12CometChatPro22CometChatGroupDelegate_")
 - (void)onGroupMemberKickedWithAction:(ActionMessage * _Nonnull)action kickedUser:(User * _Nonnull)kickedUser kickedBy:(User * _Nonnull)kickedBy kickedFrom:(Group * _Nonnull)kickedFrom;
 - (void)onGroupMemberBannedWithAction:(ActionMessage * _Nonnull)action bannedUser:(User * _Nonnull)bannedUser bannedBy:(User * _Nonnull)bannedBy bannedFrom:(Group * _Nonnull)bannedFrom;
 - (void)onGroupMemberUnbannedWithAction:(ActionMessage * _Nonnull)action unbannedUser:(User * _Nonnull)unbannedUser unbannedBy:(User * _Nonnull)unbannedBy unbannedFrom:(Group * _Nonnull)unbannedFrom;
+- (void)onGroupMemberScopeChangedWithAction:(ActionMessage * _Nonnull)action user:(User * _Nonnull)user scopeChangedTo:(NSString * _Nonnull)scopeChangedTo scopeChangedFrom:(NSString * _Nonnull)scopeChangedFrom group:(Group * _Nonnull)group SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onGroupMemberScopeChanged(action: ActionMessage, scopeChangeduser:User, scopeChangedBy : User, scopeChangedTo :String, scopeChangedFrom: String, group: Group)`");
 - (void)onGroupMemberScopeChangedWithAction:(ActionMessage * _Nonnull)action scopeChangeduser:(User * _Nonnull)scopeChangeduser scopeChangedBy:(User * _Nonnull)scopeChangedBy scopeChangedTo:(NSString * _Nonnull)scopeChangedTo scopeChangedFrom:(NSString * _Nonnull)scopeChangedFrom group:(Group * _Nonnull)group;
 - (void)onAddedToGroupWithAction:(ActionMessage * _Nonnull)action addedBy:(User * _Nonnull)addedBy addedTo:(Group * _Nonnull)addedTo;
 - (void)onMemberAddedToGroupWithAction:(ActionMessage * _Nonnull)action addedBy:(User * _Nonnull)addedBy addedUser:(User * _Nonnull)addedUser addedTo:(Group * _Nonnull)addedTo;
@@ -693,6 +695,9 @@ SWIFT_PROTOCOL("_TtP12CometChatPro22CometChatGroupDelegate_")
 SWIFT_PROTOCOL("_TtP12CometChatPro24CometChatMessageDelegate_")
 @protocol CometChatMessageDelegate
 @optional
+- (void)onTextMessageReceivedWithTextMessage:(TextMessage * _Nullable)textMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onTextMessageReceived(textMessage:TextMessage)`");
+- (void)onMediaMessageReceivedWithMediaMessage:(MediaMessage * _Nullable)mediaMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onMediaMessageReceived(mediaMessage:MediaMessage)`");
+- (void)onCustomMessageReceivedWithCustomMessage:(CustomMessage * _Nullable)customMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onCustomMessageReceived(customMessage:CustomMessage)`");
 - (void)onTextMessageReceivedWithTextMessage:(TextMessage * _Nonnull)textMessage;
 - (void)onMediaMessageReceivedWithMediaMessage:(MediaMessage * _Nonnull)mediaMessage;
 - (void)onCustomMessageReceivedWithCustomMessage:(CustomMessage * _Nonnull)customMessage;
@@ -743,9 +748,12 @@ SWIFT_CLASS("_TtC12CometChatPro11CurrentUser")
 
 SWIFT_CLASS("_TtC12CometChatPro13CustomMessage")
 @interface CustomMessage : BaseMessage
+@property (nonatomic) enum MessageType messageType SWIFT_UNAVAILABLE_MSG("This messageType property of CustomMessage class is obsolete from CometChatPro SDK v1.8.3. Please use new `type` property.");
+@property (nonatomic, copy) NSString * _Nullable type;
 @property (nonatomic, copy) NSDictionary<NSString *, id> * _Nullable customData;
 @property (nonatomic, copy) NSString * _Nullable subType;
 - (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid receiverType:(enum ReceiverType)receiverType customData:(NSDictionary<NSString *, id> * _Nonnull)customData OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid receiverType:(enum ReceiverType)receiverType customData:(NSDictionary<NSString *, id> * _Nonnull)customData type:(NSString * _Nullable)type OBJC_DESIGNATED_INITIALIZER;
 - (NSString * _Nonnull)stringValue SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid messageType:(enum MessageType)messageType receiverType:(enum ReceiverType)receiverType SWIFT_UNAVAILABLE;
 @end
@@ -1289,6 +1297,7 @@ typedef SWIFT_ENUM(NSInteger, MessageCategory, closed) {
   MessageCategoryMessage = 0,
   MessageCategoryAction = 1,
   MessageCategoryCall = 2,
+  MessageCategoryCustom = 3,
 };
 
 
@@ -1622,6 +1631,7 @@ SWIFT_PROTOCOL("_TtP12CometChatPro22CometChatGroupDelegate_")
 - (void)onGroupMemberKickedWithAction:(ActionMessage * _Nonnull)action kickedUser:(User * _Nonnull)kickedUser kickedBy:(User * _Nonnull)kickedBy kickedFrom:(Group * _Nonnull)kickedFrom;
 - (void)onGroupMemberBannedWithAction:(ActionMessage * _Nonnull)action bannedUser:(User * _Nonnull)bannedUser bannedBy:(User * _Nonnull)bannedBy bannedFrom:(Group * _Nonnull)bannedFrom;
 - (void)onGroupMemberUnbannedWithAction:(ActionMessage * _Nonnull)action unbannedUser:(User * _Nonnull)unbannedUser unbannedBy:(User * _Nonnull)unbannedBy unbannedFrom:(Group * _Nonnull)unbannedFrom;
+- (void)onGroupMemberScopeChangedWithAction:(ActionMessage * _Nonnull)action user:(User * _Nonnull)user scopeChangedTo:(NSString * _Nonnull)scopeChangedTo scopeChangedFrom:(NSString * _Nonnull)scopeChangedFrom group:(Group * _Nonnull)group SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onGroupMemberScopeChanged(action: ActionMessage, scopeChangeduser:User, scopeChangedBy : User, scopeChangedTo :String, scopeChangedFrom: String, group: Group)`");
 - (void)onGroupMemberScopeChangedWithAction:(ActionMessage * _Nonnull)action scopeChangeduser:(User * _Nonnull)scopeChangeduser scopeChangedBy:(User * _Nonnull)scopeChangedBy scopeChangedTo:(NSString * _Nonnull)scopeChangedTo scopeChangedFrom:(NSString * _Nonnull)scopeChangedFrom group:(Group * _Nonnull)group;
 - (void)onAddedToGroupWithAction:(ActionMessage * _Nonnull)action addedBy:(User * _Nonnull)addedBy addedTo:(Group * _Nonnull)addedTo;
 - (void)onMemberAddedToGroupWithAction:(ActionMessage * _Nonnull)action addedBy:(User * _Nonnull)addedBy addedUser:(User * _Nonnull)addedUser addedTo:(Group * _Nonnull)addedTo;
@@ -1631,6 +1641,9 @@ SWIFT_PROTOCOL("_TtP12CometChatPro22CometChatGroupDelegate_")
 SWIFT_PROTOCOL("_TtP12CometChatPro24CometChatMessageDelegate_")
 @protocol CometChatMessageDelegate
 @optional
+- (void)onTextMessageReceivedWithTextMessage:(TextMessage * _Nullable)textMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onTextMessageReceived(textMessage:TextMessage)`");
+- (void)onMediaMessageReceivedWithMediaMessage:(MediaMessage * _Nullable)mediaMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onMediaMessageReceived(mediaMessage:MediaMessage)`");
+- (void)onCustomMessageReceivedWithCustomMessage:(CustomMessage * _Nullable)customMessage error:(CometChatException * _Nullable)error SWIFT_AVAILABILITY(ios,unavailable,message="This delegate method is deprecated now. Please use new delegate function `onCustomMessageReceived(customMessage:CustomMessage)`");
 - (void)onTextMessageReceivedWithTextMessage:(TextMessage * _Nonnull)textMessage;
 - (void)onMediaMessageReceivedWithMediaMessage:(MediaMessage * _Nonnull)mediaMessage;
 - (void)onCustomMessageReceivedWithCustomMessage:(CustomMessage * _Nonnull)customMessage;
@@ -1681,9 +1694,12 @@ SWIFT_CLASS("_TtC12CometChatPro11CurrentUser")
 
 SWIFT_CLASS("_TtC12CometChatPro13CustomMessage")
 @interface CustomMessage : BaseMessage
+@property (nonatomic) enum MessageType messageType SWIFT_UNAVAILABLE_MSG("This messageType property of CustomMessage class is obsolete from CometChatPro SDK v1.8.3. Please use new `type` property.");
+@property (nonatomic, copy) NSString * _Nullable type;
 @property (nonatomic, copy) NSDictionary<NSString *, id> * _Nullable customData;
 @property (nonatomic, copy) NSString * _Nullable subType;
 - (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid receiverType:(enum ReceiverType)receiverType customData:(NSDictionary<NSString *, id> * _Nonnull)customData OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid receiverType:(enum ReceiverType)receiverType customData:(NSDictionary<NSString *, id> * _Nonnull)customData type:(NSString * _Nullable)type OBJC_DESIGNATED_INITIALIZER;
 - (NSString * _Nonnull)stringValue SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)initWithReceiverUid:(NSString * _Nonnull)receiverUid messageType:(enum MessageType)messageType receiverType:(enum ReceiverType)receiverType SWIFT_UNAVAILABLE;
 @end

@@ -1,16 +1,16 @@
 PODS:
-  - CometChatPro (1.8.1)
+  - CometChatPro (1.8.3)
 
 DEPENDENCIES:
-  - CometChatPro (= 1.8.1)
+  - CometChatPro (= 1.8.3)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - CometChatPro
 
 SPEC CHECKSUMS:
-  CometChatPro: c8bcfe837a8cf9c298a6bf9c92a561f1fe526878
+  CometChatPro: 21fd3283f3bda7abdebc3cbb227de6180222a76a
 
-PODFILE CHECKSUM: 9493c188c38c89207ad19224f336cf7135b228d4
+PODFILE CHECKSUM: 86dbe2b0090a6718f54b51f0be6224db43c7cc24
 
 COCOAPODS: 1.6.1

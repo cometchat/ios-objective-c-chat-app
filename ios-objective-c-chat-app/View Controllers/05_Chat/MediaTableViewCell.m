@@ -143,7 +143,7 @@
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (self.tag == indexPath.row) {
-                        _imageHolder.image = image;
+                        self->_imageHolder.image = image;
                         [self setNeedsLayout];
                     }
                 });
@@ -178,7 +178,7 @@
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (self.tag == indexPath.row) {
-                        _imageHolder.image = image;
+                        self->_imageHolder.image = image;
                         [self setNeedsLayout];
                     }
                 });
