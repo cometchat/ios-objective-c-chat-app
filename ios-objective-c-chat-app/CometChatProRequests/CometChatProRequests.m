@@ -1,8 +1,8 @@
 //
-//  CometChatProRequests.m
+//  CometChatProRequests.h
 //  ios-objective-c-chat-app
 //
-//  Created by Budhabhooshan Patil on 12/03/19.
+//  Created by Nishant on 11/12/19.
 //  Copyright © 2019 Inscripts.com. All rights reserved.
 //
 

@@ -5,11 +5,11 @@
 	<key>Authentication</key>
 	<dict>
 		<key>REGION</key>
-		<string>eu</string>
+		<string>ENTER REGION</string>
 		<key>API_KEY</key>
-		<string>13576ad583edd3cbb1bf71cb56ab632a8fe9b80f</string>
+		<string>ENTER API KEY</string>
 		<key>APP_ID</key>
-		<string>10746fe75126ff8</string>
+		<string>ENTER APP ID</string>
 	</dict>
 	<key>UIApperance</key>
 	<string>PersianBlue</string>
