@@ -36,19 +36,19 @@
     self = [super init];
     if(self)
     {
-        
+
         if ([appEntity isKindOfClass:User.class]) {
-            
+
             self.receiverId = [(User *)appEntity uid];
             self.receiverType = ReceiverTypeUser;
             self.receiverName = [(User *)appEntity name];
             self.entity = appEntity;
             self.profileURL = [(User *)appEntity avatar];
-            
+
             self.lastActiveAt = [NSString stringWithFormat:@"%ld",(long)[(User *)appEntity lastActiveAt]];
-            
+
         } else if ([appEntity isKindOfClass:Group.class]){
-            
+
             self.receiverId = [(Group *)appEntity guid];
             self.receiverType = ReceiverTypeGroup;
             self.receiverName =  [(Group *)appEntity name];
@@ -56,7 +56,7 @@
             self.profileURL = [(Group *)appEntity icon];
         }
     }
-    
+
     return self;
 }
 
@@ -72,7 +72,7 @@ static int textFiledHeight;
 @end
 
 @implementation ChatViewController{
-    
+
     UIDocumentPickerViewController *_documentPicker;
     UIPopoverPresentationController *_popover;
     AudioVisualizer *_audioVisualizer;
@@ -86,35 +86,35 @@ static int textFiledHeight;
     NSTextAttachment *userStatusTextAttachment;
     NSString *logged_in_user_uid;
     BOOL editMessageFlag;
-    
+
 }
 @synthesize messsagesArray,messageRequest,appEntity;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self delegate].messagedelegate = self;
-    
+
     NSInteger limit = 50;
-    
+
     _chatEntity = [[ChatEntity alloc]initIMessageWithEntity:appEntity];
-    
+
     if (_chatEntity.receiverType == ReceiverTypeUser)
     {
         messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithUid:_chatEntity.receiverId]setWithLimit:limit] build];
-        
+
     } else if (_chatEntity.receiverType == ReceiverTypeGroup)
     {
         messageRequest = [[[[[MessageRequestBuilder alloc]init]setWithGuid:_chatEntity.receiverId]setWithLimit:limit]build];
     }
     messsagesArray = [NSMutableArray new];
-    
+
     [_sendMessageTextView setDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillChange:)
                                                  name:UIKeyboardWillChangeFrameNotification
                                                object:nil];
-    
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         textFiledHeight = self.sendMessageTextView.frame.size.height;
     } else {
@@ -123,13 +123,13 @@ static int textFiledHeight;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
-    
+
     [self._tableView addGestureRecognizer:tap];
-    
+
     [self configuretable];
     [self fetchNext];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error: nil];
-    
+
     [self viewWillSetupNavigationBar];
     _backgroundActivityIndicatorView = [[ActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
     [__tableView setBackgroundView:_backgroundActivityIndicatorView];
@@ -140,7 +140,7 @@ static int textFiledHeight;
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
+
     TypingIndicator *endTying = [[TypingIndicator alloc]initWithReceiverID:[_chatEntity receiverId] receiverType: [_chatEntity receiverType]];
     [CometChat endTypingWithIndicator:endTying];
 }
@@ -150,12 +150,12 @@ static int textFiledHeight;
     [controller setEntity:appEntity];
     [controller setCallType:CallTypeAudio];
     [self presentViewController:controller animated:YES completion:nil];
-    
+
 }
 
 - (void)actionCallVideo
 {
-    
+
     CallViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CallViewController"];
     [controller setEntity:appEntity];
     [controller setCallType:CallTypeVideo];
@@ -167,7 +167,7 @@ static int textFiledHeight;
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
+
     // Initialize the refresh control.
     _refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl addTarget:self
@@ -177,15 +177,15 @@ static int textFiledHeight;
     [self delegate].usereventdelegate = self;
 }
 -(void)viewWillSetupNavigationBar{
-    
+
     if (@available(iOS 11.0, *)) {
         self.navigationController.navigationBar.prefersLargeTitles = NO;
         self.navigationController.navigationBar.largeTitleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
-        
+
     } else {
         // Fallback on earlier versions
     }
-    
+
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [self.navigationController.navigationBar setTranslucent:YES];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
@@ -194,7 +194,7 @@ static int textFiledHeight;
     UIBarButtonItem *buttonCallVideo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chat_callvideo"]
                                                                         style:UIBarButtonItemStylePlain target:self action:@selector(actionCallVideo)];
     self.navigationItem.rightBarButtonItems = @[buttonCallVideo, buttonCallAudio];
-    
+
     if ([_chatEntity receiverType] == ReceiverTypeUser)
     {
          dispatch_async(dispatch_get_main_queue(), ^{
@@ -209,28 +209,29 @@ static int textFiledHeight;
         [self.navigationItem setTitleView:new];
          });
     }
-    
+
 }
 -(void)loadPrevious{
-    
+
     [_refreshControl beginRefreshing];
     [messageRequest fetchPreviousOnSuccess:^(NSArray<BaseMessage *> * messages) {
-        
+
         if (messages) {
             NSIndexSet *set = [[NSIndexSet alloc]initWithIndexesInRange:NSMakeRange(0, [messages count])];
             [self->messsagesArray insertObjects:messages atIndexes:set];
             for (BaseMessage *object in messages) {
-                [CometChat markMessageAsReadWithMessage:object];
+                //[CometChat markMessageAsReadWithMessage:object];
+                
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->__tableView reloadData];
             [self->_refreshControl endRefreshing];
-            
+
         });
-        
+
     } onError:^(CometChatException * error) {
-        
+
         NSLog(@"%@",[error errorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->_refreshControl endRefreshing];
@@ -238,22 +239,22 @@ static int textFiledHeight;
     }];
 }
 -(void)fetchNext{
-    
+
     [messageRequest fetchPreviousOnSuccess:^(NSArray<BaseMessage *> * messages) {
-        
+
         NSMutableArray<BaseMessage *> *messsages = [[NSMutableArray alloc]init];
 
         if (messages) {
-            
+
             for (BaseMessage *object in messages) {
 
                 if ([object isKindOfClass:ActionMessage.class] && ([((ActionMessage *)object).message  isEqualToString:@"Message is edited."] || ([((ActionMessage *)object).message isEqualToString:@"Message is deleted."]))){
-                    [CometChat markMessageAsReadWithMessage:object];
+                    //[CometChat markMessageAsReadWithMessage:object];
                 }else{
                     [messsages addObject:object];
                 }
                 if ([object readByMeAt] == 0) {
-                    [CometChat markMessageAsReadWithMessage:object];
+                    //[CometChat markMessageAsReadWithMessage:object];
                 }
             }
             self->messsagesArray = messsages;
@@ -261,11 +262,11 @@ static int textFiledHeight;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->__tableView reloadData];
             [self->_backgroundActivityIndicatorView stopAnimating];
-            
+
         });
-        
+
     } onError:^(CometChatException * error) {
-        
+
         NSLog(@"%@",[error errorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->_backgroundActivityIndicatorView stopAnimating];
@@ -273,14 +274,14 @@ static int textFiledHeight;
     }];
 }
 -(void)configuretable{
-    
+
     __tableView.delegate = self;
     __tableView.dataSource = self;
     __tableView.estimatedRowHeight = 60;
     __tableView.rowHeight = UITableViewAutomaticDimension;
     __tableView.estimatedSectionFooterHeight = 0.0f;
     __tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+
 }
 -(void)addBorderToView:(UIView *)_aView
 {
@@ -291,7 +292,7 @@ static int textFiledHeight;
     _border.frame = CGRectMake(0, - borderWidth, _aView.frame.size.width,borderWidth);
     _border.borderWidth = borderWidth;
     [_aView.layer addSublayer:_border];
-    
+
 }
 - (UILabel *) placeholderLabel {
     if (!_placeholderLabel) {
@@ -303,7 +304,7 @@ static int textFiledHeight;
         _placeholderLabel.text = NSLocalizedString(@"Write a messsage", @"");
         _placeholderLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     }
-    
+
     return _placeholderLabel;
 }
 #pragma mark - UITableViewDataSource
@@ -318,37 +319,37 @@ static int textFiledHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setTag:[indexPath row]];
-    
+
     BaseMessage *message = [messsagesArray objectAtIndex:[indexPath row]];
-    
+
     if ([message isKindOfClass:TextMessage.class]) {
-        
+
         TextMessage *textMessage = (TextMessage *)message;
-        
+
         TextTableViewCell *textcell = [[TextTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [TextTableViewCell reuseIdentifier]];
         textcell.delegate = self;
         if ([[textMessage senderUid] isEqualToString:logged_in_user_uid]) {
-            
+
             [textcell bind:textMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight)];
             return textcell;
         } else {
-            
+
             [textcell bind:textMessage withTailDirection:(MessageBubbleViewButtonTailDirectionLeft)];
             return textcell;
         }
     }else if ([message isKindOfClass:MediaMessage.class]){
-        
+
         MediaMessage *mediaMessage = (MediaMessage *)message;
-        
+
         FilesTableViewCell *filesCell = [[FilesTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [FilesTableViewCell reuseIdentifier]];
         filesCell.delegate = self;
-        
+
         if (message.messageType == MessageTypeFile) {
-            
+
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
                 [filesCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
                 [filesCell setTag:[indexPath row]];
@@ -360,26 +361,26 @@ static int textFiledHeight;
             }
         }
         if (message.messageType == MessageTypeVideo || message.messageType == MessageTypeImage) {
-            
+
             MediaTableViewCell *mediaCell = [[MediaTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [MediaTableViewCell reuseIdentifier]];
             mediaCell.delegate = self;
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
                 [mediaCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
                 [mediaCell setTag:[indexPath row]];
                 return mediaCell;
-                
+
             } else {
-                
+
                 [mediaCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionLeft) indexPath:indexPath];
                 [mediaCell setTag:[indexPath row]];
                 return mediaCell;
             }
         }
         if (message.messageType == MessageTypeAudio) {
-            
+
             AudioTableViewCell *audioCell = [[AudioTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:[AudioTableViewCell reuseIdentifier]];
             audioCell.delegate = self;
-            
+
             if ([[mediaMessage senderUid] isEqualToString:logged_in_user_uid]) {
                 [audioCell bind:mediaMessage withTailDirection:(MessageBubbleViewButtonTailDirectionRight) indexPath:indexPath];
                 [audioCell  setTag:[indexPath row]];
@@ -391,9 +392,9 @@ static int textFiledHeight;
             }
         }
     }else if ([message isKindOfClass:ActionMessage.class]){
-        
+
         ActionMessage *action = (ActionMessage *)message;
-        
+
         ActionTableViewCell *someCell = (ActionTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[ActionTableViewCell reuseIdentifier]];
         if (!someCell) {
             someCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
@@ -403,19 +404,19 @@ static int textFiledHeight;
         }
         return someCell;
     }else if ([message isKindOfClass:Call.class]){
-        
+
         Call *callMessage = (Call *)message;
-        
+
         NSError *jsonError;
         NSData *objectData = [[callMessage rawData] dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData
                                                              options:NSJSONReadingMutableContainers
                                                                error:&jsonError];
         NSString *from , *to;
-        
+
         from = [[[json objectForKey:@"by"]objectForKey:@"entity"]objectForKey:@"name"];
         to  = [[[json objectForKey:@"for"]objectForKey:@"entity"]objectForKey:@"name"];
-        
+
         ActionTableViewCell *someCell = (ActionTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[ActionTableViewCell reuseIdentifier]];
         if (!someCell) {
             someCell = [[ActionTableViewCell alloc]initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier: [ActionTableViewCell reuseIdentifier]];
@@ -433,7 +434,7 @@ static int textFiledHeight;
 #pragma mark - UITableViewDelegate
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+
     [UIView animateWithDuration:2.0f delay:0.0f usingSpringWithDamping:1 initialSpringVelocity:0.5 options:(UIViewAnimationOptionAllowUserInteraction) animations:^{
         cell.frame = CGRectMake(cell.frame.origin.x,cell.frame.origin.y - 10.0f , cell.frame.size.width, cell.frame.size.height);
     } completion:nil];
@@ -443,65 +444,65 @@ static int textFiledHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-   
-    
+
+
 
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+
     BaseMessage *message = [messsagesArray objectAtIndex:[indexPath row]];
-    
+
     if ([message isKindOfClass:TextMessage.class]) {
-        
+
         TextMessage *textMessage = (TextMessage *)message;
-        
+
         if ([[textMessage senderUid] isEqualToString:logged_in_user_uid]) {
-            
+
             return CELL_ANIMATION_HEIGHT
             + [[[textMessage sender] name] getSize].height
             + [[textMessage text] getSize].height ;
         } else {
-            
+
             return CELL_ANIMATION_HEIGHT
             + paddingY * 2
             + [[[textMessage sender] name] getSize].height
             + [[textMessage text] getSize].height ;
         }
-        
+
     }else if ([message isKindOfClass:MediaMessage.class]){
-        
+
         if (message.messageType == MessageTypeFile) {
-            
+
             if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
-                
+
                 CGFloat width = self.view.frame.size.width *0.40;
                 return width*0.40f;
-                
+
             } else {
-                
+
                 if ([message receiverType] == ReceiverTypeUser) {
-                    
+
                     CGFloat width = self.view.frame.size.width *40/100;
                     return width*0.40f;
                 } else {
-                    
+
                     CGFloat width = self.view.frame.size.width *40/100;
                     return width*0.40f + paddingY*2;
                 }
             }
-            
-            
+
+
         }else if (message.messageType == MessageTypeVideo || message.messageType == MessageTypeImage){
-            
+
             if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
-                
+
                 CGFloat width = self.view.frame.size.width *0.50;
                 CGFloat height = width/0.75;
                 return height;
-                
+
             } else {
-                
+
                 if ([message receiverType] == ReceiverTypeUser) {
                     CGFloat width = self.view.frame.size.width *0.66;
                     CGFloat height = width/0.75;
@@ -512,66 +513,66 @@ static int textFiledHeight;
                     return paddingY*2 + height; // added height for sender name
                 }
             }
-            
-            
+
+
         } else if (message.messageType == MessageTypeAudio){
-            
+
             if ([[message senderUid] isEqualToString:logged_in_user_uid]) {
-                
+
                 CGFloat width = self.view.frame.size.width *0.40;
                 return width*0.40f;
-                
+
             } else {
-                
+
                 if ([message receiverType] == ReceiverTypeUser) {
-                    
+
                     CGFloat width = self.view.frame.size.width *40/100;
                     return width*0.40f;
                 } else {
-                    
+
                     CGFloat width = self.view.frame.size.width *40/100;
                     return width*0.40f + paddingY*2;
                 }
             }
         }
     }else if ([message isKindOfClass:ActionMessage.class]){
-        
+
         ActionMessage *action = (ActionMessage *)message;
         CGSize sizeOfText = [[action message] getSize];
         return sizeOfText.height + paddingY*2;
     }else if ([message isKindOfClass:Call.class]){
-        
+
         CGFloat width = self.view.frame.size.width *0.20;
         CGFloat height = width/2;
         return height + paddingX*2;
     }
-    
+
     return 0.0f;
-    
+
 }
 // identify links to made clickable
 - (void)handleTapOnLabel:(UITapGestureRecognizer *)tapGesture
 {
-    
+
     UILabel *msgLabel = (UILabel *)tapGesture.view;
     NSString *textString = msgLabel.text;
-    
+
     // Create instances of NSLayoutManager, NSTextContainer and NSTextStorage
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
     NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:CGSizeZero];
     NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:textString];
-    
+
     // Configure layoutManager and textStorage
     [layoutManager addTextContainer:textContainer];
     [textStorage addLayoutManager:layoutManager];
-    
+
     // Configure textContainer
     textContainer.lineFragmentPadding = 0.0;
     textContainer.lineBreakMode = msgLabel.lineBreakMode;
     textContainer.maximumNumberOfLines = msgLabel.numberOfLines;
     textContainer.size = msgLabel.bounds.size;
-    
-    
+
+
     CGPoint locationOfTouchInLabel = [tapGesture locationInView:tapGesture.view];
     CGSize labelSize = tapGesture.view.bounds.size;
     CGRect textBoundingBox = [layoutManager usedRectForTextContainer:textContainer];
@@ -583,7 +584,7 @@ static int textFiledHeight;
                                                        inTextContainer:textContainer
                               fractionOfDistanceBetweenInsertionPoints:nil];
     NSArray *matches = [self getLinksArrayFromString:textString];
-    
+
     if ([matches count]) {
         for (NSTextCheckingResult *match in matches) {
             NSRange matchRange = [match range];
@@ -591,27 +592,27 @@ static int textFiledHeight;
                 if (NSLocationInRange(indexOfCharacter, matchRange)) {
                     [[UIApplication sharedApplication] openURL:[match URL]];
                 }
-                
+
             }
         }
     }
-    
+
     layoutManager = nil;
     textContainer = nil;
     textStorage = nil;
 }
 - (NSArray *)getLinksArrayFromString : (NSString *)string {
-    
+
     NSDataDetector *detect = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray *matches = [detect matchesInString:string options:0 range:NSMakeRange(0, [string length])];
     return matches;
 }
 -(void) copy:(id)sender{
-    
+
     BaseMessage *message = [messsagesArray objectAtIndex:0];
-    
+
     if ([message isKindOfClass:TextMessage.class]) {
-        
+
         TextMessage *textMessage = (TextMessage *)message;
         [UIPasteboard generalPasteboard].string = [textMessage text];
     }
@@ -625,73 +626,73 @@ static int textFiledHeight;
 
 - (void)keyboardWillChange:(NSNotification *)notification
 {
-    
+
     // Get duration of keyboard appearance/ disappearance animation
     UIViewAnimationCurve animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     UIViewAnimationOptions animationOptions = animationCurve | (animationCurve << 16); // Convert animation curve to animation option
     NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
+
     // Get the final size of the keyboard
     CGRect keyboardEndFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
+
     // Calculate the new bottom constraint, which is equal to the size of the keyboard
     CGRect screen = [UIScreen mainScreen].bounds;
     CGFloat newBottomConstraint = (screen.size.height-keyboardEndFrame.origin.y);
-    
+
     // Keep old y content offset and height before they change
     CGFloat oldYContentOffset = self._tableView.contentOffset.y;
     CGFloat oldTableViewHeight = self._tableView.bounds.size.height;
-    
+
     [UIView animateWithDuration:animationDuration delay:0 options:animationOptions animations:^{
         // Set the new bottom constraint
         self.wrapperBottomConstraint.constant = - newBottomConstraint;
         // Request layout with the new bottom constraint
         [self.view layoutIfNeeded];
-        
+
         // Calculate the new y content offset
         CGFloat newTableViewHeight = self._tableView.bounds.size.height;
         CGFloat contentSizeHeight = self._tableView.contentSize.height;
         CGFloat newYContentOffset = oldYContentOffset - newTableViewHeight + oldTableViewHeight;
-        
+
         // Prevent new y content offset from exceeding max, i.e. the bottommost part of the UITableView
         CGFloat possibleBottommostYContentOffset = contentSizeHeight - newTableViewHeight;
         newYContentOffset = MIN(newYContentOffset, possibleBottommostYContentOffset);
-        
+
         // Prevent new y content offset from exceeding min, i.e. the topmost part of the UITableView
         CGFloat possibleTopmostYContentOffset = 0;
         newYContentOffset = MAX(possibleTopmostYContentOffset, newYContentOffset);
-        
+
         // Create new content offset
         CGPoint newTableViewContentOffset = CGPointMake(self._tableView.contentOffset.x, newYContentOffset);
         self._tableView.contentOffset = newTableViewContentOffset;
-        
+
     } completion:nil];
 }
 #pragma UITextViewDelegate
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView{
-    
+
     if (![textView.text isEqualToString:@""]) {
         _placeholderLabel.hidden = YES;
     }
     return YES;
 }
 -(void)textViewDidEndEditing:(UITextView *)textView{
-    
+
     if ([textView.text isEqualToString:@""]) {
         _placeholderLabel.hidden = NO;
     }
-    
+
     TypingIndicator *endTying = [[TypingIndicator alloc]initWithReceiverID:[_chatEntity receiverId] receiverType: [_chatEntity receiverType]];
     [CometChat endTypingWithIndicator:endTying];
-    
+
 }
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]) {
         NSString *message = _sendMessageTextView.text;
         if (![message isEqualToString:@""]) {
-            
+
             message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             [_sendMessageTextView setText:@""];
             _sendMessageHeightConstraint.constant = textFiledHeight;
@@ -706,21 +707,21 @@ static int textFiledHeight;
     return YES;
 }
 -(void)textViewDidChange:(UITextView *)textView{
-    
-    
+
+
     if (![textView.text isEqualToString:@""]) {
         _placeholderLabel.hidden = YES;
     }
     else {
         _placeholderLabel.hidden = NO;
     }
-    
-    
+
+
     float numberOfLines = (textView.contentSize.height - textView.textContainerInset.top - textView.textContainerInset.bottom) / textView.font.lineHeight;
-    
+
     int n = numberOfLines;
     if (n == 1) {
-        
+
         _sendMessageHeightConstraint.constant = textFiledHeight;
         _wrapperHeightConstraint.constant = 54.0f;
         [_wrapperView layoutIfNeeded];
@@ -729,15 +730,15 @@ static int textFiledHeight;
         [_sendMessageTextView setNeedsUpdateConstraints];
     }
     if (n == 2) {
-        
-        
+
+
         _sendMessageHeightConstraint.constant = 55.0f;
         _wrapperHeightConstraint.constant = 78.0f;
         [_wrapperView layoutIfNeeded];
         [_wrapperView setNeedsUpdateConstraints];
         [_sendMessageTextView layoutIfNeeded];
         [_sendMessageTextView setNeedsUpdateConstraints];
-        
+
     }else if (n > 2) {
         _sendMessageHeightConstraint.constant = 85.0f;
         _wrapperHeightConstraint.constant = 95.0f;
@@ -750,18 +751,18 @@ static int textFiledHeight;
     [CometChat startTypingWithIndicator:sendTyping];
 }
 - (IBAction)sendBtnPressed:(UIButton *)sender {
-    
+
     NSString *message = _sendMessageTextView.text;
-    
+
     if (editMessageFlag == YES){
-        
+
         [self editMessage:_editMessage.id message:[NSString stringWithFormat:@"%@ (Edited)",message]];
         [_sendMessageTextView setText:@""];
         editMessageFlag = NO;
         _editMessage = nil;
     }else{
         if (![message isEqualToString:@""]) {
-            
+
             message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             [_sendMessageTextView setText:@""];
             _sendMessageHeightConstraint.constant = textFiledHeight;
@@ -773,47 +774,47 @@ static int textFiledHeight;
             [self sendMessage:message];
         }
     }
-    
-   
+
+
 }
 - (IBAction)attachmentBtnPressed:(UIButton *)sender {
-    
-    
+
+
     UIAlertController *attachmentAlert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
-    
+
     UIAlertAction * sendCameraPics = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take Photo", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
+
         [Camera PresentMultiCamera:self canEdit:YES];
     }];
-    
+
     UIAlertAction *photosAndVideos = [UIAlertAction actionWithTitle:NSLocalizedString(@"Choose From Library", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
+
         [Camera PresentPhotoLibrary:self canEdit:YES];
     }];
-    
+
     UIAlertAction * sendDocuments = [UIAlertAction actionWithTitle:NSLocalizedString(@"Documents", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
+
         [self selectDocument];
     }];
     UIAlertAction * recordAudio = [UIAlertAction actionWithTitle:NSLocalizedString(@"Audio recording", @"") style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
+
         [self recordAudio];
     }];
-    
-    
+
+
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:(UIAlertActionStyleCancel) handler:nil];
-    
+
     [sendCameraPics setValue:[UIImage imageNamed:@"chat_camera"] forKey:@"image"];
     [photosAndVideos setValue:[UIImage imageNamed:@"chat_picture"] forKey:@"image"];
     [sendDocuments setValue:[UIImage imageNamed:@"chat_file"] forKey:@"image"];
     [recordAudio setValue:[UIImage imageNamed:@"chat_audio"] forKey:@"image"];
-    
+
     [attachmentAlert addAction:sendCameraPics];
     [attachmentAlert addAction:sendDocuments];
     [attachmentAlert addAction:recordAudio];
     [attachmentAlert addAction:photosAndVideos];
     [attachmentAlert addAction:cancel];
-    
+
     if(UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone)
         [self presentViewController:attachmentAlert
                            animated:YES completion:nil];
@@ -827,8 +828,8 @@ static int textFiledHeight;
         [self presentViewController:attachmentAlert
                            animated:YES completion:nil];
     }
-    
-    
+
+
 }
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
     return UIModalPresentationPopover;
@@ -841,17 +842,17 @@ static int textFiledHeight;
 
 -(void)selectDocument
 {
-    
+
     _documentPicker = [[UIDocumentPickerViewController alloc]initWithDocumentTypes:@[@publicContent]
                                                                             inMode:UIDocumentPickerModeImport];
-    
+
     _documentPicker.delegate = self;
     _documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:_documentPicker animated:YES completion:nil];
 }
 -(void)recordAudio
 {
-    
+
     CGFloat margin = 8.0F;
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"\n\n\n\n\n\n" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     audioVisualizerView = [[AudioVisualizerView alloc]initWithFrame:CGRectMake(margin, margin, alertController.view.bounds.size.width - margin * 4.0F, 130.0f)];
@@ -870,23 +871,23 @@ static int textFiledHeight;
 }
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info
 {
-    
+
     if (@available(iOS 11.0, *)) {
         NSLog(@"%@ and %@ ",[[info objectForKey:UIImagePickerControllerMediaURL]absoluteString] , [info objectForKey:UIImagePickerControllerMediaType]);
     } else {
         // Fallback on earlier versions
     }
-    
+
     MessageType messageType  = MessageTypeImage;
     NSString *filePath;
-    
+
     if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:@publicMovie]) {
-        
+
         messageType = MessageTypeVideo;
         filePath = [[info objectForKey:UIImagePickerControllerMediaURL]absoluteString];
-        
+
     } else if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:@publicImage]){
-        
+
         messageType = MessageTypeImage;
         if (@available(iOS 11.0, *)) {
             filePath = [[info objectForKey:UIImagePickerControllerImageURL]absoluteString];
@@ -894,91 +895,91 @@ static int textFiledHeight;
             // Fallback on earlier versions
         }
     }
-    
+
     if (@available(iOS 11.0, *)) {
-        
+
         MediaMessage *message = [[MediaMessage alloc]initWithReceiverUid:[_chatEntity receiverId]
                                                                  fileurl:filePath
                                                              messageType:messageType
                                                             receiverType:[_chatEntity receiverType]];
-        
+
         [CometChat sendMediaMessageWithMessage:message onSuccess:^(MediaMessage * sent_message) {
-            
+
             [self->messsagesArray addObject:sent_message];
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
-                
+
                 if ([self->messsagesArray count]) {
-                    
+
                     [self->__tableView reloadData];
                     [self->__tableView scrollToBottom];
                 }
             });
-            
+
         } onError:^(CometChatException * error) {
-            
+
             NSLog(@"Error %@",[error errorDescription]);
-            
+
         }];
     } else {
         // Fallback on earlier versions
     }
-    
+
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UIDocumentPickerDelegate
 
 -(void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller{
-    
+
 }
 -(void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url{
-    
-    
+
+
     MediaMessage *fileMessage = [[MediaMessage alloc]initWithReceiverUid:_chatEntity.receiverId fileurl:url.absoluteString messageType:MessageTypeFile receiverType:_chatEntity.receiverType];
-    
+
     [fileMessage setMetaData:[NSDictionary dictionaryWithObjectsAndKeys:[url lastPathComponent],@"fileName",nil]];
-    
+
     [CometChat sendMediaMessageWithMessage:fileMessage onSuccess:^(MediaMessage * sent_message) {
-        
-        
+
+
         NSLog(@"asdad %@",[sent_message stringValue]);
-        
+
         [self->messsagesArray addObject:sent_message];
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if ([self->messsagesArray count]) {
-                
+
                 [self->__tableView reloadData];
                 [self->__tableView scrollToBottom];
             }
         });
-        
+
     } onError:^(CometChatException * error) {
-        
+
         NSLog(@"Error %@",[error errorDescription]);
-        
+
     }];
 }
 
 -(void)sendMessage:(NSString*)originalMessage
 {
     
-    TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage messageType:MessageTypeText receiverType:[_chatEntity receiverType]];
-    
-    
+    TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage receiverType:[_chatEntity receiverType]];
+
+
     [CometChat sendTextMessageWithMessage:message onSuccess:^(TextMessage * sent_message) {
-        
-        
+
+
         NSLog(@"sent message %@",[sent_message stringValue]);
-        
+
         [self->messsagesArray addObject:sent_message];
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if ([self->messsagesArray count]) {
-                
+
                 [self->__tableView beginUpdates];
                 NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
                 [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
@@ -986,28 +987,28 @@ static int textFiledHeight;
                 [self->__tableView scrollToBottom];
             }
         });
-        
+
     } onError:^(CometChatException * error) {
-        
+
         NSLog(@"Error Sending Text Messages %@",[error errorDescription]);
-        
+
     }];
-    
+
     message = nil;
 }
 
 
 -(void)editMessage:(NSInteger *)messageID message:(NSString*)originalMessage
 {
-    TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage messageType:MessageTypeText receiverType:[_chatEntity receiverType]];
+   TextMessage *message = [[TextMessage alloc]initWithReceiverUid:[_chatEntity receiverId] text:originalMessage receiverType:[_chatEntity receiverType]];
     [message setId: messageID];
-    
+
     [CometChat editWithMessage:message onSuccess:^(BaseMessage * _Nonnull edit_message) {
-        
+
         NSLog(@"sent message %@",edit_message);
-        
+
     } onError:^(CometChatException * _Nonnull error) {
-        
+
         NSLog(@"sent message error %@",error.errorDescription);
     }];
 
@@ -1016,32 +1017,32 @@ static int textFiledHeight;
 
 
 - (void)applicationdidReceiveNewMessage:(BaseMessage *)message {
-    
+
     if ([appEntity isKindOfClass:User.class]) {
-        
+
         User *user = (User *)appEntity;
-        
+
         if ([[message senderUid] isEqualToString:[user uid]] && [message receiverType] == ReceiverTypeUser) {
             [messsagesArray addObject:message];
-            
+
             if ([messsagesArray count]) {
-                
+
                   dispatch_async(dispatch_get_main_queue(), ^{
                       [self->__tableView beginUpdates];
                       NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
                       [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
                       [self->__tableView endUpdates];
                       [self->__tableView scrollToBottom];
-                [CometChat markMessageAsReadWithMessage:message];
+                //[CometChat markMessageAsReadWithMessage:message];
                   });
             }
-            
+
         }
     } else if ([appEntity isKindOfClass:Group.class]) {
-        
+
         Group *group = (Group *)appEntity;
         if ([[message receiverUid] isEqualToString:[group guid]]) {
-            
+
             [messsagesArray addObject:message];
             if ([messsagesArray count]) {
                   dispatch_async(dispatch_get_main_queue(), ^{
@@ -1050,20 +1051,20 @@ static int textFiledHeight;
                       [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationAutomatic)];
                       [self->__tableView endUpdates];
                       [self->__tableView scrollToBottom];
-                [CometChat markMessageAsReadWithMessage:message];
+                //[CometChat markMessageAsReadWithMessage:message];
                   });
             }
         }
     }
-    
-    
+
+
 }
 
 -(void)applicationDidReceivedisTypingEvent:(TypingIndicator *)typingIndicator isComposing:(BOOL)isComposing
 {
     NSLog(isComposing ? @"YES" : @"NO");
     NSLog(@"typingIndicator %@",[typingIndicator stringValue]);
-    
+
     if ([[[typingIndicator sender] uid] isEqualToString:[_chatEntity receiverId]]) {
         if (isComposing) {
              dispatch_async(dispatch_get_main_queue(), ^{
@@ -1081,21 +1082,21 @@ static int textFiledHeight;
 }
 
 - (void)applicationDidReceivedReadAndDeliveryReceipts:(MessageReceipt *)receipts {
-    
+
     if ([[[receipts sender] uid] isEqualToString:[_chatEntity receiverId]]){
-        
+
         NSPredicate *findMessage = [NSPredicate predicateWithBlock: ^BOOL(BaseMessage* obj, NSDictionary *bind){
             return  obj.id == [[receipts messageId] integerValue];
         }];
-        
+
         NSArray <BaseMessage *> *messages = [messsagesArray filteredArrayUsingPredicate: findMessage];
         if ([messages count] == 1) {
-            
+
             BaseMessage *originalMessage = [messsagesArray objectAtIndex:[messsagesArray indexOfObject:[messages objectAtIndex:0]]];
             BaseMessage *original = [messsagesArray objectAtIndex:[messsagesArray indexOfObject:[messages objectAtIndex:0]]];
             switch ([receipts receiptType])
             {
-                    
+
                 case ReceiptTypeDelivered:
                     originalMessage.deliveredToMeAt = [receipts timeStamp];
                     break;
@@ -1103,11 +1104,11 @@ static int textFiledHeight;
                     originalMessage.readByMeAt = [receipts timeStamp];
                     break;
             }
-            
+
             [messsagesArray replaceObjectAtIndex:[messsagesArray indexOfObject:original] withObject:originalMessage];
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
-                
+
                 [self->__tableView beginUpdates];
                 NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
                 [self->__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
@@ -1118,12 +1119,12 @@ static int textFiledHeight;
 }
 -(void)showInfo
 {
-    
+
     InfoPageViewController *infoPage = [InfoPageViewController new];
     infoPage.hidesBottomBarWhenPushed = YES;
     infoPage.appEntity = [_chatEntity entity];
     [self.navigationController pushViewController:infoPage animated:YES];
-    
+
 }
 #pragma mark - Dealloc
 
@@ -1151,88 +1152,88 @@ static int textFiledHeight;
     return [[UIImage alloc] initWithCGImage:imgRef];
 }
 - (void)showMainImage:(UIGestureRecognizer*)gesture{
-    
+
     MediaMessage *message = (MediaMessage*)[messsagesArray objectAtIndex:gesture.view.tag];
-    previewUrl = [NSString stringWithFormat:@"%@",[message url]];
+    previewUrl = [NSString stringWithFormat:@"%@",[message filePath]];
     [self showMediaForIndexPath];
-    
+
 }
 -(void)showMediaForIndexPath{
-    
+
     QLPreviewController *qlController = [[QLPreviewController alloc] init];
     [qlController setDataSource:self];
     [qlController setCurrentPreviewItemIndex:1];
     [[self navigationController] pushViewController:qlController animated:YES];
-    
+
 }
 - (NSDictionary *)getNameAndExtentionFromURL:(NSString *)url {
-    
+
     NSRange range1 = [url rangeOfString:@"/" options:NSBackwardsSearch];
     NSRange range2 = [url rangeOfString:@"." options:NSBackwardsSearch];
     if (range1.location != NSNotFound && range2.location != NSNotFound) {
-        
+
         NSString *filename = [url substringWithRange:NSMakeRange(range1.location + range1.length, range2.location - range1.location - range1.length)];
         NSString *extention = [url substringFromIndex:range2.location];
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:filename, @"filename", extention, @"extention", nil];
         return dict;
-        
+
     }else {
-        
+
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"filename", @"", @"extention", nil];
         return dict;
     }
 }
 - (NSInteger)numberOfPreviewItemsInPreviewController:(nonnull QLPreviewController *)controller {
-    
+
     return 1;
-    
+
 }
 
 - (nonnull id<QLPreviewItem>)previewController:(nonnull QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
-    
+
     if (![[NSFileManager defaultManager]fileExistsAtPath:[NSString stringWithFormat:@"%@/%@",[self documentsPath],[self fileNameWithExtentionforURL:previewUrl]]]) {
-        
+
         NSData *fileData = [NSData dataWithContentsOfURL:[NSURL URLWithString:previewUrl]];
-        
+
         [self fileData:fileData WriteToFile:[NSString stringWithFormat:@"%@/%@",[self documentsPath],[self fileNameWithExtentionforURL:previewUrl]] Automically:YES];
-        
+
     }
-    
+
     return [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@",[self documentsPath],[self fileNameWithExtentionforURL:previewUrl]]];
 }
 -(void)fileData:(NSData*)data WriteToFile:(NSString*)path Automically:(BOOL)isAutomically
 {
     [data writeToFile:path atomically:isAutomically];
     UIImageWriteToSavedPhotosAlbum([UIImage imageWithData:data], nil, nil, nil);
-    
+
 }
 -(NSString *)documentsPath{
-    
+
     NSArray *paths = NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths objectAtIndex:0];
     return documentsPath;
 }
 -(NSString *)fileNameWithExtentionforURL:(NSString*)string{
-    
+
     NSDictionary *nameAndExt = [self getNameAndExtentionFromURL:string];
     NSString *fileNameWithExtention = [NSString stringWithFormat:@"%@%@",[nameAndExt objectForKey:@"filename"],[nameAndExt objectForKey:@"extention"]];
     return fileNameWithExtention;
 }
 - (void)applicationdidRecordNewAudioWithURL:(nonnull NSURL *)audioPath {
-    
+
     MediaMessage *audioMessage = [[MediaMessage alloc]initWithReceiverUid:_chatEntity.receiverId fileurl:audioPath.absoluteString messageType:MessageTypeAudio receiverType:_chatEntity.receiverType];
-    
+
     [CometChat sendMediaMessageWithMessage:audioMessage onSuccess:^(MediaMessage * sent_message) {
-        
+
         [self->messsagesArray addObject:sent_message];
-        
+
         NSLog(@"%@",[sent_message stringValue]);
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if ([self->messsagesArray count]) {
-                
-                
+
+
                 [self->__tableView beginUpdates];
                 NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
                 [self->__tableView insertRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationRight)];
@@ -1240,42 +1241,42 @@ static int textFiledHeight;
                 [self->__tableView scrollToBottom];
             }
         });
-        
+
     } onError:^(CometChatException * error) {
-        
+
         NSLog(@"Error %@",[error errorDescription]);
-        
+
     }];
     if ([self presentingViewController]) {
-        
+
         [self dismissViewControllerAnimated:[self presentingViewController] completion:nil];
     }
 }
 #pragma mark -
 - (IBAction)playPauseButtonPressed:(UIButton *)sender
 {
-    
+
     BaseMessage *message = [messsagesArray objectAtIndex:[sender tag]];
     if ([message isKindOfClass:MediaMessage.class]) {
-        
+
         MediaMessage *mediaMessage = (MediaMessage *)message;
-        
+
         if (message.messageType == MessageTypeAudio) {
-            
-            previewUrl = [mediaMessage url];
+
+            previewUrl = [mediaMessage filePath];
             [self showMediaForIndexPath];
-            
+
         }
     }
 }
 
 -(void)applicationDidReceiveUserEvent:(User *)user
 {
-    
+
     if ([[user uid]isEqualToString:[_chatEntity receiverId]]) {
-        
+
         switch ([user status]) {
-                
+
             case UserStatusOnline:
             {
                  dispatch_async(dispatch_get_main_queue(), ^{
@@ -1297,7 +1298,7 @@ static int textFiledHeight;
 }
 /*pop up Animation*/
 -(void)addPopUpAnimationToView:(UIView*)aView{
-    
+
     [UIView animateWithDuration:0.3/1.5 animations:^{
         aView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
     } completion:^(BOOL finished) {
@@ -1312,88 +1313,88 @@ static int textFiledHeight;
 }
 
 -(void)didSelectTextAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(TextMessage *)message{
-    
+
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
-    
+
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [self dismissViewControllerAnimated:YES completion:^{
         }];
     }]];
-    
+
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        
+
         self->editMessageFlag = YES;
         self->_editMessage = message;
         self->_sendMessageTextView.text =  message.text;
         [self->_placeholderLabel setHidden:YES];
-        
+
         [self dismissViewControllerAnimated:YES completion:^{
         }];
     }]];
-    
+
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        
+
         [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
             NSLog(@"Message Deleted Sucessfully");
             MediaMessage *textMessage = (TextMessage *)((ActionMessage *)deletedMessage).actionOn;
-            
+
                 NSPredicate *findMessage = [NSPredicate predicateWithBlock: ^BOOL(BaseMessage* obj, NSDictionary *bind){
                     return  obj.id == textMessage.id;
                 }];
-            
+
             NSArray <BaseMessage *> *messages = [self->messsagesArray filteredArrayUsingPredicate: findMessage];
-            
+
                     BaseMessage *original = [self->messsagesArray objectAtIndex:[self->messsagesArray indexOfObject:[messages objectAtIndex:0]]];
                     [self->messsagesArray replaceObjectAtIndex:[self->messsagesArray indexOfObject:original] withObject:textMessage];
-                    
+
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self->__tableView beginUpdates];
                         NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self->messsagesArray count]-1 inSection:0]];
                         [self->__tableView reloadRowsAtIndexPaths:paths withRowAnimation:(UITableViewRowAnimationNone)];
                         [self->__tableView endUpdates];
                     });
-            
-          
+
+
         } onError:^(CometChatException * _Nonnull error) {
-            
+
             NSLog(@"Fail to delete Message: %@",error);
         }];
-        
+
         [self dismissViewControllerAnimated:YES completion:^{
         }];
     }]];
     [self presentViewController:actionSheet animated:YES completion:nil];
-    
+
 }
 
 -(void)didSelectMediaAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage *)message{
-    
+
     tag = _tableIndexPath;
     if(flag == 0){
         [self openMediaWithTag:tag];
     }else{
         UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
-        
+
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             [self dismissViewControllerAnimated:YES completion:^{
             }];
         }]];
-        
+
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            
+
             [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
                 NSLog(@"Message Deleted Sucessfully");
                 MediaMessage *mediaMessage = (MediaMessage *)((ActionMessage *)deletedMessage).actionOn;
                 self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
+
                     [self->__tableView reloadRowsAtIndexPaths:self->_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
                 });
             } onError:^(CometChatException * _Nonnull error) {
-               
+
                  NSLog(@"Fail to delete Message: %@",error);
             }];
-            
+
             [self dismissViewControllerAnimated:YES completion:^{
             }];
         }]];
@@ -1402,28 +1403,28 @@ static int textFiledHeight;
 }
 
 -(void)didSelectFileAtIndexPath:(NSInteger)tag flag:(NSInteger)flag message:(MediaMessage *)message{
-    
+
     tag = _tableIndexPath;
     if(flag == 0){
         [self openMediaWithTag:tag];
     }else{
         UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
-        
+
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
             [self dismissViewControllerAnimated:YES completion:^{
             }];
         }]];
-        
+
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete Message" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            
+
             [CometChat deleteWithMessageId:message.id onSuccess:^(BaseMessage * _Nonnull deletedMessage) {
-                
+
                 NSLog(@"Message Deleted Sucessfully");
                 MediaMessage *mediaMessage = (MediaMessage *)((ActionMessage *)deletedMessage).actionOn;
-                
+
                 self->messsagesArray[self->_tableIndexPath.row] = mediaMessage;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
+
                     [self->__tableView reloadRowsAtIndexPaths:self->_tableIndexPath withRowAnimation: UITableViewRowAnimationAutomatic];
                 });
             } onError:^(CometChatException * _Nonnull error) {
@@ -1445,7 +1446,7 @@ static int textFiledHeight;
 -(void)openMediaWithTag:(NSInteger)tag
 {
     MediaMessage *selctedMessage = (MediaMessage *)[messsagesArray objectAtIndex:tag];
-    previewUrl = [selctedMessage url];
+    previewUrl = [selctedMessage filePath];
     [self showMediaForIndexPath];
 }
 
@@ -1454,43 +1455,43 @@ static int textFiledHeight;
 
 -(UIView *)naviagtionTitle:(NSString *)name WithStatus:(NSString *)status
 {
-    
+
     UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, self.navigationController.navigationBar.frame.size.width - 44.0f, self.navigationController.navigationBar.frame.size.height )];
-    
+
     UILabel *nameLbl = [UILabel new];
     nameLbl.textColor = [UIColor whiteColor];
     [nameLbl setFont:[UIFont systemFontOfSize:14.0f weight:(UIFontWeightSemibold)]];
     nameLbl.textAlignment = NSTextAlignmentCenter;
-    
+
     UILabel *statusLbl = [UILabel new];
     statusLbl.textColor = [UIColor whiteColor];
     [statusLbl setFont:[UIFont systemFontOfSize:12.0f]];
     statusLbl.textAlignment = NSTextAlignmentCenter;
-    
+
     [titleView addSubview:nameLbl];
     [nameLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
     [titleView addSubview:statusLbl];
     [statusLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
+
     NSDictionary *views = NSDictionaryOfVariableBindings(nameLbl,statusLbl);
-    
+
     NSArray *h1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[nameLbl]|" options:0 metrics:nil views:views];
     NSArray *h2 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[statusLbl]|" options:0 metrics:nil views:views];
     NSArray *v = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[nameLbl][statusLbl]|" options:0 metrics:nil views:views];
-    
+
     [titleView addConstraints:h1];
     [titleView addConstraints:h2];
     [titleView addConstraints:v];
-    
-    
+
+
     nameLbl.text = name;
     statusLbl.text = status;
-    
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showInfo)];
     [tap setNumberOfTapsRequired:1];
     [titleView addGestureRecognizer:tap];
-    
-    
+
+
     return titleView;
 }
 @end

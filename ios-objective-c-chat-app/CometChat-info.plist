@@ -4,10 +4,12 @@
 <dict>
 	<key>Authentication</key>
 	<dict>
+		<key>REGION</key>
+		<string>eu</string>
 		<key>API_KEY</key>
-		<string>your_api_key</string>
+		<string>13576ad583edd3cbb1bf71cb56ab632a8fe9b80f</string>
 		<key>APP_ID</key>
-		<string>your_app_id</string>
+		<string>10746fe75126ff8</string>
 	</dict>
 	<key>UIApperance</key>
 	<string>PersianBlue</string>

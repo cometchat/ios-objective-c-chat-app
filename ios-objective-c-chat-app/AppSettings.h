@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppSettings : NSObject
+@interface AppSetting : NSObject
 @property (nonatomic, readonly) UIColor *navigationBarColor;
 -(void)print;
 @end

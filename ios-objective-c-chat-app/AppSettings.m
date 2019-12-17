@@ -9,10 +9,10 @@
 #import "AppSettings.h"
 
 
-@interface AppSettings()
+@interface AppSetting()
 @end
 
-@implementation AppSettings
+@implementation AppSetting
 {
     HexToRGBConvertor *hexToRgb;
 }

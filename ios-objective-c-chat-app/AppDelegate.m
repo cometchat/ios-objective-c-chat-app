@@ -16,24 +16,24 @@
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[CometChat alloc]initWithAppId:@APP_ID onSuccess:^(BOOL isSuccess) {
-        
-        // Successfully init CometChat
-        NSLog(isSuccess ? @"YES" : @"NO");
-        
-        CometChat.messagedelegate = self;
-        CometChat.userdelegate    = self;
-        CometChat.groupdelegate   = self;
-        CometChat.calldelegate    = self;
-        [[CallManager sharedInstance] setDelegate:self];
-        
-        [self switchViewControllerIfLoggedIn];
-        
-        
+    AppSettingsBuilder *appSettingBuilder = [[AppSettingsBuilder alloc]init];
+    AppSettings *appSettings = [[[appSettingBuilder subscribePresenceForAllUsers]setRegionWithRegion:@"eu"]build];
+    
+    // Getting the App ID and API Key
+    NSString *path = [[NSBundle mainBundle] pathForResource: @"CometChat-info" ofType: @"plist"];
+    NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile: path];
+    id AuthenticationDict = [dict objectForKey: @"Authentication"];
+    
+    [[CometChat alloc]initWithAppId:AuthenticationDict[@"APP_ID"] appSettings:appSettings onSuccess:^(BOOL isSuccess) {
+        NSLog(isSuccess ? @"CometChat Initialize Success:-YES" : @"CometChat Initialize Success:-NO");
     } onError:^(CometChatException * error) {
-        // Error in init CometChat
         NSLog(@"Error %@",[error errorDescription]);
     }];
+    
+    //Setting Navigation Bar color
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0]];
+    [self switchViewControllerIfLoggedIn];
+    
     return YES;
 }
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -50,6 +50,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    //[CometChat Start]
 }
 
 
@@ -71,13 +72,13 @@
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@IS_LOGGED_IN]) {
         
-        TabBarViewController *tabBarViewController = [storyboard instantiateViewControllerWithIdentifier:@"TabBarViewController"];
+        TabBarViewController *tabBarViewController = [storyboard instantiateViewControllerWithIdentifier:@"TabBarViewController"];        
         [app.window setRootViewController:tabBarViewController];
         tabBarViewController = nil;
         
     } else {
         
-        LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"StartUpViewController"];
         [app.window setRootViewController:loginViewController];
         loginViewController = nil;
     }

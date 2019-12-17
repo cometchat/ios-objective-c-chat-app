@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BE51AF2C70A3682AF7648FFF /* libPods-ios-objective-c-chat-app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */; };
+		196892DD23A1198F005745D2 /* ConversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 196892DC23A1198F005745D2 /* ConversationsViewController.m */; };
+		198605AD23A282AD007A1AB6 /* ConversationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 198605AC23A282AD007A1AB6 /* ConversationTableViewCell.m */; };
+		19BC068F23994CF60044F943 /* StartUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19BC068E23994CF60044F943 /* StartUpViewController.m */; };
 		DB41D61A22AE852A009B6CCB /* EntityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB41D61822AE852A009B6CCB /* EntityTableViewCell.m */; };
 		DB41D61B22AE852A009B6CCB /* EntityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DB41D61922AE852A009B6CCB /* EntityTableViewCell.xib */; };
 		E1067B35226DF9DC00A3237F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1067B37226DF9DC00A3237F /* Localizable.strings */; };
@@ -83,9 +85,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.debug.xcconfig"; sourceTree = "<group>"; };
-		721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-objective-c-chat-app.release.xcconfig"; path = "Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app.release.xcconfig"; sourceTree = "<group>"; };
-		9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ios-objective-c-chat-app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		196892DB23A1198F005745D2 /* ConversationsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationsViewController.h; sourceTree = "<group>"; };
+		196892DC23A1198F005745D2 /* ConversationsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationsViewController.m; sourceTree = "<group>"; };
+		198605AB23A282AD007A1AB6 /* ConversationTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationTableViewCell.h; sourceTree = "<group>"; };
+		198605AC23A282AD007A1AB6 /* ConversationTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationTableViewCell.m; sourceTree = "<group>"; };
+		19BC068D23994CF60044F943 /* StartUpViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StartUpViewController.h; sourceTree = "<group>"; };
+		19BC068E23994CF60044F943 /* StartUpViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StartUpViewController.m; sourceTree = "<group>"; };
 		DB41D61722AE852A009B6CCB /* EntityTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EntityTableViewCell.h; sourceTree = "<group>"; };
 		DB41D61822AE852A009B6CCB /* EntityTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EntityTableViewCell.m; sourceTree = "<group>"; };
 		DB41D61922AE852A009B6CCB /* EntityTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EntityTableViewCell.xib; sourceTree = "<group>"; };
@@ -207,28 +212,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE51AF2C70A3682AF7648FFF /* libPods-ios-objective-c-chat-app.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		196892DA23A118FD005745D2 /* 11_Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				196892DB23A1198F005745D2 /* ConversationsViewController.h */,
+				196892DC23A1198F005745D2 /* ConversationsViewController.m */,
+				198605AB23A282AD007A1AB6 /* ConversationTableViewCell.h */,
+				198605AC23A282AD007A1AB6 /* ConversationTableViewCell.m */,
+			);
+			path = 11_Conversations;
+			sourceTree = "<group>";
+		};
 		5AF281F69A68E48AC15EA36D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */,
-				721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		D30119AF8955D02F38F4F96A /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9F67AF5110E1512A01C51C4E /* libPods-ios-objective-c-chat-app.a */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		E11A032322A0FE5F00C97D4C /* 09_MembersList */ = {
@@ -426,7 +431,6 @@
 				E1A1C45F221AA34100F7076B /* ios-objective-c-chat-app */,
 				E1A1C45E221AA34100F7076B /* Products */,
 				5AF281F69A68E48AC15EA36D /* Pods */,
-				D30119AF8955D02F38F4F96A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -476,6 +480,8 @@
 			children = (
 				E1A1C477221AA8C200F7076B /* LoginViewController.h */,
 				E1A1C478221AA8C200F7076B /* LoginViewController.m */,
+				19BC068D23994CF60044F943 /* StartUpViewController.h */,
+				19BC068E23994CF60044F943 /* StartUpViewController.m */,
 			);
 			path = 01_Login;
 			sourceTree = "<group>";
@@ -573,6 +579,7 @@
 				E180E614228A921000AE552C /* 08_Calling */,
 				E11A032322A0FE5F00C97D4C /* 09_MembersList */,
 				E174B17B22A7967700D14E92 /* 10_MorePage */,
+				196892DA23A118FD005745D2 /* 11_Conversations */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -701,13 +708,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1A1C473221AA34100F7076B /* Build configuration list for PBXNativeTarget "ios-objective-c-chat-app" */;
 			buildPhases = (
-				058B875F9314B9D46625A933 /* [CP] Check Pods Manifest.lock */,
 				E1A1C459221AA34100F7076B /* Sources */,
 				E1A1C45A221AA34100F7076B /* Frameworks */,
 				E1A1C45B221AA34100F7076B /* Resources */,
 				E1BCE7E0227B13B800958256 /* Embed Frameworks */,
 				E19E342122942C08002AEB54 /* ShellScript */,
-				7E4D90DE93DC7AEC400EAE1E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -729,7 +734,7 @@
 				TargetAttributes = {
 					E1A1C45C221AA34100F7076B = {
 						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1100;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -742,7 +747,7 @@
 				};
 			};
 			buildConfigurationList = E1A1C458221AA34100F7076B /* Build configuration list for PBXProject "ios-objective-c-chat-app" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -781,54 +786,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		058B875F9314B9D46625A933 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ios-objective-c-chat-app-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7E4D90DE93DC7AEC400EAE1E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app-frameworks.sh",
-				"${PODS_ROOT}/CometChatPro/CometChatPro.framework",
-				"${PODS_ROOT}/CometChatPro/Vendors/JitsiMeet.framework",
-				"${PODS_ROOT}/CometChatPro/Vendors/WebRTC.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CometChatPro.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JitsiMeet.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ios-objective-c-chat-app/Pods-ios-objective-c-chat-app-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		E19E342122942C08002AEB54 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -853,6 +810,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				198605AD23A282AD007A1AB6 /* ConversationTableViewCell.m in Sources */,
 				E1A1C47C221AA97900F7076B /* TabBarViewController.m in Sources */,
 				E18A1D2E223FB7DF00662831 /* NSError+Util.m in Sources */,
 				E1A1C470221AA34100F7076B /* main.m in Sources */,
@@ -861,9 +819,11 @@
 				E1B2D188223BE1240013D422 /* DemoUser.m in Sources */,
 				E11A032622A1234A00C97D4C /* Alert.m in Sources */,
 				E14390092226814700627EA5 /* Avatar.m in Sources */,
+				19BC068F23994CF60044F943 /* StartUpViewController.m in Sources */,
 				E18A1D2A223FB6A800662831 /* DownloadManager.m in Sources */,
 				E1A1C48B221AC4E900F7076B /* ListTableViewController.m in Sources */,
 				E18D5CF722798AF70019A4A2 /* AppSettings.m in Sources */,
+				196892DD23A1198F005745D2 /* ConversationsViewController.m in Sources */,
 				E1BD24BC22587CB2008BCA2D /* TextTableViewCell.m in Sources */,
 				E1A1C462221AA34100F7076B /* AppDelegate.m in Sources */,
 				E162E8BE229BB16B00EB1349 /* MembersViewController.m in Sources */,
@@ -1054,7 +1014,6 @@
 		};
 		E1A1C474221AA34100F7076B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0C0175BE813C1544270F3997 /* Pods-ios-objective-c-chat-app.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1067,8 +1026,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
+					"$(PROJECT_DIR)/Pods/CometChatPro",
+					"$(PROJECT_DIR)/Pods/CometChatPro/Vendors",
 				);
-				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
+				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1082,15 +1043,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ios-objective-c-chat-app.inscripts";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 			};
 			name = Debug;
 		};
 		E1A1C475221AA34100F7076B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 721C7F4D775DCA97B800B03B /* Pods-ios-objective-c-chat-app.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1103,8 +1065,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ios-objective-c-chat-app/Vendors",
+					"$(PROJECT_DIR)/Pods/CometChatPro",
+					"$(PROJECT_DIR)/Pods/CometChatPro/Vendors",
 				);
-				HEADER_SEARCH_PATHS = $SDKROOT/usr/include/libxml2;
+				HEADER_SEARCH_PATHS = "$SDKROOT/usr/include/libxml2";
 				INFOPLIST_FILE = "ios-objective-c-chat-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1118,8 +1082,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ios-objective-c-chat-app.inscripts";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
 			};
 			name = Release;
 		};

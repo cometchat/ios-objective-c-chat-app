@@ -38,13 +38,15 @@ NS_ASSUME_NONNULL_BEGIN
 +(void)joinGroup:(Group *)group withPassword:(NSString *)password in:(id)target onSuccess:(void(^)(Group* groupJoined))groupJoined;
 
 
+
 /**
  leave a particular group
 
  @param group to be left
  @param isLeft succesfullt left a group
  */
-+(void)leaveGroup:(Group *)group in:(id)target onSuccess:(void(^)(bool left))isLeft;
+//+(void)leaveGroup:(Group *)group in:(id)target onSuccess:(void(^)(bool left))isLeft;
++(void)leaveGroup:(id)group in:(id)target onSuccess:(void (^)(bool))isLeft;
 /**
  Ban paticular User / Group Member from Particular group
 

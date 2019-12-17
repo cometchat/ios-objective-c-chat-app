@@ -24,31 +24,31 @@
     return NSStringFromClass([self class]);
 }
 -(void)bind:(MediaMessage *)message withTailDirection:(MessageBubbleViewButtonTailDirection)tailDirection indexPath:(NSIndexPath *)indexPath {
-    
+
     _editMessage = message;
     width = self.frame.size.width *0.50;
     height = width/0.75;
-    
+
     [self.contentView addSubview:self.imageHolder];
     [_imageHolder setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView addSubview:self.timeLbl];
     [_timeLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
+
     NSDictionary *metrics = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",width],@"width",
                              [NSString stringWithFormat:@"%f",height],@"height",
                              [NSString stringWithFormat:@"%f",CELL_ANIMATION_HEIGHT],@"CELL_ANIMATION_HEIGHT" ,nil];
-    
-    
+
+
     switch (tailDirection) {
         case MessageBubbleViewButtonTailDirectionRight:
         {
-            
+
             [self.contentView addSubview:self.readReceipts];
             [_readReceipts setTranslatesAutoresizingMaskIntoConstraints:NO];
-            
+
             NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[_timeLbl]-[_imageHolder(width)]-(2)-[_readReceipts]-(2)-|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_timeLbl,_readReceipts)];
             NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_imageHolder(height)]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            
+
             //Bottom
             NSLayoutConstraint *bottom1 =[NSLayoutConstraint
                                           constraintWithItem:_timeLbl
@@ -58,7 +58,7 @@
                                           attribute:NSLayoutAttributeBottom
                                           multiplier:1.0f
                                           constant:-paddingY*3];
-            
+
             NSLayoutConstraint *bottom3 =[NSLayoutConstraint
                                           constraintWithItem:_readReceipts
                                           attribute:NSLayoutAttributeBottom
@@ -67,19 +67,19 @@
                                           attribute:NSLayoutAttributeBottom
                                           multiplier:1.0f
                                           constant:-paddingY*3];
-            
+
             [self.contentView addConstraints:subViewH1];
             [self.contentView addConstraints:subViewV1];
             [self.contentView addConstraint:bottom1];
             [self.contentView addConstraint:bottom3];
-            
+
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft) cornerRadii:CGSizeMake(10.0, 10.0)];
-            
+
             CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
             maskLayer.path  = maskPath.CGPath;
             _imageHolder.layer.mask = maskLayer;
-            
-            
+
+
             if ([message readByMeAt]) {
                 [_readReceipts setImage:[UIImage imageNamed:@"round_done_all_black_18pt"]];
             }else if ([message deliveredToMeAt]){
@@ -89,15 +89,15 @@
                 [_readReceipts setImage:[UIImage imageNamed:@"round_done_black_18pt"]];
                 [_readReceipts setTintColor:[UIColor lightGrayColor]];
             }
-            
+
         }
             break;
         case MessageBubbleViewButtonTailDirectionLeft:
         {
-            
+
             NSArray *subViewH1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_imageHolder(width)]-[_timeLbl]" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_timeLbl)];
             NSArray *subViewV1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_imageHolder(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder)];
-            
+
             //Bottom
             NSLayoutConstraint *bottom1 =[NSLayoutConstraint
                                           constraintWithItem:_timeLbl
@@ -107,24 +107,24 @@
                                           attribute:NSLayoutAttributeBottom
                                           multiplier:1.0f
                                           constant:-paddingY*3];
-            
+
             [self.contentView addConstraints:subViewH1];
             [self.contentView addConstraints:subViewV1];
             [self.contentView addConstraint:bottom1];
-            
+
             UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0f, 0.0f,width,height) byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10.0, 10.0)];
-            
+
             CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
             maskLayer.path  = maskPath.CGPath;
             _imageHolder.layer.mask = maskLayer;
-            
-            
+
+
             if ([message receiverType] == ReceiverTypeGroup)
             {
-                
+
                 [self.contentView addSubview:self.senderNameLbl];
                 [_senderNameLbl setTranslatesAutoresizingMaskIntoConstraints:NO];
-                
+
                 [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.senderNameLbl attribute:(NSLayoutAttributeLeading) relatedBy:(NSLayoutRelationEqual) toItem:self.contentView attribute:(NSLayoutAttributeLeading) multiplier:1.0f constant:paddingX*2]];
                 [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_senderNameLbl][_imageHolder(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(_imageHolder,_senderNameLbl)]];
             }
@@ -134,12 +134,12 @@
     }
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^(void) {
-        
-        NSLog(@"[mediaMessage url] %@",[message url]);
-        
+
+        NSLog(@"[mediaMessage url] %@",[message filePath]);
+
         if (message.messageType == MessageTypeVideo && message.deletedAt == 0.0)  {
-            
-            UIImage *image = [self loadThumbNail:[NSURL URLWithString:[message url]]];
+
+            UIImage *image = [self loadThumbNail:[NSURL URLWithString:[message filePath]]];
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (self.tag == indexPath.row) {
@@ -149,7 +149,7 @@
                 });
             }
         }else if (message.messageType == MessageTypeVideo && message.deletedAt > 0.0){
-            
+
              UIImage *image = [UIImage imageNamed:@"deletedVideo"];
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -160,7 +160,7 @@
                 });
             }
         }else if (message.messageType == MessageTypeImage && message.deletedAt > 0.0){
-            
+
             UIImage *image = [UIImage imageNamed:@"deletedImage"];
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -171,9 +171,9 @@
                 });
             }
         }else if (message.messageType == MessageTypeImage && message.deletedAt == 0.0){
-            
-            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[message url]]];
-            
+
+            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[message filePath]]];
+
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -197,22 +197,22 @@
         _imageHolder.image = [UIImage imageNamed:@"place_holder"];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tappedImage:)];
         tap.numberOfTapsRequired = 1;
-        
+
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
                                                    initWithTarget:self
                                                    action:@selector(handleDeleteAction:)];
         longPress.minimumPressDuration = 1.0;
         [_imageHolder addGestureRecognizer:longPress];
-        
+
         [_imageHolder addGestureRecognizer:tap];
         [_imageHolder addGestureRecognizer:tap];
 
-        
+
     }
     return _imageHolder;
 }
 -(UILabel*)senderNameLbl {
-    
+
     if (!_senderNameLbl) {
         _senderNameLbl = [UILabel new];
         _senderNameLbl.numberOfLines = 1;
@@ -223,7 +223,7 @@
     return _senderNameLbl;
 }
 -(UILabel*)timeLbl {
-    
+
     if (!_timeLbl) {
         _timeLbl = [UILabel new];
         [_timeLbl setFont:[UIFont systemFontOfSize:11]];
@@ -232,7 +232,7 @@
     return _timeLbl;
 }
 -(UIImageView *)readReceipts{
-    
+
     if (!_readReceipts) {
         _readReceipts = [UIImageView new];
         [_readReceipts setImage:[UIImage imageNamed:@"round_schedule_black_18pt"]];
@@ -241,7 +241,7 @@
     return _readReceipts;
 }
 - (void)tappedImage:(UIGestureRecognizer *)gestureRecognizer {
-    
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:flag:message:)]) {
         [_delegate didSelectMediaAtIndexPath:self.tag flag:0 message:_editMessage];
     }
@@ -249,16 +249,16 @@
 
 - (void)handleDeleteAction:(UILongPressGestureRecognizer *)gesture {
     if(UIGestureRecognizerStateBegan == gesture.state) {
-        
+
         if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectMediaAtIndexPath:flag:message:)]) {
            [_delegate didSelectMediaAtIndexPath:self.tag flag:1 message:_editMessage];
         }
     }
-    
+
     if(UIGestureRecognizerStateChanged == gesture.state) {
         // Do repeated work here (repeats continuously) while finger is down
     }
-    
+
     if(UIGestureRecognizerStateEnded == gesture.state) {
         // Do end work here when finger is lifted
     }

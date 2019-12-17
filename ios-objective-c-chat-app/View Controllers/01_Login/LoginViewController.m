@@ -8,7 +8,7 @@
 
 #import "LoginViewController.h"
 #import "TabBarViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface LoginViewController ()
 @property(strong ,nonatomic) UIView             *subViewHolder;
 @property(strong ,nonatomic) UIView             *imageHolder;
@@ -39,35 +39,95 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:)name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:)name:UIKeyboardWillHideNotification object:nil];
     [self viewWillsetupSubviews];
+    
 }
 
 #pragma mark  - CometChatPro Login
 
-- (IBAction)loginButtonTouchUpInside:(UIButton *)sender {
-    [self login:sender];
+
+//SuperHero 1 Button Login
+- (IBAction)onClickBtnSuperHero1:(id)sender {
+    [self.txtFld_UID setText:@"superhero1"];
 }
+
+//SuperHero2 Button Login
+- (IBAction)onClickBtnSuperHero2:(id)sender {
+    [self.txtFld_UID setText:@"superhero2"];
+}
+
+//SuperHero3 Button Login
+- (IBAction)onClickBtnSuperHero3:(id)sender {
+    [self.txtFld_UID setText:@"superhero3"];
+}
+
+//SuperHero4 Button Login
+- (IBAction)onClickBtnSuperHero4:(id)sender {
+    [self.txtFld_UID setText:@"superhero4"];
+}
+
+//Login Button
+- (IBAction)onClickBtnLogin:(id)sender {
+    if (_txtFld_UID.text && _txtFld_UID.text.length > 0)
+    {
+        [self login:_btn_login];
+    }
+    else
+    {
+       UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Warning"
+                                  message:@"The UID cannot be Empty."
+                                  preferredStyle:UIAlertControllerStyleAlert];
+
+       UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action) {}];
+
+       [alert addAction:defaultAction];
+       [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+}
+
+
+
+
 -(void)login:(id)sender
 {
+    self.activityIndicatorView_login.hidden = NO;
     [self indicatorstartAnimating];
     
     __weak __typeof__(self) weakSelf = self;
     
-    [CometChatProRequests loginWithUID:[self.userNameField text] andAPIKey:@API_KEY loggedinUser:^(User * _Nonnull user) {
+    NSString *path = [[NSBundle mainBundle] pathForResource: @"CometChat-info" ofType: @"plist"];
+    NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile: path];
+    id AuthenticationDict = [dict objectForKey: @"Authentication"];
+    NSString *apiKey = AuthenticationDict[@"API_KEY"];
+    NSLog(@"api key is: %@",apiKey);
+    
+    [CometChatProRequests loginWithUID:self.txtFld_UID.text andAPIKey:apiKey loggedinUser:^(User * _Nonnull user) {
         /**
          * l o g i n   s u c c e s s f u l
          */
         dispatch_async(dispatch_get_main_queue(), ^{
             
             __typeof__(self) strongSelf = weakSelf;
-            
+           
+            [[NSUserDefaults standardUserDefaults]setObject:[user uid] forKey:@LOGGED_IN_USER_ID];
+            [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@IS_LOGGED_IN];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [strongSelf indicatorstopAnimating];
             TabBarViewController *tabbarcontroller  = [strongSelf.storyboard instantiateViewControllerWithIdentifier:@"TabBarViewController"];
-            [strongSelf presentViewController:tabbarcontroller animated:YES completion:^{
-                
-                [[NSUserDefaults standardUserDefaults]setObject:[user uid] forKey:@LOGGED_IN_USER_ID];
-                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@IS_LOGGED_IN];
-                
-            }];
+            if (@available(iOS 13.0, *)) {
+                [tabbarcontroller setModalPresentationStyle: UIModalPresentationFullScreen];
+                [strongSelf presentViewController:tabbarcontroller animated:YES completion:^{
+                    
+                    
+                }];
+            } else {
+               [strongSelf presentViewController:tabbarcontroller animated:YES completion:^{
+                    
+                    
+                }];
+            }
+            
             
         });
     } andError:^(CometChatException * _Nonnull error) {
@@ -80,14 +140,6 @@
             
             [strongSelf indicatorstopAnimating];
             
-            if ([sender isKindOfClass:[UIButton class]]) {
-                [(UIButton *) sender setBackgroundColor:[UIColor redColor]];
-            }
-            
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:[error errorCode] message:[error errorDescription] preferredStyle:(UIAlertControllerStyleAlert)];
-            UIAlertAction *ok = [UIAlertAction actionWithTitle: NSLocalizedString(@"Ok", "") style:(UIAlertActionStyleDefault) handler:nil];
-            [alert addAction:ok];
-            [strongSelf presentViewController:alert animated:YES completion:nil];
         });
         
     }];
@@ -127,7 +179,6 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     
     [self dismissKeyboard];
-    [self login:self.loginButton];
     return YES;
 }
 
@@ -159,19 +210,19 @@
     }
     return _userNameField;
 }
--(UIButton *)loginButton{
-    
-    if (!_loginButton) {
-        _loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [_loginButton setTitle:NSLocalizedString(@"login", "") forState:UIControlStateNormal];
-        [_loginButton.layer setCornerRadius:12.0f];
-        [_loginButton setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
-        [_loginButton setTintColor:[UIColor whiteColor]];
-        [[_loginButton titleLabel] setFont:[UIFont systemFontOfSize:17.0f weight:(UIFontWeightSemibold)]];
-        [_loginButton addTarget:self action:@selector(loginButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _loginButton;
-}
+//-(UIButton *)loginButton{
+//
+//    if (!_loginButton) {
+//        _loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        [_loginButton setTitle:NSLocalizedString(@"login", "") forState:UIControlStateNormal];
+//        [_loginButton.layer setCornerRadius:12.0f];
+//        [_loginButton setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
+//        [_loginButton setTintColor:[UIColor whiteColor]];
+//        [[_loginButton titleLabel] setFont:[UIFont systemFontOfSize:17.0f weight:(UIFontWeightSemibold)]];
+//        [_loginButton addTarget:self action:@selector(loginButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+//    }
+//    return _loginButton;
+//}
 -(UILabel *)tryADemo{
     
     if (!_tryADemo) {
@@ -232,8 +283,30 @@
     [_tryADemo setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.contentView setBackgroundColor:[hexToRGB colorWithHexString:@"#2636BE"]];
     [self.subViewHolder setBackgroundColor:[UIColor whiteColor]];
+    //[self addConstraintsforSize:self.view.frame.size];
     
-    [self addConstraintsforSize:self.view.frame.size];
+    //Update Ui
+    [_view_LoginView.layer setCornerRadius:18.0f];
+    [_view_LoginView.layer setMasksToBounds:YES];
+    [_btn_login.layer setCornerRadius:15.0f];
+    [_btn_login.layer setMasksToBounds:YES];
+    [_view_superHero1.layer setCornerRadius:5.0f];
+    [_view_superHero1.layer setBorderWidth:1.0f];
+    [_view_superHero1.layer setBorderColor:[UIColor colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0].CGColor];
+    [_view_superHero1.layer setMasksToBounds:YES];
+    [_view_superHero2.layer setCornerRadius:5.0f];
+    [_view_superHero2.layer setBorderWidth:1.0f];
+    [_view_superHero2.layer setBorderColor:[UIColor colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0].CGColor];
+    [_view_superHero2.layer setMasksToBounds:YES];
+    [_view_superHero3.layer setCornerRadius:5.0f];
+    [_view_superHero3.layer setBorderWidth:1.0f];
+    [_view_superHero3.layer setBorderColor:[UIColor colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0].CGColor];
+    [_view_superHero3.layer setMasksToBounds:YES];
+    [_view_superHero4.layer setCornerRadius:5.0f];
+    [_view_superHero4.layer setBorderWidth:1.0f];
+    [_view_superHero4.layer setBorderColor:[UIColor colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0].CGColor];
+    [_view_superHero4.layer setMasksToBounds:YES];
+    _activityIndicatorView_login.hidden = YES;
 }
 
 -(void)addConstraintsforSize:(CGSize)size
@@ -347,18 +420,36 @@
 
 -(void)indicatorstartAnimating
 {
-    [_userNameField setRightView:[self activityIndicator]];
-    _userNameField.rightViewMode = UITextFieldViewModeAlways;
-    [[self activityIndicator] startAnimating];
-    [_loginButton setEnabled:NO];
+    [_txtFld_UID setRightView:[self activityIndicator]];
+    _txtFld_UID.rightViewMode = UITextFieldViewModeAlways;
+    [[self activityIndicatorView_login] startAnimating];
+    [_btn_login setEnabled:NO];
+    [_btn_login setTitle:@"Processing..." forState:UIControlStateNormal];
     [_userNameField setEnabled:NO];
 }
+
 -(void)indicatorstopAnimating
 {
-    [[self activityIndicator] stopAnimating];
-    [[self activityIndicator] removeFromSuperview];
-    [_loginButton setEnabled:YES];
-    [_userNameField setEnabled:YES];
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@IS_LOGGED_IN]){
+        [[self activityIndicator] stopAnimating];
+        self.activityIndicatorView_login.hidden = YES;
+        [[self activityIndicator] removeFromSuperview];
+        [_loginButton setEnabled:YES];
+        [_btn_login setEnabled:YES];
+        [_btn_login setTitle:@"Login Successful" forState:UIControlStateNormal];
+        [_btn_login setBackgroundColor:[hexToRGB colorWithHexString:@"#9ACD32"]];
+        [_userNameField setEnabled:YES];
+    }
+    else{
+        [[self activityIndicator] stopAnimating];
+        [[self activityIndicator] removeFromSuperview];
+        self.activityIndicatorView_login.hidden = YES;
+        [_btn_login setEnabled:YES];
+        [_btn_login setTitle:@"Login Failure" forState:UIControlStateNormal];
+        [_btn_login setBackgroundColor:[hexToRGB colorWithHexString:@"#FF0000"]];
+        [_loginButton setEnabled:YES];
+        [_userNameField setEnabled:YES];
+    }
 }
 
 -(void)presentDemoUserList:(id)sender{

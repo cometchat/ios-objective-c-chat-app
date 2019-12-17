@@ -14,23 +14,29 @@
 #pragma mark  -  Login
 
 +(void)loginWithUID:(NSString *)uid andAPIKey:(NSString *)api_key loggedinUser:(void(^)(User *user))aUser andError:(void(^)(CometChatException *error))aError{
+
     
     [CometChat loginWithUID:uid apiKey:api_key onSuccess:^(User * user) {
-        
+
         aUser(user);
-        
+
     } onError:^(CometChatException * error) {
-        
+
         aError(error);
     }];
-    
-}
 
+}
+//
+//+(void)loginWithUID:(NSString *)uid andAPIKey:(NSString *)api_key loggedinUser:(void(^)(User *user))aUser andError:(void(^)(CometChatException *error))aError{
+//
+//    [CometChat login]
+//}
 #pragma mark  -  Contact List
 
 #pragma mark  -  Group List
 
 #pragma mark  -  Join Group
+
 +(void)joinGroup:(Group *)group withPassword:(NSString *)password in:(id)target onSuccess:(void (^)(Group * _Nonnull))groupJoined{
     
     [CometChat joinGroupWithGUID:[group guid] groupType:[group groupType] password:password onSuccess:^(Group * _Nonnull _joinedGroup ) {

@@ -116,6 +116,17 @@
         case 4:
         {
             // logout //
+            
+            UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            StartUpViewController *controller = [sb instantiateViewControllerWithIdentifier:@"StartUpViewController"];
+            NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
+            NSDictionary * dict = [defs dictionaryRepresentation];
+            for (id key in dict) {
+                [defs removeObjectForKey:key];
+            }
+            [defs synchronize];
+            [self.navigationController pushViewController:controller animated:YES];
+            
         }
             break;
         default:

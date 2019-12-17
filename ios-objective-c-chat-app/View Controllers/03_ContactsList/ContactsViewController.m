@@ -172,7 +172,7 @@
     }
     self.navigationItem.title = NSLocalizedString(@"Contacts", @"");
     
-    UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"outline_more_vert_black_24pt"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
+    UIBarButtonItem *user_details = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"more_vertical"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserDetails)];
     [user_details setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[user_details]];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];

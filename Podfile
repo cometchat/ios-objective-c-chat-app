@@ -3,6 +3,6 @@
 
 target 'ios-objective-c-chat-app' do
   
-	pod 'CometChatPro','1.8.3'
+	pod 'CometChatPro','2.0.4'
 
 end

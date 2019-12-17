@@ -179,7 +179,7 @@
     }
     
     self.navigationItem.title = NSLocalizedString(@"Groups", @"");
-    UIBarButtonItem *creategroupBtn = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"group_create"] style:UIBarButtonItemStylePlain target:self action:@selector(showAlertSheet:)];
+    UIBarButtonItem *creategroupBtn = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"createGroup"] style:UIBarButtonItemStylePlain target:self action:@selector(showAlertSheet:)];
     
     [creategroupBtn setTintColor:[UIColor whiteColor]];
     [self.navigationItem setRightBarButtonItems:@[creategroupBtn]];
