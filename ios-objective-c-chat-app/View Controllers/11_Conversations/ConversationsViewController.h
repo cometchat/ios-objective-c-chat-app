@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) UISearchController *searchController;
 @property (nonatomic, retain) NSMutableArray<Conversation *> *conversationListArray;
 @property (nonatomic, retain) NSMutableArray<AppEntity *> *contactListArray;
+@property (weak, nonatomic) IBOutlet UIView *view_backgroundView;
 
 @property (nonatomic , retain) AppEntity *appEntity;
 @end

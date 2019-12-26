@@ -16,13 +16,17 @@
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    AppSettingsBuilder *appSettingBuilder = [[AppSettingsBuilder alloc]init];
-    AppSettings *appSettings = [[[appSettingBuilder subscribePresenceForAllUsers]setRegionWithRegion:@"eu"]build];
+    
+    
     
     // Getting the App ID and API Key
     NSString *path = [[NSBundle mainBundle] pathForResource: @"CometChat-info" ofType: @"plist"];
     NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile: path];
     id AuthenticationDict = [dict objectForKey: @"Authentication"];
+    NSString *region = AuthenticationDict[@"REGION"];
+    
+    AppSettingsBuilder *appSettingBuilder = [[AppSettingsBuilder alloc]init];
+    AppSettings *appSettings = [[[appSettingBuilder subscribePresenceForAllUsers]setRegionWithRegion:region]build];
     
     [[CometChat alloc]initWithAppId:AuthenticationDict[@"APP_ID"] appSettings:appSettings onSuccess:^(BOOL isSuccess) {
         NSLog(isSuccess ? @"CometChat Initialize Success:-YES" : @"CometChat Initialize Success:-NO");

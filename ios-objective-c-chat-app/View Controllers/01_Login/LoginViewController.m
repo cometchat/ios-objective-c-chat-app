@@ -140,6 +140,15 @@
             
             [strongSelf indicatorstopAnimating];
             
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:error.errorCode
+                                       message:error.errorDescription
+                                       preferredStyle:UIAlertControllerStyleAlert];
+
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action) {}];
+
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
         });
         
     }];
