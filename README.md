@@ -29,7 +29,7 @@ ___
    $ pod install
    ```
    
-   4. If you're facing any issues while installing pods, then kindly use below command ton install pods.
+4. If you're facing any issues while installing pods, then kindly use below command ton install pods.
    
    ```
    pod install --repo-update
