@@ -102,7 +102,6 @@ import CometChatPro
      */
     @objc public func setup(withStyle: UIModalPresentationStyle){
         self.modalPresentationStyle = withStyle
-        CometChat.calldelegate = self
         set(controllers: [conversations,calls,users,groups, more])
     }
 }
