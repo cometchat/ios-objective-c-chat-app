@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -321,6 +321,7 @@
 		FB4AA03B24337C9B0083B996 /* LogoutCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB4AA03924337C9B0083B996 /* LogoutCell.xib */; };
 		FB4AA03E243381190083B996 /* UIComponentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4AA03C243381190083B996 /* UIComponentsCell.swift */; };
 		FB4AA03F243381190083B996 /* UIComponentsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB4AA03D243381190083B996 /* UIComponentsCell.xib */; };
+		FBB956362485598E00EFF653 /* CreateUser.m in Sources */ = {isa = PBXBuildFile; fileRef = FBB956352485598E00EFF653 /* CreateUser.m */; };
 		FBFBE20F24333F3A00D74915 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FBFBE20E24333F3A00D74915 /* AppDelegate.m */; };
 		FBFBE21224333F3A00D74915 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FBFBE21124333F3A00D74915 /* SceneDelegate.m */; };
 		FBFBE21524333F3A00D74915 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FBFBE21424333F3A00D74915 /* ViewController.m */; };
@@ -656,6 +657,8 @@
 		FB4AA03924337C9B0083B996 /* LogoutCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutCell.xib; sourceTree = "<group>"; };
 		FB4AA03C243381190083B996 /* UIComponentsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIComponentsCell.swift; sourceTree = "<group>"; };
 		FB4AA03D243381190083B996 /* UIComponentsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UIComponentsCell.xib; sourceTree = "<group>"; };
+		FBB956342485598E00EFF653 /* CreateUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreateUser.h; sourceTree = "<group>"; };
+		FBB956352485598E00EFF653 /* CreateUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreateUser.m; sourceTree = "<group>"; };
 		FBFBE20A24333F3A00D74915 /* CometChat KitchenSink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CometChat KitchenSink.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBFBE20D24333F3A00D74915 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FBFBE20E24333F3A00D74915 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -1867,6 +1870,8 @@
 				FBFBE4E424334C2900D74915 /* LoginWithDemoUsers.m */,
 				FBFBE4E624334C3900D74915 /* LoginWithUID.h */,
 				FBFBE4E724334C3900D74915 /* LoginWithUID.m */,
+				FBB956342485598E00EFF653 /* CreateUser.h */,
+				FBB956352485598E00EFF653 /* CreateUser.m */,
 				FBFBE4E924334C5500D74915 /* MainViewController.h */,
 				FBFBE4EA24334C5500D74915 /* MainViewController.m */,
 				FB4AA02624337B910083B996 /* Cells */,
@@ -1912,7 +1917,7 @@
 		FBFBE20224333F3A00D74915 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Pushpsen;
 				TargetAttributes = {
 					FBFBE20924333F3A00D74915 = {
@@ -2165,6 +2170,7 @@
 				FB16424B24729647006DB485 /* CometChatPrivacyAndSecurity.swift in Sources */,
 				FB16415924729646006DB485 /* Filter.swift in Sources */,
 				FB4AA02A24337BC70083B996 /* ComponentCell.m in Sources */,
+				FBB956362485598E00EFF653 /* CreateUser.m in Sources */,
 				FBFBE20F24333F3A00D74915 /* AppDelegate.m in Sources */,
 				FB16421824729647006DB485 /* LeftFileMessageBubble.swift in Sources */,
 				FB16412C24729646006DB485 /* CameraHandler.swift in Sources */,
@@ -2413,6 +2419,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_MODULE_NAME = CometChatObjc;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
