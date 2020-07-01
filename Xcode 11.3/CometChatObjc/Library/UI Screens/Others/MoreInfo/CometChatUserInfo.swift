@@ -8,6 +8,7 @@
 
 import UIKit
 import CometChatPro
+
 /*  ----------------------------------------------------------------------------------------- */
 
 public class CometChatUserInfo: UIViewController {
@@ -89,7 +90,7 @@ public class CometChatUserInfo: UIViewController {
               self.present(alert, animated: true, completion: nil)
           }
           let user = User(uid: uid, name: name)
-        CometChat.updateUser(user: user, apiKey: "ENTER API KEY", onSuccess: { (user) in
+          CometChat.updateUser(user: user, apiKey: "ENTER API KEY", onSuccess: { (user) in
               DispatchQueue.main.async {
                   self.dismiss(animated: true, completion: nil)
                   self.tableView.reloadData()
