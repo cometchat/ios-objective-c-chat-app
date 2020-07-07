@@ -55,6 +55,12 @@ To Run to sample app you have to do the following changes by Adding **APP_ID**, 
 
 ![Studio Guide](https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/blob/master/Screenshots/Auth.png) 
 
+Note :
+
+To run the sample app kindly follow the instructions provided in Readme.md file.
+
+If you're running Objective - C sample app then please run it on physical device.
+
 ___
 
 # Add UIKit Library to your App
