@@ -12,7 +12,6 @@ ___
 
 
 
-
 ```swift
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CometChatCallDelegate>
 ```

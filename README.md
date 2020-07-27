@@ -4,7 +4,6 @@
 <br></br><br></br>
 
 CometChat Kitchen Sink Sample App (built using **CometChat UIKit**) is a fully functional messaging app capable of **one-on-one** (private) and **group** messaging as well as Calling. This sample app enables users to send **text** and **multimedia messages like images, videos, documents**. Also, users can make **Audio** and **Video** calls to other users or groups.
-
 ___
 ## Table of Contents
 
@@ -55,12 +54,6 @@ To Run to sample app you have to do the following changes by Adding **APP_ID**, 
    -  Select demo users or enter the **UID** at the time of login once the app is launched. 
 
 ![Studio Guide](https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/blob/master/Screenshots/Auth.png) 
-
-Note :
-
-To run the sample app kindly follow the instructions provided in Readme.md file.
-
-If you're running Objective - C sample app then please run it on physical device.
 
 ___
 
