@@ -1,6 +1,6 @@
 
 target 'CometChatObjc' do
  
- pod 'CometChatPro','2.0.12-Xcode11.4'
+ pod 'CometChatPro','2.0.13-Xcode11.4'
 
 end
