@@ -61,7 +61,6 @@ class LeftTextMessageBubble: UITableViewCell {
                 }
                 self.parseProfanityFilter(forMessage: currentMessage)
                 self.parseSentimentAnalysis(forMessage: currentMessage)
-                
                 if textMessage?.replyCount != 0 {
                     replybutton.isHidden = false
                     if textMessage?.replyCount == 1 {
@@ -94,7 +93,6 @@ class LeftTextMessageBubble: UITableViewCell {
                 self.receiptStack.isHidden = true
                 self.parseProfanityFilter(forMessage: textmessage)
                 self.parseSentimentAnalysis(forMessage: textmessage)
-                
                 if textmessage.readAt > 0 && textmessage.receiverType == .user{
                     timeStamp.text = String().setMessageTime(time: Int(textMessage?.readAt ?? 0))
                 }else if textmessage.deliveredAt > 0 {
@@ -126,6 +124,7 @@ class LeftTextMessageBubble: UITableViewCell {
     weak var deletedMessage: BaseMessage? {
         didSet {
             // self.selectionStyle = .none
+  
             self.replybutton.isHidden = true
             sentimentAnalysisView.isHidden = true
             spaceConstraint.constant = 0

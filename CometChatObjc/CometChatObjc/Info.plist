@@ -30,6 +30,8 @@
 	<string>Add Photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access Photos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Access Location</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

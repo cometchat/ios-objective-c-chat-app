@@ -58,8 +58,8 @@ class LeftReplyMessageBubble: UITableViewCell {
                 if let metaData = textMessage?.metaData, let message = metaData["message"] as? String {
                     self.replyMessage.text = message
                 }
-                self.parseSentimentAnalysis(forMessage: currentMessage)
                 self.parseProfanityFilter(forMessage: currentMessage)
+                self.parseSentimentAnalysis(forMessage: currentMessage)
                 receiptStack.isHidden = true
                 nameView.isHidden = false
                 if let avatarURL = currentMessage.sender?.avatar  {
@@ -74,9 +74,8 @@ class LeftReplyMessageBubble: UITableViewCell {
     weak var textMessageInThread: TextMessage? {
              didSet {
                  if let textmessage  = textMessageInThread {
-                      self.parseSentimentAnalysis(forMessage: textmessage)
                       self.parseProfanityFilter(forMessage: textmessage)
-                      
+                      self.parseSentimentAnalysis(forMessage: textmessage)
                      
                      if let metaData = textmessage.metaData, let message = metaData["message"] as? String {
                          self.replyMessage.text = message
@@ -266,8 +265,6 @@ class LeftReplyMessageBubble: UITableViewCell {
                 self.parseProfanityFilter(forMessage: forMessage)
             }
         }
-
-
 }
 
 
