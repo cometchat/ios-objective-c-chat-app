@@ -70,6 +70,9 @@
     
     [[CometChat alloc]initWithAppId:APP_ID appSettings:appSettings onSuccess:^(BOOL isSuccess) {
         NSLog(isSuccess ? @"CometChat Initialize Success:-YES" : @"CometChat Initialize Success:-NO");
+        
+        [CometChat setSourceWithResource:@"ui-kit" platform:@"iOS" language:@"objective-c"];
+        
     } onError:^(CometChatException * error) {
         NSLog(@"Error %@",[error errorDescription]);
     }];
