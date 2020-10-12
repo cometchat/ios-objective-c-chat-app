@@ -11,6 +11,9 @@ ___
 - Register for `CometChatCallDelegate` in Application class. 
 
 
+
+
+
 ```swift
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CometChatCallDelegate>
 ```
