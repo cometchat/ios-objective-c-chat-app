@@ -86,8 +86,6 @@
     } onError:^(CometChatException * error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->activityIndicator stopAnimating];
-            CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationShort)];
-            [snackBar show];
         });
         NSLog(@"login failure: %@",error.errorDescription);
     }];

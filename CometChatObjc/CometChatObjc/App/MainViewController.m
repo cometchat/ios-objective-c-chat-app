@@ -106,10 +106,7 @@
                 }
             });
         } onError:^(CometChatException * error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationLong)];
-                [snackBar show];
-            });
+           
         }];
     }else{
         [CometChat getGroupWithGUID:user onSuccess:^(Group * group) {
@@ -121,10 +118,7 @@
                 }
             });
         } onError:^(CometChatException * error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationLong)];
-                [snackBar show];
-            });
+           
         }];
     }
 }
@@ -214,16 +208,10 @@
                                 [self presentViewController:navigationController animated:true completion:nil];
                             });
                         } onError:^(CometChatException * error) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationShort)];
-                                [snackBar show];
-                            });
+                         
                         }];
                     }else{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationShort)];
-                            [snackBar show];
-                        });
+                       
                     }
                 }];
                 
@@ -290,16 +278,10 @@
                                 
                             });
                         } onError:^(CometChatException * error) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationShort)];
-                                [snackBar show];
-                            });
+                           
                         }];
                     }else{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:error.errorDescription duration:( CometChatSnackbarDurationShort)];
-                            [snackBar show];
-                        });
+                      
                     }
                 }];
                 
@@ -363,8 +345,7 @@
                  [self makeCallToEntity:@"supergroup" withType:CallTypeVideo withEntityType:ReceiverTypeGroup];
             }
         }
-        CometChatSnackbar *snackBar = [[CometChatSnackbar alloc]initWithMessage:@"You won't receive any real time events for calls by calling from here because Objective C won't allowing to extend the 'CometChatCallDelegate' protocol in application class. Still, you can check the calling functionality by launching Unified version of UI Kit. Also, to receive real time events for call. Please, check 'CometchatCallManager' class and add 'CometChatCallDelegate' methods in AppDelegate." duration:( CometChatSnackbarDurationLong)];
-        [snackBar show];
+       
     });
 }
 
