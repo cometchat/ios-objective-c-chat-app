@@ -74,6 +74,7 @@ class LeftImageMessageBubble: UITableViewCell {
               }
               parseImageForModeration(forMessage: mediaMessage)
             if mediaMessage.replyCount != 0 &&  UIKitSettings.threadedChats == .enabled {
+                
                 replybutton.isHidden = false
                 if mediaMessageInThread?.replyCount == 1 {
                     replybutton.setTitle("1 reply", for: .normal)

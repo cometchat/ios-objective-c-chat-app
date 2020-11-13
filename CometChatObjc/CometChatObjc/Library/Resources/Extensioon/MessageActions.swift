@@ -23,6 +23,7 @@
     case delete
     case thread
     case share
+    case sticker
  }
  
  protocol RowPresentable {
@@ -44,6 +45,7 @@
     func didReplyPressed()
     func didSharePressed()
     func didForwardPressed()
+    func didStickerPressed()
  }
 
 
@@ -148,7 +150,7 @@
                 }else{
                     cell.name.textColor = .black
                 }
-                cell.icon.image = UIImage(named: "􀉌.png", in: UIKitSettings.bundle, compatibleWith: nil)
+                cell.icon.image = UIImage(named: "􀉌.png", in: UIKitSettings.bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
                 cell.fullScreenSwitch.isHidden = true
                 cell.badgeCountSwitch.isHidden = true
             case .forward:
@@ -200,6 +202,11 @@
             case .createAPoll:
                 cell.name.text = "Create a Poll"
                 cell.icon.image = UIImage(named: "􀌶.png", in: UIKitSettings.bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                cell.fullScreenSwitch.isHidden = true
+                cell.badgeCountSwitch.isHidden = true
+            case .sticker:
+                cell.name.text = "Send Sticker"
+                cell.icon.image = UIImage(named: "sticker1.png", in: UIKitSettings.bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
                 cell.fullScreenSwitch.isHidden = true
                 cell.badgeCountSwitch.isHidden = true
             }
@@ -271,6 +278,10 @@
             case .createAPoll:
                 self.dismiss(animated: true) {
                     MessageActions.actionsDelegate?.createAPollPressed()
+                }
+            case .sticker:
+                self.dismiss(animated: true) {
+                    MessageActions.actionsDelegate?.didStickerPressed()
                 }
             }
         }
