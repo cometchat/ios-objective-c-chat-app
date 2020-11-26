@@ -36,7 +36,14 @@ class CometChatStickerView: UIViewController {
         self.fetchStickers()
         
     }
-
+    
+    override func loadView() {
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName: "CometChatStickerView", bundle: bundle)
+        let view = nib.instantiate(withOwner: self, options: nil)[0] as! UIView
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view  = view
+    }
     
     private func setupBackgroundView(){
         stickerBackgroundView.roundViewCorners([.layerMinXMinYCorner, .layerMaxXMinYCorner], radius: 20)
