@@ -253,3 +253,79 @@ extension CometChatUnified : CometChatCallDelegate {
 //
 //
 ///*  ----------------------------------------------------------------------------------------- */
+//
+//// //  MARK: - CometChatCallDelegate Methods (For Objective C Project)
+////
+//extension CometChatUnified : CometChatCallDelegate {
+//
+//    /**
+//    This method triggers when incoming call received from Server.
+//     - Parameters:
+//      - incomingCall: Specifies a Call Object
+//        - error:  triggers when error occurs
+//    - Author: CometChat Team
+//    - Copyright:  ©  2020 CometChat Inc.
+//    */
+//    public func onIncomingCallReceived(incomingCall: Call?, error: CometChatException?) {
+//
+//        if let currentCall = incomingCall {
+//            DispatchQueue.main.async {
+//                let call = CometChatIncomingCall()
+//                call.modalPresentationStyle = .custom
+//                call.setCall(call: currentCall)
+//                self.present(call, animated: true, completion: nil)
+//                }
+//                if let call = incomingCall {
+//                    CometChatCallManager.incomingCallDelegate?.onIncomingCallReceived(incomingCall: call, error: error)
+//                }
+//            }
+//        }
+//
+//    /**
+//    This method triggers when outgoing call accepted from User or group.
+//     - Parameters:
+//      - acceptedCall: Specifies a Call Object
+//        - error:  triggers when error occurs
+//    - Author: CometChat Team
+//    - Copyright:  ©  2020 CometChat Inc.
+//    */
+//    public func onOutgoingCallAccepted(acceptedCall: Call?, error: CometChatException?) {
+//
+//        if let call = acceptedCall {
+//            CometChatCallManager.outgoingCallDelegate?.onOutgoingCallAccepted(acceptedCall: call, error: error)
+//        }
+//    }
+//
+//    /**
+//    This method triggers when ourgoing call rejected from User or group.
+//     - Parameters:
+//      - rejectedCall: Specifies a Call Object
+//        - error:  triggers when error occurs
+//    - Author: CometChat Team
+//    - Copyright:  ©  2020 CometChat Inc.
+//    */
+//    public func onOutgoingCallRejected(rejectedCall: Call?, error: CometChatException?) {
+//
+//        if let call = rejectedCall {
+//            CometChatCallManager.outgoingCallDelegate?.onOutgoingCallRejected(rejectedCall: call, error: error)
+//        }
+//    }
+//
+//    /**
+//    This method triggers when incoming call cancelled from User or group.
+//     - Parameters:
+//      - rejectedCall: Specifies a Call Object
+//        - error:  triggers when error occurs
+//    - Author: CometChat Team
+//    - Copyright:  ©  2020 CometChat Inc.
+//    */
+//    public func onIncomingCallCancelled(canceledCall: Call?, error: CometChatException?) {
+//
+//        if let call = canceledCall {
+//            CometChatCallManager.incomingCallDelegate?.onIncomingCallCancelled(canceledCall: call, error: error)
+//        }
+//    }
+//}
+////
+////
+/////*  ----------------------------------------------------------------------------------------- */
