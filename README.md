@@ -1,70 +1,98 @@
-<div>
-<img align="left" src="https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/blob/master/Screenshots/appScreenshot.jpg">  </div>
 
-<br></br><br></br>
+<div style="width:100%">
+    <div style="width:50%; display:inline-block">
+        <p align="center">
+        <img align="center" width="180" height="180" alt="" src="https://github.com/cometchat-pro/ios-objective-c-chat-app/blob/master/Screenshots/logo.png">    
+        </p>    
+    </div>    
+</div>
+</div>
+
+</br>
+
+# iOS Objective-C Chat App
+
+<p align="left">
+
+<a href=""><img src="https://img.shields.io/badge/Repo%20Size-15.6%20MB-brightgreen" /></a>
+<a href=""> <img src="https://img.shields.io/badge/Contributors-5-yellowgreen" /></a>
+<a href=" "> <img src="https://img.shields.io/badge/Version-2.1.9-red" /></a>
+<a href=""> <img src="https://img.shields.io/github/stars/cometchat-pro/ios-objective-c-chat-app?style=social" /></a>
+
+</p>
+</br></br>
+
+
+<div>
+<img align="left" src="https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/blob/master/Screenshots/appScreenshot.jpg">  
+</div>
+
+<br></br><br></br></br>
+
+<br></br>
 
 CometChat Kitchen Sink Sample App (built using **CometChat UIKit**) is a fully functional messaging app capable of **one-on-one** (private) and **group** messaging as well as Calling. This sample app enables users to send **text** and **multimedia messages like images, videos, documents**. Also, users can make **Audio** and **Video** calls to other users or groups.
-___
-## Table of Contents
 
-1. [Installation](#Installation)
+</br>
 
-2. [Running the sample app](#Running-the-sample-app)
+---
 
-3. [Add UIKit library to your App](#Add-UIKit-Library-to-your-App)
+## Prerequisites
 
-4. [Troubleshooting](#Troubleshooting)
+Before you begin, ensure you have met the following requirements:
 
+- You have installed the latest version of Xcode. (Above Xcode 12 Recommended)
 
-
-
+- iOS Objective-C Chat App works for the iOS devices from iOS 11 and above.
 
 
-# Installation
+
+
+## Installing iOS Objective-C Chat App
       
 1. Simply clone the project from [ios-objective-c-chat-app](https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/archive/master.zip) repository. After cloning the repository:
 
-2. Navigate to project's folder and use below command to install the require pods.
+2. Navigate to project's folder and use below command to install the require dependancies.
    
    ```
    $ pod install
    ```
    
-3. If you're facing any issues while installing pods, then kindly use below command ton install pods.
+3. If you're facing any issues while installing pods, then kindly use the below command to install dependancies.
    
    ```
    pod install --repo-update
    ```
 
 4. Build and run the Sample App.
-___
+---
 
 
-# Running the sample app
+## Running the sample app
 
-To Run to sample app you have to do the following changes by Adding **APP_ID**, **API_KEY** and  **REGION_CODE**
+To Run to sample app you have to do the following changes by Adding **AppID**, **AuthKey** and  **Region**
    
-   You can obtain your  *APP_ID*, *API_KEY* and *REGION_CODE* from [CometChat-Pro Dashboard](https://app.cometchat.io/)
+   You can obtain your  *App ID*, *Auth Key* and *Region* from [CometChat-Pro Dashboard](https://app.cometchat.io/). Create new app and head over to the Quick Start or API & Auth Keys section and note the *App ID*, *Auth Key*, and *Region*.
           
    - Open the project in Xcode. 
           
    - Go to CometChatObjc -->  **AppConstants.h**.
                   
-   - Modify *APP_ID* and *API_KEY*  and *REGION* with your own **API_KEY**, **APP_ID** and **REGION**.
+   - Modify *App ID* and *Auth Key*  and *Region* with your own **App ID**, **Auth Key** and **Region**.
 
    -  Select demo users or enter the **UID** at the time of login once the app is launched. 
 
 ![Studio Guide](https://github.com/cometchat-pro-samples/ios-objective-c-chat-app/blob/master/Screenshots/Auth.png) 
 
-___
+---
 
-# Add UIKit Library to your App
+## Add UIKit Library to your project
 
 Learn more about how to integrate [UI Kit](https://github.com/cometchat-pro/ios-chat-uikit) inside your app. 
 
-___
+---
 
-# Important Steps for Objective - C.
+## Important Steps for Objective - C.
 
 - To receive real-time events for calls in Objective C you must have to register `CometchatCallDelegate` protocol and it's methods in AppDelegate. 
 
@@ -72,10 +100,40 @@ Please, [refer this guide](https://github.com/cometchat-pro-samples/ios-objectiv
 
 -  Kindly, run it sample app on the physical device. 
 
-___
+---
 
 # Troubleshooting
 
-Facing any issues while integrating or installing the UI Kit please <a href="https://forum.cometchat.com/"> visit our forum</a>.
+- To read the full dcoumentation on UI Kit integration visit our [Documentation](https://prodocs.cometchat.com/docs/ios-ui-kit)  .
+
+- Facing any issues while integrating or installing the UI Kit please <a href="https://app.cometchat.io/"> connect with us via real time support present in CometChat Dashboard.</a>
+
+---
+
+# Contributors
+
+Thanks to the following people who have contributed to this project:
+
+[@pushpsenairekar2911 👨‍💻](https://github.com/pushpsenairekar2911) <br>
+[@BudhabhooshanPatil 👨‍💻](https://github.com/BudhabhooshanPatil)
+<br>
+[@jeetkapadia 👨‍💻](https://github.com/jeetkapadia)
+<br>
+[@NishantTiwarins 👨‍💻](https://github.com/NishantTiwarins)
+<br>
+[@Abhijitinscripts 📝](https://github.com/Abhijitinscripts)
+
+---
+
+# Contact
+
+Contact us via real time support present in [CometChat Dashboard.](https://app.cometchat.io/)
+
+---
+
+# License
 
 
+This project uses the following [license](https://github.com/cometchat-pro/ios-objective-c-chat-app/blob/master/License.md).
+
+---

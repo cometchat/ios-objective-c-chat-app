@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [CometChat loginWithUID:@"superhero1" apiKey:API_KEY onSuccess:^(User * user) {
+    [CometChat loginWithUID:@"superhero1" apiKey:AUTH_KEY onSuccess:^(User * user) {
         
         NSLog(@"login successful");
         

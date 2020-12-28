@@ -72,7 +72,7 @@
 
 -(void)loginWithUID {
     [activityIndicator startAnimating];
-    [CometChat loginWithUID: textField.text apiKey:API_KEY onSuccess:^(User * user) {
+    [CometChat loginWithUID: textField.text apiKey:AUTH_KEY onSuccess:^(User * user) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->activityIndicator stopAnimating];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];

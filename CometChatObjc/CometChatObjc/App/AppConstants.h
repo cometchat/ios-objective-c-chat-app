@@ -9,8 +9,11 @@
 #ifndef AppConstants_h
 #define AppConstants_h
 
-#define API_KEY             @"ENTER API KEY"
 #define APP_ID              @"ENTER APP ID"
+#define AUTH_KEY             @"ENTER AUTH KEY"
 #define REGION_CODE         @"ENTER REGION CODE"
 
 #endif /* AppConstants_h */
+
+
+

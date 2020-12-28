@@ -97,7 +97,7 @@
     
     User *user = [[User alloc] initWithUid: uid name: textField.text];
     
-    [CometChat createUserWithUser:user apiKey:API_KEY onSuccess:^(User * user) {
+    [CometChat createUserWithUser:user apiKey:AUTH_KEY onSuccess:^(User * user) {
         
           dispatch_async(dispatch_get_main_queue(), ^{
              
@@ -136,7 +136,7 @@
              [self.view layoutIfNeeded];
          }];
        });
-    [CometChat loginWithUID: uid apiKey:API_KEY onSuccess:^(User * user) {
+    [CometChat loginWithUID: uid apiKey:AUTH_KEY onSuccess:^(User * user) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->activityIndicator stopAnimating];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
