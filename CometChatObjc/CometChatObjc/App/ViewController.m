@@ -15,7 +15,7 @@
 
 @implementation ViewController
 
-@synthesize unifiedUI;
+@synthesize cometChatUI;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,9 +26,9 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
            
-            CometChatUnified *unifiedUI = [[CometChatUnified alloc]init];
-            [unifiedUI setupWithStyle: UIModalPresentationPopover];
-            [self presentViewController:unifiedUI animated:true completion:nil];
+            CometChatUI *cometChatUI = [[CometChatUI alloc]init];
+            [cometChatUI setupWithStyle: UIModalPresentationPopover];
+            [self presentViewController:cometChatUI animated:true completion:nil];
             
         });
         

@@ -12,7 +12,7 @@
 
 @interface ViewController : UIViewController
 
-@property (nonatomic) CometChatUnified *unifiedUI;
+@property (nonatomic) CometChatUI *cometChatUI;
 
 @end
 

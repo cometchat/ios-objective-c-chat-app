@@ -128,15 +128,15 @@
     NSInteger selectedScreen = typeSegment.selectedSegmentIndex;
     if (selectedScreen == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            CometChatUnified *unifiedUI = [[CometChatUnified alloc]init];
-            [unifiedUI setupWithStyle: UIModalPresentationFullScreen];
-            [self presentViewController:unifiedUI animated:true completion:nil];
+            CometChatUI *cometChatUI = [[CometChatUI alloc]init];
+            [cometChatUI setupWithStyle: UIModalPresentationFullScreen];
+            [self presentViewController:cometChatUI animated:true completion:nil];
         });
     }else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            CometChatUnified *unifiedUI = [[CometChatUnified alloc]init];
-            [unifiedUI setupWithStyle: UIModalPresentationPopover];
-            [self presentViewController:unifiedUI animated:true completion:nil];
+            CometChatUI *cometChatUI = [[CometChatUI alloc]init];
+            [cometChatUI setupWithStyle: UIModalPresentationPopover];
+            [self presentViewController:cometChatUI animated:true completion:nil];
             
         });
     }
@@ -154,7 +154,7 @@
         CometChatUserList *userList = [[CometChatUserList alloc] init];
         CometChatGroupList *groupList = [[CometChatGroupList alloc] init];
         CometChatMessageList *messageList = [[CometChatMessageList alloc] init];
-        CometChatUserInfo *userInfo = [[CometChatUserInfo alloc] init];
+        CometChatUserProfile *userProfile = [[CometChatUserProfile alloc] init];
         
         
         if (selectedStyle == 0){
@@ -217,9 +217,9 @@
                 
             } else if (selectedScreen == 5){
                 
-                UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:userInfo];
+                UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:userProfile];
                 navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-                [userInfo setWithTitle:@"More Info" mode:UINavigationItemLargeTitleDisplayModeAutomatic];
+                [userProfile setWithTitle:@"More Info" mode:UINavigationItemLargeTitleDisplayModeAutomatic];
                 [self presentViewController:navigationController animated:true completion:nil];
             }
             
@@ -288,9 +288,9 @@
                 
             } else if (selectedScreen == 5){
                 
-                UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:userInfo];
+                UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:userProfile];
                 navigationController.modalPresentationStyle = UIModalPresentationPopover;
-                [userInfo setWithTitle:@"More Info" mode:UINavigationItemLargeTitleDisplayModeAutomatic];
+                [userProfile setWithTitle:@"More Info" mode:UINavigationItemLargeTitleDisplayModeAutomatic];
                 [self presentViewController:navigationController animated:true completion:nil];
             }
         }
