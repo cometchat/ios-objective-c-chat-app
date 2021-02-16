@@ -93,9 +93,10 @@ enum Controller : String {
         let color = UIKitSettings.primaryColor
         self.tabBar.tintColor = color
         
-       //Assigning Calling Delegate
+        
+        //Assigning Calling Delegate
         CometChat.calldelegate = self
-     
+        
         // Adding view controllers in Tabbar
         self.viewControllers = controllers
     }
