@@ -21,6 +21,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     if ([CometChat getLoggedInUser] != nil) {
+        
+        CometChat.calldelegate = self;
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             MainViewController * mainVC = [storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];

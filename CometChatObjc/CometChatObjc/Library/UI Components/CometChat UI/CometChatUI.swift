@@ -18,7 +18,7 @@ import CometChatPro
 
 /*  ----------------------------------------------------------------------------------------- */
 
-enum Controller : String {
+public enum Controller : String {
     case chats = "chats"
     case calls = "calls"
     case users = "users"
