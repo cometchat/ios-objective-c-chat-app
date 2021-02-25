@@ -46,7 +46,17 @@ Before you begin, ensure you have met the following requirements:
 
 - iOS Objective-C Chat App works for the iOS devices from iOS 11 and above.
 
+NOTE: Please install the latest pod version on your Mac to avoid integration issues
 
+```bash
+Please follow the below steps:
+
+sudo gem update cocoapods --pre
+pod update
+clean
+build
+
+```
 
 
 ## Installing iOS Objective-C Chat App
