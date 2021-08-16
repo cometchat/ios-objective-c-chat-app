@@ -24,14 +24,14 @@
 	<string>Access Camera</string>
 	<key>NSDocumentsFolderUsageDescription</key>
 	<string>Access Docs</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Access Location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Access Microphone</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Add Photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access Photos</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Access Location</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
