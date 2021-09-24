@@ -9,9 +9,9 @@
 #ifndef AppConstants_h
 #define AppConstants_h
 
-#define APP_ID              @"1914596b62597fde"
-#define AUTH_KEY            @"41377e5c106843662dd3684cbcb48ba7f25b81f3"
-#define REGION_CODE         @"us"
+#define APP_ID              @"ENTER APP ID HERE"
+#define AUTH_KEY            @"ENTER AUTH KEY HERE"
+#define REGION_CODE         @"ENTER REGION CODE HERE"
 
 #endif /* AppConstants_h */
 
