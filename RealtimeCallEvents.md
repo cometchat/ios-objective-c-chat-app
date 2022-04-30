@@ -4,13 +4,12 @@
 Since, swift supports extension for AppDelegate, we have managed it for Swift. But if you're using Objective C then you've to add necessory events manually inside your project.
 ___
 
-
-
 ## Step 1: 
 
 - Open `AppDelegate.h` file. 
 
 - Register for `CometChatCallDelegate` in Application class. 
+
 
 
 
